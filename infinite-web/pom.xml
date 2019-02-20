@@ -19,13 +19,30 @@
     <build>
         <finalName>infinite-web</finalName>
         <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
+        	 <resource>
+		        <directory>src/main/resources</directory>
+		        <filtering>true</filtering>
+		        <excludes>
+		            <exclude>**/*.woff</exclude>
+		            <exclude>**/*.ttf</exclude>
+		            <exclude>**/*.woff2</exclude>
+					<exclude>**/*.otf</exclude>
+					<exclude>**/*.eot</exclude>
+					<exclude>**/*.svg</exclude>
+		        </excludes>
+		    </resource>
+		    <resource>
+		        <directory>src/main/resources</directory>
+		        <filtering>false</filtering>
+		        <includes>
+		            <include>**/*.woff</include>
+		            <include>**/*.ttf</include>
+					<include>**/*.woff2</include>
+					<include>**/*.otf</include>
+					<include>**/*.eot</include>
+					<include>**/*.svg</include>
+		        </includes>
+		    </resource>
         </resources>
         <plugins>
             <plugin>
