@@ -122,10 +122,10 @@
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-heart-outline"></i><span> 个人空间 </span> <span class="menu-arrow"></span></a>
                                 <ul class="list-unstyled">
-                                    <li><a href="#" onclick="getUrl('/infinite/zone/myZone.html')">我的空间</a></li>
-                                    <li><a href="#" onclick="getUrl('/infinite/atc/myAtc.html')">我的手记</a></li>
-                                    <li><a href="#" onclick="getUrl('/infinite/ask/myAsk.html')">我的猿问</a></li>
-                                    <li><a href="#">我的代码库</a></li>
+                                    <li><a href="#" onclick="getUrl('/infinite/myZone.html')">我的空间</a></li>
+                                    <li><a href="#" onclick="getUrl('/infinite/myAtc.html')">我的手记</a></li>
+                                    <li><a href="#" onclick="getUrl('/infinite/myAsk.html')">我的猿问</a></li>
+                                    <li><a href="#" onclick="getUrl('/infinite/myCode.html')">我的代码块</a></li>
                                 </ul>
                             </li>
 
@@ -164,12 +164,13 @@
             <div class="content-page">
                 <!-- Start content -->
                 <div id="contentHtml" class="content">
-                    <iframe id="main-frame" frameborder="0" scrolling="no" onload="changeFrameHeight()" src="" width="100%"></iframe>
+                    <iframe id="main-frame" frameborder="0" scrolling="no" src="" width="100%"></iframe>
                 </div> <!-- content -->
-
+                <!--
                 <footer class="footer text-right">
                     2019 © BinkerKing.
                 </footer>
+                -->
             </div>
 
 
@@ -214,49 +215,22 @@
         <script src="/temp1/plugins/waypoints/jquery.waypoints.min.js"></script>
         <script src="/temp1/plugins/counterup/jquery.counterup.min.js"></script>
 
-        <!--Morris Chart-->
-		<script src="/temp1/plugins/morris/morris.min.js"></script>
-		<script src="/temp1/plugins/raphael/raphael-min.js"></script>
-
-        <!-- Dashboard init -->
-        <script src="/temp1/assets/pages/jquery.dashboard.js"></script>
-
         <!-- App js -->
         <script src="/temp1/assets/js/jquery.core.js"></script>
         <script src="/temp1/assets/js/jquery.app.js"></script>
 
         <!-- 初始化  -->
         <script>
+        var min_height = document.documentElement.clientHeight - 70;
         $(function(){
-            getUrl('/infinite/zone/myZone.html');
+            getUrl('/infinite/myAtc.html');
         });
 
         function getUrl(url){
-            // document.getElementById("main-frame").style.height = "0px";//最好设置为minHeight
+            $('#main-frame').attr('height',min_height+"px");
             $('#main-frame').attr('src',url);
         }
 
-        function changeFrameHeight(){
-            var iframe = document.getElementById("main-frame");
-            var nomal_height = 200;
-            var min_height = document.documentElement.clientHeight - 140;//屏幕的高度-下面foot的宽度
-            // var bHeight = iframe.contentWindow.document.body.scrollHeight;
-            // var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-            // var height = Math.max(bHeight, dHeight);
-            // iframe.height = height;
-            
-            
-            if(nomal_height < min_height){
-                iframe.height = min_height;
-            }else{
-                iframe.height = nomal_height;
-            }
-            
-        }
-
-        window.onresize=function(){  
-            changeFrameHeight();  
-        }      
         </script>
 
     </body>
