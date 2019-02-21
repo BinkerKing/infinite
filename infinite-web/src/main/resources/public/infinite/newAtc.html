@@ -1,123 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
-    <meta name="author" content="Coderthemes">
-    <!-- App favicon -->
-    <link rel="shortcut icon" href="/temp1/assets/images/favicon.ico">
-    <!-- App title -->
-    <title>Zircos - Responsive Admin Dashboard Template</title>
-    <!-- Summernote css -->
-    <link href="/temp1/plugins/summernote/summernote.css" rel="stylesheet" />
-    <!-- App css -->
-    <link href="/temp1/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/core.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/components.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/icons.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/pages.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/menu.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/responsive.css" rel="stylesheet" type="text/css" />
+	<meta charset="utf-8" />
+	<title>Infinite - 我的文章</title>
+	<meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<link type="include" href="/common/depjs.html" />
+	<link type="include" href="/common/depcss.html" />
+
+	<!-- style -->
+	<link rel="stylesheet" href="/temp2/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+	<!-- build:css ../assets/styles/app.min.css -->
+	<link rel="stylesheet" href="/temp2/assets/styles/app.css" type="text/css" />
+	<!-- endbuild -->
+	<link rel="stylesheet" href="/temp2/assets/styles/font.css" type="text/css" />
+	<!-- Summernote css -->
+	<link href="/temp1/plugins/summernote/summernote.css" rel="stylesheet" />
+
+	<!-- Plugins css-->
+	<link href="/temp1/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+	<link href="/temp1/plugins/multiselect/css/multi-select.css"  rel="stylesheet" type="text/css" />
+	<link href="/temp1/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+	<link href="/temp1/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+
+	<!-- App css -->
+	<link href="/temp1/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/core.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/components.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/icons.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/pages.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/menu.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/responsive.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="/temp1/plugins/switchery/switchery.min.css">
+
 </head>
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="page-title-box">
-					<div class="clearfix"></div>
+<div class="row-col">
+	<div class="col-sm w w-auto-xs light lt bg-auto">
+		<div class="padding pos-rlt">
+			<button class="btn btn-outline btn-primary btn-block"
+					onclick="save()">保存</button>
+			<div class="hidden-xs-down m-t" id="inbox-menu">
+				<div class="nav-active-primary">
+					<div class="nav nav-pills nav-sm flex-column">
+						<select class="selectpicker show-tick" data-style="btn-success">
+							<option>Mustard</option>
+							<option>Ketchup</option>
+							<option>Relish</option>
+						</select>
+					</div>
+				</div>
+				<div class="m-y">Labels</div>
+				<div class="nav-active-white">
+					<ul class="nav nav-pills nav-stacked nav-sm">
+						<li class="nav-item"><a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-primary"></i> Angular
+						</a> <a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-info"></i> Bootstrap
+						</a> <a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-warn"></i> Client
+						</a> <a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-accent"></i> Work
+						</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
-	
-		<div class="row">
-			<div class="col-sm-12">
-				<input id="title" type="text" class="form-control form-control-sm"
-					placeholder="New label" required>
+	</div>
+	<div class="col-sm">
+		<div ui-view class="padding pos-rlt">
+			<!-- header -->
+			<div class="m-b">
+				<div class="btn-toolbar">
+					<input id="title" type="text" class="form-control" placeholder="Title">
+				</div>
+			</div>
+			<!-- / header -->
+
+			<!-- list -->
+			<div class="list white">
 				<div class="summernote"></div>
 			</div>
+			<!-- / list -->
 		</div>
 	</div>
-	<!-- container -->
+</div>
 </body>
-<!-- jQuery  -->
-<script src="/temp1/assets/js/jquery.min.js"></script>
-<script src="/temp1/assets/js/bootstrap.min.js"></script>
-<script src="/temp1/assets/js/detect.js"></script>
-<script src="/temp1/assets/js/fastclick.js"></script>
-<script src="/temp1/assets/js/jquery.blockUI.js"></script>
-<script src="/temp1/assets/js/waves.js"></script>
-<script src="/temp1/assets/js/jquery.slimscroll.js"></script>
-<script src="/temp1/assets/js/jquery.scrollTo.min.js"></script>
-<script src="/temp1/plugins/switchery/switchery.min.js"></script>
-<!--Summernote js-->
-<script src="/temp1/plugins/summernote/summernote.min.js"></script>
-<!-- App js -->
-<script src="/temp1/assets/js/jquery.core.js"></script>
-<script src="/temp1/assets/js/jquery.app.js"></script>
-<script src="/temp1/assets/js/modernizr.min.js"></script>
+<!-- jQuery -->
+<script src="/temp2/libs/jquery/jquery/dist/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/temp2/libs/jquery/tether/dist/js/tether.min.js"></script>
+<script src="/temp2/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+<!-- core -->
+<script src="/temp2/libs/jquery/PACE/pace.min.js"></script>
 <script src="/core/js/view.js"></script>
 <script src="/core/js/base.js"></script>
 <script src="/core/js/tmpl.js"></script>
+<script src="/tools/arttemplate/libs/template-web.js"></script>
+<!--Summernote js-->
+<script src="/temp1/plugins/summernote/summernote.min.js"></script>
+
+<script src="/temp1/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="/temp1/plugins/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
+<script src="/temp1/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js" type="text/javascript"></script>
+<script src="/temp1/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
+<script src="/temp1/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
+
 <script>
-var resizefunc = [];
-$(function(){
-    $('.summernote').summernote({
-        height: 550,                 // set editor height
-        minHeight: null,             // set minimum height of editor
-        maxHeight: null,             // set maximum height of editor
-        focus: false                 // set focus to editable area after initializing summernote
-    });
+	var resizefunc = [];
 
-    $('.inline-editor').summernote({
-        airMode: true
-    });
-});
+	$(function(){
+		$('.summernote').summernote({
+			height: 480,                 // set editor height
+			minHeight: null,             // set minimum height of editor
+			maxHeight: null,             // set maximum height of editor
+			focus: false                 // set focus to editable area after initializing summernote
+		});
 
-//Alt+S 保存
-jQuery(document).keydown(function(e) {
-	if(e.which == 83 && e.altKey) {
-		show();
+		$('.inline-editor').summernote({
+			airMode: false
+		});
+	});
+
+	function save(){
+		window.parent.getUrl("/infinite/myAtc.html");
 	}
-	if(e.which == 68 && e.altKey) {
-		empty();
+
+	//Alt+S 保存
+	jQuery(document).keydown(function(e) {
+		if(e.which == 83 && e.altKey) {
+			show();
+		}
+		if(e.which == 68 && e.altKey) {
+			empty();
+		}
+		if(e.which == 67 && e.altKey) {
+			copy();
+		}
+		if(e.which == 86 && e.altKey) {
+			prase();
+		}
+	});
+
+	var test = "";
+
+	function show(){
+		var content = $('.summernote').summernote('code');
+		View.info(content);
 	}
-	if(e.which == 67 && e.altKey) {
-		copy();
+
+	function empty(){
+		$('.summernote').summernote('code',"");
 	}
-	if(e.which == 86 && e.altKey) {
-		prase();
+	function copy(){
+		test = $('.summernote').summernote('code');
 	}
-});
+	function prase(){
+		$('.summernote').summernote('code',test);
+	}
 
-function show(){
-	var content = $('.summernote').summernote('code');
-	View.info(content);
-}
-
-var test = "";
-
-function empty(){
-	$('.summernote').summernote('code',"");
-}
-function copy(){
-	test = $('.summernote').summernote('code');
-}
-function prase(){
-	$('.summernote').summernote('code',test);
-}
-
-// 计算页面的实际高度，iframe自适应会用到
-function calcPageHeight(doc) {
-    var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight);
-    var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
-    var height  = Math.max(cHeight, sHeight)
-    return height
-}
-window.onload = function() {
-    var height = calcPageHeight(window.document);
-    window.parent.document.getElementById('main-frame').style.height = height + 'px';
-}
 </script>
 </html>

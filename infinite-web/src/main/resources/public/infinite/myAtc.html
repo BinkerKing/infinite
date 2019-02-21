@@ -10,17 +10,28 @@
 	<link type="include" href="/common/depjs.html" />
     <link type="include" href="/common/depcss.html" />
 
-	<!-- style -->
-	<link rel="stylesheet" href="/temp2/assets/animate.css/animate.min.css" type="text/css" />
-	<link rel="stylesheet" href="/temp2/assets/glyphicons/glyphicons.css" type="text/css" />
-	<link rel="stylesheet" href="/temp2/assets/font-awesome/css/font-awesome.min.css" type="text/css" />
-	<link rel="stylesheet" href="/temp2/assets/material-design-icons/material-design-icons.css" type="text/css" />
-	
-	<link rel="stylesheet" href="/temp2/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
 	<!-- build:css ../assets/styles/app.min.css -->
 	<link rel="stylesheet" href="/temp2/assets/styles/app.css" type="text/css" />
 	<!-- endbuild -->
 	<link rel="stylesheet" href="/temp2/assets/styles/font.css" type="text/css" />
+
+	<!-- Plugins css-->
+	<link href="/temp1/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+	<link href="/temp1/plugins/multiselect/css/multi-select.css"  rel="stylesheet" type="text/css" />
+	<link href="/temp1/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+	<link href="/temp1/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+
+	<!-- App css -->
+	<link href="/temp1/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/core.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/components.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/icons.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/pages.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/menu.css" rel="stylesheet" type="text/css" />
+	<link href="/temp1/assets/css/responsive.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/temp1/plugins/switchery/switchery.min.css">
+
 	<!-- jQuery -->
 	<script src="/temp2/libs/jquery/jquery/dist/jquery.js"></script>
 	<!-- Bootstrap -->
@@ -31,25 +42,19 @@
 	<script src="/core/js/view.js"></script>
 	<script src="/core/js/base.js"></script>
 	<script src="/core/js/tmpl.js"></script>
-	<script src="/tools/arttemplate/lib/template-web.js"></script>
+	<script src="/tools/arttemplate/libs/template-web.js"></script>
+	<script src="/temp2/assets/js/modernizr.min.js"></script>
 </head>
 <body>
 	<div class="row-col">
 		<div class="col-sm w w-auto-xs light lt bg-auto">
 			<div class="padding pos-rlt">
-				<div>
-					<button class="btn btn-sm white pull-right hidden-sm-up"
-						ui-toggle-class="show" target="#inbox-menu">
-						<i class="fa fa-bars"></i>
-					</button>
-					<button class="btn btn-outline b-primary text-primary btn-lg"
+				<button class="btn btn-outline btn-primary btn-block"
 						onclick="addAtc()">写文章</button>
-				</div>
 				<div class="hidden-xs-down m-t" id="inbox-menu">
 					<div class="nav-active-primary">
 						<div class="nav nav-pills nav-sm flex-column">
-							<a class="nav-link"> Inbox </a> <a class="nav-link"> Starred
-							</a> <a class="nav-link"> Sent </a>
+
 						</div>
 					</div>
 					<div class="m-y">Labels</div>
@@ -71,21 +76,14 @@
 		</div>
 		<div class="col-sm">
 			<div ui-view class="padding pos-rlt">
-				<a href class="md-btn md-fab md-fab-bottom-right pos-fix red"> <i
-					class="material-icons i-24 text-white">&#xe150;</i>
+				<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addAtc()">
+					<i class="glyphicon glyphicon-pencil"></i>
 				</a>
 				<div>
 					<!-- header -->
 					<div class="m-b">
 						<div class="btn-toolbar">
 							<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
-							<div class="btn-group">
-								<button class="btn btn-sm white" data-toggle="tooltip"
-									data-placement="bottom" data-title="Refresh"
-									data-original-title="" title="">
-									<i class="fa fa-refresh"></i>
-								</button>
-							</div>
 						</div>
 					</div>
 					<!-- / header -->
@@ -102,28 +100,29 @@
 	</div>
 
 	<!-- 文章展示model -->
-	<div class="modal" id="myModal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="false">
-		<div class="modal-dialog modal-lg">
+	<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+		<div class="modal-dialog modal-full">
 			<div class="modal-content">
 				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 					<h4 class="modal-title" id="modalLabel">文章</h4>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
 				</div>
 				<div class="modal-body" id="_modalDialog_body">
-					<iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" height="600px" width="99.6%"></iframe>
+					<iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" width="99.6%"></iframe>
 				</div>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal -->
+				<div class="modal-footer">
+					<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="edit()">
+						<i class="glyphicon glyphicon-pencil"></i>
+					</a>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
 	</div>
+
 </body>
 <script type="text/javascript">
 /*全局变量区*/
+var min_height = document.documentElement.clientHeight - 200;//获取屏幕高度-头部高度
 var AuthorId = 1;
 var Status = 1;//1-所有 2-已发布 3-未发布
 
@@ -133,6 +132,7 @@ var UnPublishList = [];//未发布的
 /*初始化*/
 $(function(){
 	initAtcList();
+	$('#atcView').attr('height',min_height+"px");
 });
 
 /*监听区*/
@@ -146,19 +146,12 @@ $("#searchFilter").bind("input propertychange",function(){
 })
 
 /*方法区*/
-function getUrl(url){
-    $('#main-frame').attr('src',url);
+function addAtc(){
+	window.parent.getUrl("/infinite/newAtc.html");
 }
 
-function addAtc(){
-	window.parent.getUrl("/infinite/newAtc.html?atcId=1");
-}
-// 计算页面的实际高度，iframe自适应会用到
-function calcPageHeight(doc) {
-	var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight);
-	var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
-	var height  = Math.max(cHeight, sHeight);
-	return height;
+function edit(){
+	window.parent.getUrl("/infinite/newAtc.html");
 }
 
 /***数据获取***/
