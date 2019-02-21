@@ -1,225 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Flatkit - HTML Version | Bootstrap 4 Web App Kit with AngularJS</title>
-  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8" />
+	<title>Infinite - 我的文章</title>
+	<meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<link type="include" href="/common/depjs.html" />
+    <link type="include" href="/common/depcss.html" />
 
-  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
-  <link rel="apple-touch-icon" href="/temp2/assets/images/logo.png">
-  <meta name="apple-mobile-web-app-title" content="Flatkit">
-  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="shortcut icon" sizes="196x196" href="/temp2/assets/images/logo.png">
-  
-  <!-- style -->
-  <link rel="stylesheet" href="/temp2/assets/animate.css/animate.min.css" type="text/css" />
-  <link rel="stylesheet" href="/temp2/assets/glyphicons/glyphicons.css" type="text/css" />
-  <link rel="stylesheet" href="/temp2/assets/font-awesome/css/font-awesome.min.css" type="text/css" />
-  <link rel="stylesheet" href="/temp2/assets/material-design-icons/material-design-icons.css" type="text/css" />
-
-  <link rel="stylesheet" href="/temp2/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
-  <!-- build:css ../assets/styles/app.min.css -->
-  <link rel="stylesheet" href="/temp2/assets/styles/app.css" type="text/css" />
-  <!-- endbuild -->
-  <link rel="stylesheet" href="/temp2/assets/styles/font.css" type="text/css" />
+	<!-- style -->
+	<link rel="stylesheet" href="/temp2/assets/animate.css/animate.min.css" type="text/css" />
+	<link rel="stylesheet" href="/temp2/assets/glyphicons/glyphicons.css" type="text/css" />
+	<link rel="stylesheet" href="/temp2/assets/font-awesome/css/font-awesome.min.css" type="text/css" />
+	<link rel="stylesheet" href="/temp2/assets/material-design-icons/material-design-icons.css" type="text/css" />
+	
+	<link rel="stylesheet" href="/temp2/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+	<!-- build:css ../assets/styles/app.min.css -->
+	<link rel="stylesheet" href="/temp2/assets/styles/app.css" type="text/css" />
+	<!-- endbuild -->
+	<link rel="stylesheet" href="/temp2/assets/styles/font.css" type="text/css" />
+	<!-- jQuery -->
+	<script src="/temp2/libs/jquery/jquery/dist/jquery.js"></script>
+	<!-- Bootstrap -->
+	<script src="/temp2/libs/jquery/tether/dist/js/tether.min.js"></script>
+	<script src="/temp2/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+	<!-- core -->
+	<script src="/temp2/libs/jquery/PACE/pace.min.js"></script>
+	<script src="/core/js/view.js"></script>
+	<script src="/core/js/base.js"></script>
+	<script src="/core/js/tmpl.js"></script>
+	<script src="/tools/arttemplate/lib/template-web.js"></script>
 </head>
 <body>
-<!-- ############ PAGE START-->
-<div class="row-col">
-  <div class="col-sm w w-auto-xs light lt bg-auto">
-    <div class="padding pos-rlt">
-      <div>
-        <button class="btn btn-sm white pull-right hidden-sm-up" ui-toggle-class="show" target="#inbox-menu"><i class="fa fa-bars"></i></button>
-        <button class="btn btn-outline b-primary text-primary btn-lg" onclick="addAtc()">写文章</button>
-      </div>
-      <div class="hidden-xs-down m-t" id="inbox-menu">
-        <div class="nav-active-primary">
-          <div class="nav nav-pills nav-sm flex-column">
-              <a class="nav-link">
-                Inbox
-              </a>
-              <a class="nav-link">
-                Starred
-              </a>
-              <a class="nav-link">
-                Sent
-              </a>
-          </div>
-        </div>
-        <div class="m-y">Labels</div>
-        <div class="nav-active-white">
-          <ul class="nav nav-pills nav-stacked nav-sm">
-            <li class="nav-item">
-              <a class="nav-link">
-                <i class="fa m-r-sm fa-circle text-primary" ></i>
-                Angular
-              </a>
-              <a class="nav-link">
-                <i class="fa m-r-sm fa-circle text-info" ></i>
-                Bootstrap
-              </a>
-              <a class="nav-link">
-                <i class="fa m-r-sm fa-circle text-warn" ></i>
-                Client
-              </a>
-              <a class="nav-link">
-                <i class="fa m-r-sm fa-circle text-accent" ></i>
-                Work
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="p-y">
-          <form name="label">
-            <div class="input-group">
-              <input type="text" class="form-control form-control-sm" placeholder="New label" required>
-              <span class="input-group-btn">
-                <button class="btn btn-default btn-sm no-shadow" type="button">Add</button>
-              </span>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm">
-    <div ui-view class="padding pos-rlt">
-      <a href class="md-btn md-fab md-fab-bottom-right pos-fix red">
-        <i class="material-icons i-24 text-white">&#xe150;</i>
-      </a>
-      <div>
-        <!-- header -->
-        <div class="m-b">
-          <div class="btn-toolbar">
-            <input type="text" class="form-control" placeholder="Say something">
-            <div class="btn-group">
-              <button class="btn btn-sm white" data-toggle="tooltip" data-placement="bottom" data-title="Refresh" data-original-title="" title=""><i class="fa fa-refresh"></i></button>
-            </div>
-          </div>
-        </div>
-        <!-- / header -->
+	<div class="row-col">
+		<div class="col-sm w w-auto-xs light lt bg-auto">
+			<div class="padding pos-rlt">
+				<div>
+					<button class="btn btn-sm white pull-right hidden-sm-up"
+						ui-toggle-class="show" target="#inbox-menu">
+						<i class="fa fa-bars"></i>
+					</button>
+					<button class="btn btn-outline b-primary text-primary btn-lg"
+						onclick="addAtc()">写文章</button>
+				</div>
+				<div class="hidden-xs-down m-t" id="inbox-menu">
+					<div class="nav-active-primary">
+						<div class="nav nav-pills nav-sm flex-column">
+							<a class="nav-link"> Inbox </a> <a class="nav-link"> Starred
+							</a> <a class="nav-link"> Sent </a>
+						</div>
+					</div>
+					<div class="m-y">Labels</div>
+					<div class="nav-active-white">
+						<ul class="nav nav-pills nav-stacked nav-sm">
+							<li class="nav-item"><a class="nav-link"> <i
+									class="fa m-r-sm fa-circle text-primary"></i> Angular
+							</a> <a class="nav-link"> <i
+									class="fa m-r-sm fa-circle text-info"></i> Bootstrap
+							</a> <a class="nav-link"> <i
+									class="fa m-r-sm fa-circle text-warn"></i> Client
+							</a> <a class="nav-link"> <i
+									class="fa m-r-sm fa-circle text-accent"></i> Work
+							</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm">
+			<div ui-view class="padding pos-rlt">
+				<a href class="md-btn md-fab md-fab-bottom-right pos-fix red"> <i
+					class="material-icons i-24 text-white">&#xe150;</i>
+				</a>
+				<div>
+					<!-- header -->
+					<div class="m-b">
+						<div class="btn-toolbar">
+							<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
+							<div class="btn-group">
+								<button class="btn btn-sm white" data-toggle="tooltip"
+									data-placement="bottom" data-title="Refresh"
+									data-original-title="" title="">
+									<i class="fa fa-refresh"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+					<!-- / header -->
 
-        <!-- list -->
-        <div class="list white">
-          <div class="list-item b-l b-l-2x b-info">
-            <div class="list-left">
-              <span class="w-40 avatar">
-                <img src="/temp2/assets/images/a0.jpg">
-              </span>
-            </div>
-            <div class="list-body">
-              <div class="pull-right text-muted text-xs">
-                <span class="hidden-xs">5, July</span>
-                <i class="fa fa-paperclip m-l-sm"></i>
-              </div>
-              <div>
-                <a href class="_500" data-toggle="modal" data-target="#myModal">Bootstrap components written in pure AngularJS</a>
-                <span class="label label-xs m-l-sm text-u-c">Bootstrap</span>
-              </div>
-              <div class="text-ellipsis text-muted text-sm">Retur adipiscing elit. Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper Neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat.</div>
-            </div>
-          </div>
-          <div class="list-item b-l b-l-2x b-warning">
-            <div class="list-left">
-              <span class="w-40 avatar">
-                <img src="/temp2/assets/images/a1.jpg">
-              </span>
-            </div>
-            <div class="list-body">
-              <div class="pull-right text-muted text-xs">
-                <span class="hidden-xs">5, July</span>
-                <i class="fa fa-paperclip m-l-sm"></i>
-              </div>
-              <div>
-                <a href class="_500">Nesting view in Angular</a>
-                <span class="label label-xs m-l-sm text-u-c">AngularJS</span>
-              </div>
-              <div class="text-ellipsis text-muted text-sm">Neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat.</div>
-            </div>
-          </div>
-          <div class="list-item b-l b-l-2x">
-            <div class="list-left">
-              <span class="w-40 avatar">
-                <img src="/temp2/assets/images/a9.jpg">
-              </span>
-            </div>
-            <div class="list-body">
-              <div class="pull-right text-muted text-xs">
-                <span class="hidden-xs">5, July</span>
-                <i class="fa fa-paperclip m-l-sm"></i>
-              </div>
-              <div>
-                <a href class="_500">Bootstrap 4 Coming</a>
-                <span class="label label-xs m-l-sm text-u-c">Bootstrap</span>
-              </div>
-              <div class="text-ellipsis text-muted text-sm">Aww yeah, Bootstrap 4 is coming! </div>
-            </div>
-          </div>
-        </div>
-        <!-- / list -->
-      </div>
+					<!-- list -->
+					<div class="list white">
+						<div id="atcListDiv"></div>
+					</div>
+					<!-- / list -->
+				</div>
 
-    </div>
-  </div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 文章展示model -->
+	<div class="modal" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="false">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modalLabel">文章</h4>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body" id="_modalDialog_body">
+					<iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" height="600px" width="99.6%"></iframe>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+</body>
+<script type="text/javascript">
+/*全局变量区*/
+var AuthorId = 1;
+var Status = 1;//1-所有 2-已发布 3-未发布
+
+var AtcList = [];//所有的
+var PublishList = [];//已发布的
+var UnPublishList = [];//未发布的
+/*初始化*/
+$(function(){
+	initAtcList();
+});
+
+/*监听区*/
+//监听搜索框的回车
+$('#searchFilter').bind('keypress',function(e){ 
+	if(e.keyCode == 13)      
+		searchByTitle();
+});
+$("#searchFilter").bind("input propertychange",function(){
+	searchByTitle();
+})
+
+/*方法区*/
+function getUrl(url){
+    $('#main-frame').attr('src',url);
+}
+
+function addAtc(){
+	window.parent.getUrl("/infinite/newAtc.html?atcId=1");
+}
+// 计算页面的实际高度，iframe自适应会用到
+function calcPageHeight(doc) {
+	var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight);
+	var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
+	var height  = Math.max(cHeight, sHeight);
+	return height;
+}
+
+/***数据获取***/
+//获取所有文章列表，并初始化全局变量
+function initAtcList(){
+	var url = "http://localhost:8081/" + "MyAtcController/getMyAtcList";
+	var param = {
+		authorId : AuthorId,
+		status : 1,
+		search : "",
+		lable : ""
+	};
+	View.post(url,param,function(resp){
+		AtcList = resp;
+		reload_AtcListTmpl(resp);
+	},function(){
+		
+	});
+}
+
+//全局变量搜索:标题搜索
+function searchByTitle(){
+	var titleSearch = $("#searchFilter").val();
+	if(titleSearch == ""){
+		reload_AtcListTmpl(AtcList);
+		return;
+	}
+	var searchList=[];
+	for(var i=0;i<AtcList.length;i++){
+		if(AtcList[i].titleInfo.indexOf(titleSearch)!=-1){
+			searchList.push(AtcList[i]);
+		}
+	}
+	reload_AtcListTmpl(searchList);
+}
+
+//通过id获取文章信息
+function getInfoById(id){
+	for(var i=0;i<AtcList.length;i++){
+		if(AtcList[i].id==id){
+			return AtcList[i];
+		}
+	}
+}
+
+/***页面渲染***/
+//渲染文章列表模板
+function reload_AtcListTmpl(list){
+	var data = {};
+	data.list = list;
+	var temp = new Tmpl("atcListTmpl",data);
+	temp.reset("atcListDiv");
+}
+</script>
+<script id="atcListTmpl" type="text/html">
+{{each list}}  
+<div class="list-item b-l b-l-2x b-info">
+	<div class="list-left">
+		<span class="w-40 avatar"> <img src="/temp2/assets/images/a0.jpg">
+		</span>
+	</div>
+	<div class="list-body">
+		<div class="pull-right text-muted text-xs">
+			<span class="hidden-xs">5, July</span> <i
+				class="fa fa-paperclip m-l-sm"></i>
+		</div>
+		<div>
+			<a href class="_500" data-toggle="modal" data-target="#myModal">{{$value.titleInfo}}</a>
+			<span class="label label-xs m-l-sm text-u-c">Bootstrap</span>
+		</div>
+		<div class="text-ellipsis text-muted text-sm">描述</div>
+	</div>
 </div>
-
-<!-- 文章展示model -->
-<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalLabel">文章</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div class="modal-body" id="_modalDialog_body">
-              <iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" width="99.6%"></iframe>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-
-<!-- build:js scripts/app.html.js -->
-<!-- jQuery -->
-  <script src="/temp2/libs/jquery/jquery/dist/jquery.js"></script>
-<!-- Bootstrap -->
-  <script src="/temp2/libs/jquery/tether/dist/js/tether.min.js"></script>
-  <script src="/temp2/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
-<!-- core -->
-  <script src="/temp2/libs/jquery/PACE/pace.min.js"></script>
-  <script type="text/javascript">
-  // function openModal(){
-  //     $('iframe').attr("src","");
-  //     $('#myModal').modal({backdrop:false});//false：表示单击模态框以外区域不关闭模态框
-  // }
-  // window.addEventListener('message', receiveMessage, false);
-  // function receiveMessage(evt) {
-  //     var taskData = $.parseJSON(evt.data);
-  //     if(taskData.opt=="C"){
-  //         $("#myModal").modal("hide");
-  //     }
-  // }
-
-  function addAtc(){
-    window.parent.getUrl("/infinite/newAtc.html");
-  }
-
-  // 计算页面的实际高度，iframe自适应会用到
-  function calcPageHeight(doc) {
-    var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
-    var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
-    var height  = Math.max(cHeight, sHeight)
-    return height
-  }
-  window.onload = function() {
-    var height = calcPageHeight(document);
-    parent.document.getElementById('main-frame').style.height = height + 'px';
-  }
-  </script>
-<!-- endbuild -->
-</body></html>
+{{/each}}
+</script>
+</html>
