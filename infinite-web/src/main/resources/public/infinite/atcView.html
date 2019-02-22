@@ -2,9 +2,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Infinite - 查看文章</title>
+    
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="stylesheet" type="text/css" href="/temp1/assets/css/bootstrap.min.css"/><!-- bootstrap -->
 </head>
 <body>
-<div class="wrapper wrapper-content  animated fadeInRight article">
+<div id="atcViewBody" class="wrapper wrapper-content animated fadeInRight article">
     <div class="row justify-content-md-center">
         <div class="col-lg-10">
             <div id="atcViewDiv"></div>
@@ -12,19 +18,24 @@
     </div>
 </div>
 </body>
-<!-- App js -->
-<script src="/temp2/libs/jquery/jquery/dist/jquery.js"></script>
-<script src="/tools/arttemplate/libs/template-web.js"></script>
-<script src="/core/js/view.js"></script>
-<script src="/core/js/base.js"></script>
-<script src="/core/js/tmpl.js"></script>
 <script>
 var atcId = View.getQStr("atcId");
 $(function(){
 	initAtcView();
+	$("#atcViewBody").slimScroll({
+		width: 'auto', //可滚动区域宽度
+		height: '100%' //可滚动区域高度
+	});
 });
+function setScroll(){
+	$("#atcViewBody").slimScroll({
+		alwaysVisible: true
+	});
+}
+$(window).on("resize",setScroll);
+
 function initAtcView(){
-	var url = "http://localhost:8081/" + "MyAtcController/getMyAtcView";
+	var url = "http://localhost:8083/" + "MyAtcController/getMyAtcView";
 	var param = "id="+ 1;
 	View.get(url,param,function(resp){
 		var data = {};
@@ -35,7 +46,6 @@ function initAtcView(){
 		
 	});
 }
-
 </script>
 <script id="atcViewTmpl" type="text/html">
 <div class="ibox">

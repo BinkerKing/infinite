@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
     <meta name="author" content="Coderthemes">
-    <link type="include" href="/common/depjs.html" />
-    <link type="include" href="/common/depcss.html" />
-    <!-- App favicon -->
-	<link rel="shortcut icon" href="/temp1/assets/images/favicon.ico">
-	<!-- App title -->
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+	<link rel="shortcut icon" href="/temp1/assets/images/favicon.ico"><!-- App favicon -->
+	
 	<title>Infinite - 首页</title>
-
-    <!-- App css -->
-    <link href="/temp1/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/core.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/components.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/icons.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/pages.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/menu.css" rel="stylesheet" type="text/css" />
-    <link href="/temp1/assets/css/responsive.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="/temp1/plugins/switchery/switchery.min.css">
+	
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/bootstrap.min.css"/><!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/temp1/assets/css/core.css"/>
+    <link rel="stylesheet" type="text/css" href="/temp1/assets/css/components.css"/>
+    <link rel="stylesheet" type="text/css" href="/temp1/assets/css/icons.css"/>
+    <link rel="stylesheet" type="text/css" href="/temp1/assets/css/pages.css"/>
+    <link rel="stylesheet" type="text/css" href="/temp1/assets/css/menu.css"/>
+    <link rel="stylesheet" type="text/css" href="/temp1/assets/css/responsive.css"/><!-- 响应式导航样式 -->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css"/><!-- 复选框样式 -->
 </head>
 <body class="fixed-left">
     <!-- Begin page -->
@@ -189,26 +187,23 @@
     </div>
     <!-- END wrapper -->
 </body>
-<script src="/temp1/assets/js/modernizr.min.js"></script>
 <!-- jQuery  -->
-<script src="/temp1/assets/js/jquery.min.js"></script>
-<script src="/temp1/assets/js/bootstrap.min.js"></script>
-<script src="/temp1/assets/js/detect.js"></script>
-<script src="/temp1/assets/js/fastclick.js"></script>
-<script src="/temp1/assets/js/jquery.blockUI.js"></script>
-<script src="/temp1/assets/js/waves.js"></script>
-<script src="/temp1/assets/js/jquery.slimscroll.js"></script>
-<script src="/temp1/assets/js/jquery.scrollTo.min.js"></script>
-<script src="/temp1/plugins/switchery/switchery.min.js"></script>
+<script src="/temp1/assets/js/detect.js"></script><!-- 检测浏览器和操作系统 -->
+<script src="/temp1/assets/js/modernizr.min.js"></script><!-- 用来检测浏览器功能支持情况 -->
+<script src="/temp1/assets/js/fastclick.js"></script><!-- 去掉移动端click事件的300ms的延迟。 -->
+<script src="/temp1/assets/js/waves.js"></script><!-- 点击效果插件 -->
+<script src="/temp1/assets/js/jquery.scrollTo.min.js"></script><!-- 平滑滚动插件 -->
+<script src="/temp1/assets/js/jquery.blockUI.js"></script><!-- 遮罩插件 -->
+<script src="/temp1/plugins/switchery/switchery.min.js"></script><!-- 复选框插件 -->
 <!-- Counter js  -->
-<script src="/temp1/plugins/waypoints/jquery.waypoints.min.js"></script>
-<script src="/temp1/plugins/counterup/jquery.counterup.min.js"></script>
+<script src="/temp1/plugins/waypoints/jquery.waypoints.min.js"></script><!-- 滚动监听插件 -->
+<script src="/temp1/plugins/counterup/jquery.counterup.min.js"></script><!-- 数字动画插件 -->
 <!-- App js -->
-<script src="/temp1/assets/js/jquery.core.js"></script>
+<script src="/temp1/assets/js/jquery.core.js"></script><!-- JQUERY核心 -->
 <script src="/temp1/assets/js/jquery.app.js"></script>
 <script>
 /*全局变量区*/
-var min_height = document.documentElement.clientHeight - 70;//获取屏幕高度-头部高度
+var min_height = document.documentElement.clientHeight - 86;//获取屏幕高度-头部高度
 var resizefunc = [];
 /*初始化*/
 $(function(){

@@ -2,123 +2,108 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Infinite - 我的文章</title>
+	<title>Infinite - 我的手记列表</title>
 	<meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
-	<link type="include" href="/common/depjs.html" />
-    <link type="include" href="/common/depcss.html" />
+	<link rel="stylesheet" type="text/css" href="/temp2/assets/styles/app.css" /><!--模板二的样式 -->
 
-	<!-- build:css ../assets/styles/app.min.css -->
-	<link rel="stylesheet" href="/temp2/assets/styles/app.css" type="text/css" />
-	<!-- endbuild -->
-	<link rel="stylesheet" href="/temp2/assets/styles/font.css" type="text/css" />
-
-	<!-- Plugins css-->
-	<link href="/temp1/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
-	<link href="/temp1/plugins/multiselect/css/multi-select.css"  rel="stylesheet" type="text/css" />
-	<link href="/temp1/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
-	<link href="/temp1/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
-
+	<!-- 插件 css-->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-select/css/bootstrap-select.min.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/multiselect/css/multi-select.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/select2/css/select2.min.css" />
+	
 	<!-- App css -->
-	<link href="/temp1/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/core.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/components.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/icons.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/pages.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/menu.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/responsive.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="/temp1/plugins/switchery/switchery.min.css">
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/bootstrap.min.css"/><!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/core.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/components.css" /><!--图标样式 -->
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/icons.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/pages.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/menu.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/responsive.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css "><!--复选框样式 -->
 
-	<!-- jQuery -->
-	<script src="/temp2/libs/jquery/jquery/dist/jquery.js"></script>
-	<!-- Bootstrap -->
-	<script src="/temp2/libs/jquery/tether/dist/js/tether.min.js"></script>
-	<script src="/temp2/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
-	<!-- core -->
-	<script src="/temp2/libs/jquery/PACE/pace.min.js"></script>
-	<script src="/core/js/view.js"></script>
-	<script src="/core/js/base.js"></script>
-	<script src="/core/js/tmpl.js"></script>
-	<script src="/tools/arttemplate/libs/template-web.js"></script>
-	<script src="/temp2/assets/js/modernizr.min.js"></script>
+	<link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+	<link rel="import" href="/common/form-js.html" />
 </head>
 <body>
-	<div class="row-col">
-		<div class="col-sm w w-auto-xs light lt bg-auto">
-			<div class="padding pos-rlt">
-				<button class="btn btn-outline btn-primary btn-block"
-						onclick="addAtc()">写文章</button>
-				<div class="hidden-xs-down m-t" id="inbox-menu">
-					<div class="nav-active-primary">
-						<div class="nav nav-pills nav-sm flex-column">
-
-						</div>
+<div class="row-col">
+	<div class="col-sm w w-auto-xs light lt bg-auto">
+		<div class="padding pos-rlt">
+			<button class="btn btn-outline btn-primary btn-block"
+					onclick="addAtc()">写文章</button>
+			<div class="hidden-xs-down m-t" id="inbox-menu">
+				<div class="nav-active-primary">
+					<div class="nav nav-pills nav-sm flex-column">
+						<select class="selectpicker show-tick" data-style="btn-success">
+								<option>Mustard</option>
+								<option>Ketchup</option>
+								<option>Relish</option>
+						</select>
 					</div>
-					<div class="m-y">Labels</div>
-					<div class="nav-active-white">
-						<ul class="nav nav-pills nav-stacked nav-sm">
-							<li class="nav-item"><a class="nav-link"> <i
-									class="fa m-r-sm fa-circle text-primary"></i> Angular
-							</a> <a class="nav-link"> <i
-									class="fa m-r-sm fa-circle text-info"></i> Bootstrap
-							</a> <a class="nav-link"> <i
-									class="fa m-r-sm fa-circle text-warn"></i> Client
-							</a> <a class="nav-link"> <i
-									class="fa m-r-sm fa-circle text-accent"></i> Work
-							</a></li>
-						</ul>
-					</div>
+				</div>
+				<div class="m-y">Labels</div>
+				<div class="nav-active-white">
+					<ul class="nav nav-pills nav-stacked nav-sm">
+						<li class="nav-item"><a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-primary"></i> Angular
+						</a> <a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-info"></i> Bootstrap
+						</a> <a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-warn"></i> Client
+						</a> <a class="nav-link"> <i
+								class="fa m-r-sm fa-circle text-accent"></i> Work
+						</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm">
-			<div ui-view class="padding pos-rlt">
-				<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addAtc()">
+	</div>
+	<div class="col-sm">
+		<div ui-view class="padding pos-rlt">
+			<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addAtc()">
+				<i class="glyphicon glyphicon-pencil"></i>
+			</a>
+			<div>
+				<!-- header -->
+				<div class="m-b">
+					<div class="btn-toolbar">
+						<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
+					</div>
+				</div>
+				<!-- / header -->
+				<!-- list -->
+				<div class="list white">
+					<div id="atcListDiv"></div>
+				</div>
+				<!-- / list -->
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- 文章展示model -->
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+	<div class="modal-dialog modal-full">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				<h4 class="modal-title" id="modalLabel">文章</h4>
+			</div>
+			<div class="modal-body" id="_modalDialog_body">
+				<iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" width="99.6%"></iframe>
+				<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="edit()">
 					<i class="glyphicon glyphicon-pencil"></i>
 				</a>
-				<div>
-					<!-- header -->
-					<div class="m-b">
-						<div class="btn-toolbar">
-							<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
-						</div>
-					</div>
-					<!-- / header -->
-
-					<!-- list -->
-					<div class="list white">
-						<div id="atcListDiv"></div>
-					</div>
-					<!-- / list -->
-				</div>
-
 			</div>
-		</div>
-	</div>
-
-	<!-- 文章展示model -->
-	<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-		<div class="modal-dialog modal-full">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-					<h4 class="modal-title" id="modalLabel">文章</h4>
-				</div>
-				<div class="modal-body" id="_modalDialog_body">
-					<iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" width="99.6%"></iframe>
-				</div>
-				<div class="modal-footer">
-					<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="edit()">
-						<i class="glyphicon glyphicon-pencil"></i>
-					</a>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal -->
-	</div>
-
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
 </body>
 <script type="text/javascript">
 /*全局变量区*/
@@ -157,7 +142,7 @@ function edit(){
 /***数据获取***/
 //获取所有文章列表，并初始化全局变量
 function initAtcList(){
-	var url = "http://localhost:8081/" + "MyAtcController/getMyAtcList";
+	var url = "http://localhost:8083/" + "MyAtcController/getMyAtcList";
 	var param = {
 		authorId : AuthorId,
 		status : 1,

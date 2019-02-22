@@ -2,40 +2,35 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Infinite - 我的文章</title>
+	<title>Infinite - 新增手记</title>
 	<meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
 
-	<link type="include" href="/common/depjs.html" />
-	<link type="include" href="/common/depcss.html" />
+	<link rel="stylesheet" type="text/css" href="/temp2/assets/styles/app.css" /><!--模板二的样式 -->
 
-	<!-- style -->
-	<link rel="stylesheet" href="/temp2/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
-	<!-- build:css ../assets/styles/app.min.css -->
-	<link rel="stylesheet" href="/temp2/assets/styles/app.css" type="text/css" />
-	<!-- endbuild -->
-	<link rel="stylesheet" href="/temp2/assets/styles/font.css" type="text/css" />
-	<!-- Summernote css -->
-	<link href="/temp1/plugins/summernote/summernote.css" rel="stylesheet" />
-
-	<!-- Plugins css-->
-	<link href="/temp1/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
-	<link href="/temp1/plugins/multiselect/css/multi-select.css"  rel="stylesheet" type="text/css" />
-	<link href="/temp1/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
-	<link href="/temp1/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
-
+	<!-- 插件 css-->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-select/css/bootstrap-select.min.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/multiselect/css/multi-select.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/select2/css/select2.min.css" />
+	
 	<!-- App css -->
-	<link href="/temp1/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/core.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/components.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/icons.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/pages.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/menu.css" rel="stylesheet" type="text/css" />
-	<link href="/temp1/assets/css/responsive.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="/temp1/plugins/switchery/switchery.min.css">
-
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/bootstrap.min.css"/><!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/core.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/components.css" /><!--图标样式 -->
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/icons.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/pages.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/menu.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/responsive.css" />
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css "><!--复选框样式 -->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/summernote/summernote.css"/><!-- Summernote富文本框 css -->
+	
+	<script src="/temp1/plugins/summernote/summernote.min.js"></script><!-- Summernote富文本框 JS -->
 </head>
 <body>
 <div class="row-col">
@@ -46,11 +41,7 @@
 			<div class="hidden-xs-down m-t" id="inbox-menu">
 				<div class="nav-active-primary">
 					<div class="nav nav-pills nav-sm flex-column">
-						<select class="selectpicker show-tick" data-style="btn-success">
-							<option>Mustard</option>
-							<option>Ketchup</option>
-							<option>Relish</option>
-						</select>
+
 					</div>
 				</div>
 				<div class="m-y">Labels</div>
@@ -72,95 +63,95 @@
 	</div>
 	<div class="col-sm">
 		<div ui-view class="padding pos-rlt">
-			<!-- header -->
-			<div class="m-b">
-				<div class="btn-toolbar">
-					<input id="title" type="text" class="form-control" placeholder="Title">
+			<div>
+				<!-- header -->
+				<div class="m-b">
+					<div class="btn-toolbar">
+						<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
+					</div>
 				</div>
+				<!-- / header -->
+				<!-- list -->
+				<div class="list white">
+					<div class="summernote"></div>
+				</div>
+				<!-- / list -->
 			</div>
-			<!-- / header -->
 
-			<!-- list -->
-			<div class="list white">
-				<div class="summernote"></div>
-			</div>
-			<!-- / list -->
 		</div>
 	</div>
 </div>
 </body>
-<!-- jQuery -->
-<script src="/temp2/libs/jquery/jquery/dist/jquery.js"></script>
-<!-- Bootstrap -->
-<script src="/temp2/libs/jquery/tether/dist/js/tether.min.js"></script>
-<script src="/temp2/libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
-<!-- core -->
-<script src="/temp2/libs/jquery/PACE/pace.min.js"></script>
-<script src="/core/js/view.js"></script>
-<script src="/core/js/base.js"></script>
-<script src="/core/js/tmpl.js"></script>
-<script src="/tools/arttemplate/libs/template-web.js"></script>
-<!--Summernote js-->
-<script src="/temp1/plugins/summernote/summernote.min.js"></script>
-
-<script src="/temp1/plugins/select2/js/select2.min.js" type="text/javascript"></script>
-<script src="/temp1/plugins/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
-<script src="/temp1/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js" type="text/javascript"></script>
-<script src="/temp1/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
-<script src="/temp1/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
-
-<script>
-	var resizefunc = [];
-
-	$(function(){
-		$('.summernote').summernote({
-			height: 480,                 // set editor height
-			minHeight: null,             // set minimum height of editor
-			maxHeight: null,             // set maximum height of editor
-			focus: false                 // set focus to editable area after initializing summernote
-		});
-
-		$('.inline-editor').summernote({
-			airMode: false
-		});
+<script type="text/javascript">
+var TAtcInfomation = {};
+$(function(){
+	$('.summernote').summernote({
+		height: 480,                 // set editor height
+		minHeight: null,             // set minimum height of editor
+		maxHeight: null,             // set maximum height of editor
+		focus: false                 // set focus to editable area after initializing summernote
 	});
 
-	function save(){
+	$('.inline-editor').summernote({
+		airMode: false
+	});
+});
+
+function validate(){
+	
+}
+
+function save(){
+	window.parent.getUrl("/infinite/myAtc.html");
+	return;
+	validate();
+	var tAtcInfomation = TAtcInfomation;
+	tAtcInfomation.titleInfo = $("#titleInfo").val();
+	tAtcInfomation.authorId = 1;
+	if(!tAtcInfomation.tatcContent){
+		tAtcInfomation.tatcContent = {};
+		tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
+		tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
+	}
+	var url = "http://localhost:8083/" + "MyAtcController/saveAtc";
+	View.post(url,tAtcInfomation,function(resp){
 		window.parent.getUrl("/infinite/myAtc.html");
-	}
-
-	//Alt+S 保存
-	jQuery(document).keydown(function(e) {
-		if(e.which == 83 && e.altKey) {
-			show();
-		}
-		if(e.which == 68 && e.altKey) {
-			empty();
-		}
-		if(e.which == 67 && e.altKey) {
-			copy();
-		}
-		if(e.which == 86 && e.altKey) {
-			prase();
-		}
+	},function(){
+		
 	});
+}
 
-	var test = "";
+//Alt+S 保存
+jQuery(document).keydown(function(e) {
+	if(e.which == 83 && e.altKey) {
+		show();
+	}
+	if(e.which == 68 && e.altKey) {
+		empty();
+	}
+	if(e.which == 67 && e.altKey) {
+		copy();
+	}
+	if(e.which == 86 && e.altKey) {
+		prase();
+	}
+});
 
-	function show(){
-		var content = $('.summernote').summernote('code');
-		View.info(content);
-	}
+var test = "";
 
-	function empty(){
-		$('.summernote').summernote('code',"");
-	}
-	function copy(){
-		test = $('.summernote').summernote('code');
-	}
-	function prase(){
-		$('.summernote').summernote('code',test);
-	}
+function show(){
+	var content = $('.summernote').summernote('code');
+	View.info(content);
+}
 
+function empty(){
+	$('.summernote').summernote('code',"");
+}
+function copy(){
+	test = $('.summernote').summernote('code');
+}
+function prase(){
+	$('.summernote').summernote('code',test);
+}
 </script>
 </html>
