@@ -21,14 +21,6 @@ public class TCdeContent {
 	@Column(name = "id")
 	@GeneratedValue
 	private Long id;
-
-	//@Comment("代码块信息ID")
-	@Column(name = "info_id")
-	private Long infoId;
-	
-	//@Comment("文件名")
-	@Column(name = "file_name")
-	private String fileName;
 	
 	@Lob
 	//@Comment("内容")

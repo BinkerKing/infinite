@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Infinite - 新增手记</title>
+	<title>Infinite - 新增代码块</title>
 	<meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,10 +27,10 @@
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/pages.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/menu.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/responsive.css" />
-	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css "><!--复选框样式 -->
-	<link rel="stylesheet" type="text/css" href="/temp1/plugins/summernote/summernote.css"/><!-- Summernote富文本框 css -->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css" /><!--复选框样式 -->
 	
-	<script src="/temp1/plugins/summernote/summernote.min.js"></script><!-- Summernote富文本框 JS -->
+	<link rel="import" href="/common/codemirror-js.html" />
+	<link rel="import" href="/common/form-js.html" />
 </head>
 <body>
 <div class="row-col">
@@ -39,9 +39,26 @@
 			<button class="btn btn-outline btn-primary btn-block"
 					onclick="save()">保存</button>
 			<div class="hidden-xs-down m-t" id="inbox-menu">
+				<div class="m-y">皮肤</div>
 				<div class="nav-active-primary">
 					<div class="nav nav-pills nav-sm flex-column">
-
+						<select id="skinType" class="selectpicker show-tick" data-style="btn-success">
+							<option value="monokai" selected>monokai</option>
+							<option value="3024-day">3024-day</option>
+							<option value="3024-night">3024-night</option>
+						</select>
+					</div>
+				</div>
+				<div class="m-y">代码类型</div>
+				<div class="nav-active-primary">
+					<div class="nav nav-pills nav-sm flex-column">
+						<select id="codeType" class="selectpicker show-tick" data-style="btn-success">
+							<option value="htmlmixed">htmlmixed</option>
+							<option value="css">css</option>
+							<option value="clike">clike</option>
+							<option value="javascript">javascript</option>
+							<option value="xml">xml</option>
+						</select>
 					</div>
 				</div>
 				<div class="m-y">Labels</div>
@@ -67,90 +84,40 @@
 				<!-- header -->
 				<div class="m-b">
 					<div class="btn-toolbar">
-						<input id="titleInfo" type="text" class="form-control" placeholder="Title">
+						<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
 					</div>
 				</div>
 				<!-- / header -->
 				<!-- list -->
 				<div class="list white">
-					<div class="summernote"></div>
+					<textarea id="code" name="code"></textarea>
 				</div>
 				<!-- / list -->
 			</div>
-
 		</div>
 	</div>
 </div>
 </body>
 <script type="text/javascript">
-var TAtcInfomation = {};
-var authorId = 1;
+/*初始化*/
 $(function(){
-	$('.summernote').summernote({
-		height: 480,                 // set editor height
-		minHeight: null,             // set minimum height of editor
-		maxHeight: null,             // set maximum height of editor
-		focus: false                 // set focus to editable area after initializing summernote
-	});
-
-	$('.inline-editor').summernote({
-		airMode: false
-	});
+	editor.setValue("");//代码编辑器初始化
+	editor.setOption("theme","monokai");
+	editor.setOption("mode","htmlmixed");
 });
 
-function validate(){
-	
-}
-
-function save(){
-	validate();
-	var tAtcInfomation = TAtcInfomation;
-	tAtcInfomation.titleInfo = $("#titleInfo").val();
-	tAtcInfomation.authorId = authorId
-	if(!tAtcInfomation.tatcContent){
-		tAtcInfomation.tatcContent = {};
-		tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
-		tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
-	}
-	var url = Const.Api_URL + "/MyAtcController/saveAtc";
-	View.post(url,tAtcInfomation,function(resp){
-		window.parent.getUrl("/infinite/myAtc.html");
-	},function(){
-		
-	});
-}
-
-//Alt+S 保存
-jQuery(document).keydown(function(e) {
-	if(e.which == 83 && e.altKey) {
-		show();
-	}
-	if(e.which == 68 && e.altKey) {
-		empty();
-	}
-	if(e.which == 67 && e.altKey) {
-		copy();
-	}
-	if(e.which == 86 && e.altKey) {
-		prase();
-	}
+/*监听区*/
+$('#codeType').change(function(){
+	editor.setOption("mode",$("#codeType").val());
+});
+$('#skinType').change(function(){
+	editor.setOption("theme",$("#skinType").val());
 });
 
-var test = "";
-
-function show(){
-	var content = $('.summernote').summernote('code');
-	View.info(content);
+/*方法区*/
+function save() {
+	window.parent.getUrl("/infinite/myCode.html");
 }
 
-function empty(){
-	$('.summernote').summernote('code',"");
-}
-function copy(){
-	test = $('.summernote').summernote('code');
-}
-function prase(){
-	$('.summernote').summernote('code',test);
-}
 </script>
 </html>

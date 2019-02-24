@@ -22,34 +22,30 @@ public class TCdeInfoServiceImpl implements TCdeInfoService {
 	@Override
 	public List<TCdeInfo> getCodeList(Long custId) {
 		List<TCdeInfo> tCdeInfoList = tCdeInfoRepo.findByCustId(custId);
-		for(TCdeInfo info : tCdeInfoList){
-			List<TCdeContent> contentList = tCdeContentRepo.findByInfoId(info.getId());
-			info.setTcdeContentList(contentList);
-		}
 		return tCdeInfoList;
 	}
 
 	@Override
-	public TCdeContent getContent(Long contentId) {
-		TCdeContent content = tCdeContentRepo.findOne(contentId);
-		return content;
+	public TCdeInfo getCode(Long infoId) {
+		TCdeInfo tCdeInfo = tCdeInfoRepo.findOne(infoId);
+		TCdeContent tCdeContent = tCdeContentRepo.findOne(tCdeInfo.getContentId());
+		tCdeInfo.setTcdeContent(tCdeContent);
+		return tCdeInfo;
 	}
 
 	@Override
 	public TCdeInfo saveCode(TCdeInfo info) {
+		TCdeContent tCdeContent = tCdeContentRepo.save(info.getTcdeContent());
+		info.setContentId(tCdeContent.getId());
 		info = tCdeInfoRepo.save(info);
 		return info;
 	}
-	
-	@Override
-	public TCdeContent saveContent(TCdeContent content) {
-		content = tCdeContentRepo.save(content);
-		return content;
-	}
 
 	@Override
-	public String deleteContent(Long contentId) {
-		tCdeContentRepo.delete(contentId);
+	public String deleteCode(Long infoId) {
+		TCdeInfo tCdeInfo = tCdeInfoRepo.findOne(infoId);
+		tCdeContentRepo.delete(tCdeInfo.getContentId());
+		tCdeInfoRepo.delete(infoId);
 		return null;
 	}
 

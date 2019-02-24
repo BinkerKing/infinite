@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Infinite - 新增代码块</title>
+	<title>Infinite - 新增手记</title>
 	<meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,10 +27,10 @@
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/pages.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/menu.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/responsive.css" />
-	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css" /><!--复选框样式 -->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css "><!--复选框样式 -->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/summernote/summernote.css"/><!-- Summernote富文本框 css -->
 	
-	<link rel="import" href="/common/codemirror-js.html" />
-	<link rel="import" href="/common/form-js.html" />
+	<script src="/temp1/plugins/summernote/summernote.min.js"></script><!-- Summernote富文本框 JS -->
 </head>
 <body>
 <div class="row-col">
@@ -41,6 +41,7 @@
 			<div class="hidden-xs-down m-t" id="inbox-menu">
 				<div class="nav-active-primary">
 					<div class="nav nav-pills nav-sm flex-column">
+
 					</div>
 				</div>
 				<div class="m-y">Labels</div>
@@ -72,7 +73,7 @@
 				<!-- / header -->
 				<!-- list -->
 				<div class="list white">
-					<textarea id="code" name="code"></textarea>
+					<div class="summernote"></div>
 				</div>
 				<!-- / list -->
 			</div>
@@ -82,12 +83,75 @@
 </div>
 </body>
 <script type="text/javascript">
-jQuery(document).ready(function(){
-    editor.setValue("");
+var TAtcInfomation = {};
+$(function(){
+	$('.summernote').summernote({
+		height: 480,                 // set editor height
+		minHeight: null,             // set minimum height of editor
+		maxHeight: null,             // set maximum height of editor
+		focus: false                 // set focus to editable area after initializing summernote
+	});
+
+	$('.inline-editor').summernote({
+		airMode: false
+	});
 });
 
+function validate(){
+	
+}
+
 function save(){
-	window.parent.getUrl("/infinite/myCode.html");
+	window.parent.getUrl("/infinite/myAtc.html");
+	return;
+	validate();
+	var tAtcInfomation = TAtcInfomation;
+	tAtcInfomation.titleInfo = $("#titleInfo").val();
+	tAtcInfomation.authorId = 1;
+	if(!tAtcInfomation.tatcContent){
+		tAtcInfomation.tatcContent = {};
+		tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
+		tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
+	}
+	var url = Const.Api_URL + "/MyAtcController/saveAtc";
+	View.post(url,tAtcInfomation,function(resp){
+		window.parent.getUrl("/infinite/myAtc.html");
+	},function(){
+		
+	});
+}
+
+//Alt+S 保存
+jQuery(document).keydown(function(e) {
+	if(e.which == 83 && e.altKey) {
+		show();
+	}
+	if(e.which == 68 && e.altKey) {
+		empty();
+	}
+	if(e.which == 67 && e.altKey) {
+		copy();
+	}
+	if(e.which == 86 && e.altKey) {
+		prase();
+	}
+});
+
+var test = "";
+
+function show(){
+	var content = $('.summernote').summernote('code');
+	View.info(content);
+}
+
+function empty(){
+	$('.summernote').summernote('code',"");
+}
+function copy(){
+	test = $('.summernote').summernote('code');
+}
+function prase(){
+	$('.summernote').summernote('code',test);
 }
 </script>
 </html>

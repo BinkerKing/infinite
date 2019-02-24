@@ -35,8 +35,8 @@ function setScroll(){
 $(window).on("resize",setScroll);
 
 function initAtcView(){
-	var url = "http://localhost:8083/" + "MyAtcController/getMyAtcView";
-	var param = "id="+ 1;
+	var url = Const.Api_URL + "/MyAtcController/getMyAtcView";
+	var param = "id="+ atcId;
 	View.get(url,param,function(resp){
 		var data = {};
 		data.data = resp;
@@ -46,6 +46,8 @@ function initAtcView(){
 		
 	});
 }
+
+
 </script>
 <script id="atcViewTmpl" type="text/html">
 <div class="ibox">

@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/TCdeInfoController")
-public class TCdeInfoController {
+@RequestMapping(value = "/MyCodeController")
+public class MyCodeController {
 	
 	@Autowired
 	public TCdeInfoService tCdeInfoService;
 	
-	//获取所有CodeList
+	//获取我的所有CodeList
 	@RequestMapping(value = "/getCodeList", method = RequestMethod.GET)
 	public Resp getCodeList(@RequestParam("custId") Long custId){
 		List<TCdeInfo> codeList = tCdeInfoService.getCodeList(custId);
 		return new Resp(codeList, CodeDef.SUCCESS);
 	}
 	
-	//获取Content
-	@RequestMapping(value = "/getContent", method = RequestMethod.GET)
-	public Resp getContent(@RequestParam("contentId") Long contentId){
-		TCdeContent content = tCdeInfoService.getContent(contentId);
-		return new Resp(content,CodeDef.SUCCESS);
+	//获取Code
+	@RequestMapping(value = "/getCode", method = RequestMethod.GET)
+	public Resp getContent(@RequestParam("infoId") Long infoId){
+		TCdeInfo tCdeInfo = tCdeInfoService.getCode(infoId);
+		return new Resp(tCdeInfo,CodeDef.SUCCESS);
 	}
 	
 	//保存信息
@@ -38,16 +38,9 @@ public class TCdeInfoController {
 		return new Resp(info,CodeDef.SUCCESS);
 	}
 	
-	//保存信息
-	@RequestMapping(value = "/saveContent", method = RequestMethod.POST)
-	public Resp saveContent(@RequestBody TCdeContent lg){
-		TCdeContent content = tCdeInfoService.saveContent(lg);
-		return new Resp(content,CodeDef.SUCCESS);
-	}
-	
 	@RequestMapping(value = "/deleteContent", method = RequestMethod.GET)
-	public Resp deleteContent(@RequestParam("contentId") Long contentId){
-		tCdeInfoService.deleteContent(contentId);
+	public Resp deleteContent(@RequestParam("infoId") Long infoId){
+		tCdeInfoService.deleteCode(infoId);
 		return new Resp(CodeDef.SUCCESS);
 	}
 }

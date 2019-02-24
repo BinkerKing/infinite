@@ -39,11 +39,7 @@
 			<div class="hidden-xs-down m-t" id="inbox-menu">
 				<div class="nav-active-primary">
 					<div class="nav nav-pills nav-sm flex-column">
-						<select class="selectpicker show-tick" data-style="btn-success">
-								<option>Mustard</option>
-								<option>Ketchup</option>
-								<option>Relish</option>
-						</select>
+
 					</div>
 				</div>
 				<div class="m-y">Labels</div>
@@ -96,7 +92,7 @@
 				<h4 class="modal-title" id="modalLabel">文章</h4>
 			</div>
 			<div class="modal-body" id="_modalDialog_body">
-				<iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" width="99.6%"></iframe>
+				<iframe id="atcView" src="" frameBorder="0" width="99.6%"></iframe>
 				<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="edit()">
 					<i class="glyphicon glyphicon-pencil"></i>
 				</a>
@@ -128,7 +124,10 @@ $('#searchFilter').bind('keypress',function(e){
 });
 $("#searchFilter").bind("input propertychange",function(){
 	searchByTitle();
-})
+});
+$('body').on('hidden.bs.modal', '.modal', function () {
+	$(this).removeData('bs.modal');
+});
 
 /*方法区*/
 function addAtc(){
@@ -142,7 +141,7 @@ function edit(){
 /***数据获取***/
 //获取所有文章列表，并初始化全局变量
 function initAtcList(){
-	var url = "http://localhost:8083/" + "MyAtcController/getMyAtcList";
+	var url = Const.Api_URL + "/MyAtcController/getMyAtcList";
 	var param = {
 		authorId : AuthorId,
 		status : 1,
@@ -182,6 +181,10 @@ function getInfoById(id){
 	}
 }
 
+function getAtc(id){
+	$("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
+}
+
 /***页面渲染***/
 //渲染文章列表模板
 function reload_AtcListTmpl(list){
@@ -204,7 +207,7 @@ function reload_AtcListTmpl(list){
 				class="fa fa-paperclip m-l-sm"></i>
 		</div>
 		<div>
-			<a href class="_500" data-toggle="modal" data-target="#myModal">{{$value.titleInfo}}</a>
+			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{$value.id}})">{{$value.titleInfo}}</a>
 			<span class="label label-xs m-l-sm text-u-c">Bootstrap</span>
 		</div>
 		<div class="text-ellipsis text-muted text-sm">描述</div>

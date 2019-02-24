@@ -27,6 +27,10 @@ public class TCdeInfo {
 	//@Comment("用户ID")
 	@Column(name = "cust_id")
 	private Long custId;
+
+	//@Comment("内容ID")
+	@Column(name = "content_id")
+	private Long contentId;
 	
 	//@Comment("标题")
 	@Column(name = "title")
@@ -35,8 +39,12 @@ public class TCdeInfo {
 	//@Comment("备注")
 	@Column(name = "note")
 	private String note;
+
+	//@Comment("代码类型")
+	@Column(name = "mode")
+	private String mode;
 	
 	@Transient
-	private List<TCdeContent> tcdeContentList;
+	private TCdeContent tcdeContent;
 	
 }
