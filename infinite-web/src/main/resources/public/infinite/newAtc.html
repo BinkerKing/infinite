@@ -36,8 +36,10 @@
 <div class="row-col">
 	<div class="col-sm w w-auto-xs light lt bg-auto">
 		<div class="padding pos-rlt">
-			<button class="btn btn-outline btn-primary btn-block"
+			<button id="btn_save" class="btn btn-outline btn-primary btn-block"
 					onclick="save()">保存</button>
+			<button id="delete_btn" class="btn btn-outline btn-primary btn-block"
+					onclick="deleteAtc()" style= "display:none">删除</button>
 			<div class="hidden-xs-down m-t" id="inbox-menu">
 				<div class="nav-active-primary">
 					<div class="nav nav-pills nav-sm flex-column">
@@ -83,8 +85,9 @@
 </div>
 </body>
 <script type="text/javascript">
-var TAtcInfomation = {};
+var atcId = View.getQStr("atcId");
 var authorId = 1;
+var AtcObj = {};//全局的ATC，如果是编辑，则会给上值，是新增则是空
 $(function(){
 	$('.summernote').summernote({
 		height: 480,                 // set editor height
@@ -96,6 +99,20 @@ $(function(){
 	$('.inline-editor').summernote({
 		airMode: false
 	});
+
+	if(atcId){
+		//编辑
+		$("#delete_btn").show();
+		var url = Const.Api_URL + "/MyAtcController/getMyAtcView";
+		var param = "id="+ atcId;
+		View.get(url,param,function(resp){
+			$("#titleInfo").val(resp.titleInfo);
+			$('.summernote').summernote('code',resp.tatcContent.htmlContent);
+			AtcObj = resp;
+		},function(){
+
+		});
+	}
 });
 
 function validate(){
@@ -104,19 +121,36 @@ function validate(){
 
 function save(){
 	validate();
-	var tAtcInfomation = TAtcInfomation;
+	if($("#titleInfo").val() == ""){
+		window.parent.getUrl("/infinite/myAtc.html");
+		return;
+	}
+	var tAtcInfomation = AtcObj;
 	tAtcInfomation.titleInfo = $("#titleInfo").val();
 	tAtcInfomation.authorId = authorId
-	if(!tAtcInfomation.tatcContent){
+	if (!tAtcInfomation.tatcContent) {
 		tAtcInfomation.tatcContent = {};
-		tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
-		tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
 	}
+	tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
+	tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
 	var url = Const.Api_URL + "/MyAtcController/saveAtc";
-	View.post(url,tAtcInfomation,function(resp){
+	View.post(url, tAtcInfomation, function (resp) {
 		window.parent.getUrl("/infinite/myAtc.html");
-	},function(){
-		
+	}, function () {
+
+	});
+}
+
+function deleteAtc(){
+	//删除确认框
+
+	var url = Const.Api_URL + "/MyAtcController/deleteAtc";
+	View.post(url, AtcObj, function (resp) {
+		//删除成功提示框
+
+		window.parent.getUrl("/infinite/myAtc.html");
+	}, function () {
+
 	});
 }
 

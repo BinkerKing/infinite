@@ -29,6 +29,12 @@ public class MyAtcController {
 		tAtcInfomationService.saveAtc(lc);
 		return new Resp(CodeDef.SUCCESS);
 	}
+
+	@RequestMapping(value = "/deleteAtc", method = RequestMethod.POST)
+	public Resp deleteAtc(@RequestBody TAtcInfomation lc){
+		tAtcInfomationService.deleteAtc(lc);
+		return new Resp(CodeDef.SUCCESS);
+	}
 	
 	@RequestMapping(value = "/saveAtcInfo", method = RequestMethod.POST)
 	public Resp saveAtcInfo(@RequestBody TAtcInfomation lc){

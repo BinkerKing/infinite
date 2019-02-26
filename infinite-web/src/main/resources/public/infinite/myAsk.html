@@ -61,20 +61,20 @@
     </div>
     <div class="col-sm">
         <div ui-view class="padding pos-rlt">
-            <a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addAtc()">
+            <a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addAsk()">
                 <i class="glyphicon glyphicon-pencil"></i>
             </a>
             <div>
                 <!-- header -->
                 <div class="m-b">
                     <div class="btn-toolbar">
-                        <input id="searchFilter" type="text" class="form-control" placeholder="Say something">
+                        <input id="searchFilter" type="text" class="form-control" placeholder="Say something" autocomplete="off">
                     </div>
                 </div>
                 <!-- / header -->
                 <!-- list -->
                 <div class="list white">
-                    <div id="atcListDiv"></div>
+                    <div id="askListDiv"></div>
                 </div>
                 <!-- / list -->
             </div>
@@ -92,7 +92,7 @@
                 <h4 class="modal-title" id="modalLabel">文章</h4>
             </div>
             <div class="modal-body" id="_modalDialog_body">
-                <iframe id="atcView" src="/infinite/atcView.html" frameBorder="0" width="99.6%"></iframe>
+                <iframe id="askView" src="/infinite/askView.html" frameBorder="0" width="99.6%"></iframe>
                 <a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="edit()">
                     <i class="glyphicon glyphicon-pencil"></i>
                 </a>
@@ -107,13 +107,13 @@
     var AuthorId = 1;
     var Status = 1;//1-所有 2-已发布 3-未发布
 
-    var AtcList = [];//所有的
+    var AskList = [];//所有的
     var PublishList = [];//已发布的
     var UnPublishList = [];//未发布的
     /*初始化*/
     $(function(){
-        initAtcList();
-        $('#atcView').attr('height',min_height+"px");
+        initAskList();
+        $('#askView').attr('height',min_height+"px");
     });
 
     /*监听区*/
@@ -132,13 +132,13 @@
     }
 
     function edit(){
-        window.parent.getUrl("/infinite/newAsk.html");
+        window.parent.getUrl("/infinite/newAsk.html?askId="+CurAskId);
     }
 
     /***数据获取***/
 //获取所有文章列表，并初始化全局变量
-    function initAtcList(){
-        var url = Const.Api_URL + "/MyAtcController/getMyAtcList";
+    function initAskList(){
+        var url = Const.Api_URL + "/MyAskController/getMyAskList";
         var param = {
             authorId : AuthorId,
             status : 1,
@@ -146,8 +146,8 @@
             lable : ""
         };
         View.post(url,param,function(resp){
-            AtcList = resp;
-            reload_AtcListTmpl(resp);
+            AskList = resp;
+            reload_AskListTmpl(resp);
         },function(){
 
         });
@@ -157,37 +157,37 @@
     function searchByTitle(){
         var titleSearch = $("#searchFilter").val();
         if(titleSearch == ""){
-            reload_AtcListTmpl(AtcList);
+            reload_AskListTmpl(AskList);
             return;
         }
         var searchList=[];
-        for(var i=0;i<AtcList.length;i++){
-            if(AtcList[i].titleInfo.indexOf(titleSearch)!=-1){
-                searchList.push(AtcList[i]);
+        for(var i=0;i<AskList.length;i++){
+            if(AskList[i].titleInfo.indexOf(titleSearch)!=-1){
+                searchList.push(AskList[i]);
             }
         }
-        reload_AtcListTmpl(searchList);
+        reload_AskListTmpl(searchList);
     }
 
     //通过id获取文章信息
     function getInfoById(id){
-        for(var i=0;i<AtcList.length;i++){
-            if(AtcList[i].id==id){
-                return AtcList[i];
+        for(var i=0;i<AskList.length;i++){
+            if(AskList[i].id==id){
+                return AskList[i];
             }
         }
     }
 
     /***页面渲染***/
 //渲染文章列表模板
-    function reload_AtcListTmpl(list){
+    function reload_AskListTmpl(list){
         var data = {};
         data.list = list;
-        var temp = new Tmpl("atcListTmpl",data);
-        temp.reset("atcListDiv");
+        var temp = new Tmpl("askListTmpl",data);
+        temp.reset("askListDiv");
     }
 </script>
-<script id="atcListTmpl" type="text/html">
+<script id="askListTmpl" type="text/html">
     {{each list}}
     <div class="list-item b-l b-l-2x b-info">
         <div class="list-left">

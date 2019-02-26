@@ -11,7 +11,7 @@ public interface TCdeInfoService {
 	
 	public TCdeInfo saveCode(TCdeInfo info);
 	
-	public String deleteCode(Long infoId);
+	public String deleteCode(TCdeInfo inf);
 
 	public TCdeInfo getCode(Long infoId);
 

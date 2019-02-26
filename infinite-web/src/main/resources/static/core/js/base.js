@@ -485,11 +485,17 @@ String.prototype.format = function (args) {
 	return result;
 }
 
-function isInArray(arr,value){
-    for(var i = 0; i < arr.length; i++){
-        if(value === arr[i].name){
-            return true;
-        }
-    }
-    return false;
+function isInArray(arr,value) {
+	for (var i = 0; i < arr.length; i++) {
+		if (value === arr[i].name) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function changeBack(str){
+	str = str.replace(new RegExp("&#60;",'g'),"<");
+	str = str.replace(new RegExp("&#62;",'g'),">");
+	return str;
 }

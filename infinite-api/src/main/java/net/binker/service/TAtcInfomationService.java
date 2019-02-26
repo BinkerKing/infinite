@@ -11,6 +11,8 @@ public interface TAtcInfomationService {
 	public List<TAtcInfomation> getMyAtcList(Long authorId, String status, String search, String lable);
 	
 	public String saveAtc(TAtcInfomation lc);
+
+	public String deleteAtc(TAtcInfomation lc);
 	
 	public String saveAtcInfo(TAtcInfomation lc);
 	

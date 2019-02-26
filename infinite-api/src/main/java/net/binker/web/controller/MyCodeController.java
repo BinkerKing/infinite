@@ -37,10 +37,12 @@ public class MyCodeController {
 		TCdeInfo info = tCdeInfoService.saveCode(lg);
 		return new Resp(info,CodeDef.SUCCESS);
 	}
-	
-	@RequestMapping(value = "/deleteContent", method = RequestMethod.GET)
-	public Resp deleteContent(@RequestParam("infoId") Long infoId){
-		tCdeInfoService.deleteCode(infoId);
-		return new Resp(CodeDef.SUCCESS);
+
+	//删除信息
+	@RequestMapping(value = "/deleteCode", method = RequestMethod.POST)
+	public Resp deleteCode(@RequestBody TCdeInfo lg){
+		tCdeInfoService.deleteCode(lg);
+		return new Resp().setCode(CodeDef.SUCCESS);
 	}
+	
 }

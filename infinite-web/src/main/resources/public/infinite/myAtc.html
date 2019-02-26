@@ -68,7 +68,7 @@
 				<!-- header -->
 				<div class="m-b">
 					<div class="btn-toolbar">
-						<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
+						<input id="searchFilter" type="text" class="form-control" autocomplete="off" placeholder="Say something">
 					</div>
 				</div>
 				<!-- / header -->
@@ -110,6 +110,8 @@ var Status = 1;//1-所有 2-已发布 3-未发布
 var AtcList = [];//所有的
 var PublishList = [];//已发布的
 var UnPublishList = [];//未发布的
+
+var CurAtcId = "";
 /*初始化*/
 $(function(){
 	initAtcList();
@@ -135,7 +137,7 @@ function addAtc(){
 }
 
 function edit(){
-	window.parent.getUrl("/infinite/newAtc.html");
+	window.parent.getUrl("/infinite/newAtc.html?atcId="+CurAtcId);
 }
 
 /***数据获取***/
@@ -182,6 +184,7 @@ function getInfoById(id){
 }
 
 function getAtc(id){
+	CurAtcId = id;
 	$("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
 }
 
@@ -190,12 +193,35 @@ function getAtc(id){
 function reload_AtcListTmpl(list){
 	var data = {};
 	data.list = list;
+	for(var i=0;i<data.list.length;i++){
+		data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+	}
 	var temp = new Tmpl("atcListTmpl",data);
 	temp.reset("atcListDiv");
 }
+
+function getMyDate(str) {
+	var oDate = new Date(str),
+			oYear = oDate.getFullYear(),
+			oMonth = oDate.getMonth()+1,
+			oDay = oDate.getDate(),
+			oHour = oDate.getHours(),
+			oMin = oDate.getMinutes(),
+			oSen = oDate.getSeconds(),
+			oTime = oYear +'-'+ addZero(oMonth) +'-'+ addZero(oDay);
+	return oTime;
+}
+
+function addZero(num){
+	if(parseInt(num) < 10){
+		num = '0'+num;
+	}
+	return num;
+}
+
 </script>
 <script id="atcListTmpl" type="text/html">
-{{each list}}  
+{{each list as item}}
 <div class="list-item b-l b-l-2x b-info">
 	<div class="list-left">
 		<span class="w-40 avatar"> <img src="/temp2/assets/images/a0.jpg">
@@ -203,14 +229,14 @@ function reload_AtcListTmpl(list){
 	</div>
 	<div class="list-body">
 		<div class="pull-right text-muted text-xs">
-			<span class="hidden-xs">5, July</span> <i
+			<span class="hidden-xs">{{item.createTime}}</span> <i
 				class="fa fa-paperclip m-l-sm"></i>
 		</div>
 		<div>
-			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{$value.id}})">{{$value.titleInfo}}</a>
+			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{item.id}})">{{item.titleInfo}}</a>
 			<span class="label label-xs m-l-sm text-u-c">Bootstrap</span>
 		</div>
-		<div class="text-ellipsis text-muted text-sm">描述</div>
+		<div class="text-ellipsis text-muted text-sm">主人太懒，没有留下任何说明</div>
 	</div>
 </div>
 {{/each}}

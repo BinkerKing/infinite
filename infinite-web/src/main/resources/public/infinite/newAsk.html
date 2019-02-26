@@ -41,7 +41,8 @@
 			<div class="hidden-xs-down m-t" id="inbox-menu">
 				<div class="nav-active-primary">
 					<div class="nav nav-pills nav-sm flex-column">
-
+						<button id="delete_btn" class="btn btn-outline btn-primary btn-block"
+								onclick="deleteAsk()">删除</button>
 					</div>
 				</div>
 				<div class="m-y">Labels</div>
@@ -83,7 +84,9 @@
 </div>
 </body>
 <script type="text/javascript">
-var TAtcInfomation = {};
+var authorId = 1;
+var askId = View.getQStr("askId");
+var AskObj = {};//全局的ATC，如果是编辑，则会给上值，是新增则是空
 $(function(){
 	$('.summernote').summernote({
 		height: 480,                 // set editor height
@@ -95,6 +98,22 @@ $(function(){
 	$('.inline-editor').summernote({
 		airMode: false
 	});
+
+	if(askId){
+		//编辑
+		var url = Const.Api_URL + "/MyAskController/getMyAskView";
+		var param = "id="+ askId;
+		View.get(url,param,function(resp){
+			$("#titleInfo").val(resp.titleInfo);
+			$('.summernote').summernote('code',resp.taskContent.htmlContent);
+			AskObj = resp;
+		},function(){
+
+		});
+	}else{
+		//新增
+		$("#delete_btn").hide();//隐藏删除按钮
+	}
 });
 
 function validate(){
@@ -102,22 +121,33 @@ function validate(){
 }
 
 function save(){
-	window.parent.getUrl("/infinite/myAtc.html");
-	return;
 	validate();
-	var tAtcInfomation = TAtcInfomation;
-	tAtcInfomation.titleInfo = $("#titleInfo").val();
-	tAtcInfomation.authorId = 1;
-	if(!tAtcInfomation.tatcContent){
-		tAtcInfomation.tatcContent = {};
-		tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
-		tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
+	var tAskInfomation = AskObj;
+	tAskInfomation.titleInfo = $("#titleInfo").val();
+	tAskInfomation.authorId = authorId
+	if (!tAskInfomation.tatcContent) {
+		tAskInfomation.tatcContent = {};
 	}
-	var url = Const.Api_URL + "/MyAtcController/saveAtc";
-	View.post(url,tAtcInfomation,function(resp){
-		window.parent.getUrl("/infinite/myAtc.html");
-	},function(){
-		
+	tAskInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
+	tAskInfomation.tatcContent.titleInfo = $("#titleInfo").val();
+	var url = Const.Api_URL + "/MyAskController/saveAsk";
+	View.post(url, tAskInfomation, function (resp) {
+		window.parent.getUrl("/infinite/myAsk.html");
+	}, function () {
+
+	});
+}
+
+function deleteAsk(){
+	//删除确认框
+
+	var url = Const.Api_URL + "/MyAskController/deleteAsk";
+	View.post(url, AskObj, function (resp) {
+		//删除成功提示框
+
+		window.parent.getUrl("/infinite/myAsk.html");
+	}, function () {
+
 	});
 }
 

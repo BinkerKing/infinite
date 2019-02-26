@@ -86,6 +86,13 @@ public class TAtcInfomationServiceImpl implements TAtcInfomationService {
 	}
 
 	@Override
+	public String deleteAtc(TAtcInfomation lc) {
+		tAtcInfomationRepo.delete(lc.getId());
+		tAtcContentRepo.delete(lc.getContentId());
+		return null;
+	}
+
+	@Override
 	public String saveAtcInfo(TAtcInfomation lc) {
 		tAtcInfomationRepo.save(lc);
 		return null;

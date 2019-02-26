@@ -31,8 +31,4 @@ public class TCdeContent {
 	@Column(name = "mode")
 	private String mode;
 	
-	//@Comment("备注")
-	@Column(name = "note")
-	private String note;
-	
 }

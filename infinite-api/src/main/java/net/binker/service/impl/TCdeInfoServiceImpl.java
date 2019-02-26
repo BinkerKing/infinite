@@ -42,10 +42,9 @@ public class TCdeInfoServiceImpl implements TCdeInfoService {
 	}
 
 	@Override
-	public String deleteCode(Long infoId) {
-		TCdeInfo tCdeInfo = tCdeInfoRepo.findOne(infoId);
-		tCdeContentRepo.delete(tCdeInfo.getContentId());
-		tCdeInfoRepo.delete(infoId);
+	public String deleteCode(TCdeInfo info) {
+		tCdeContentRepo.delete(info.getContentId());
+		tCdeInfoRepo.delete(info.getId());
 		return null;
 	}
 

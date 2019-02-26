@@ -36,8 +36,10 @@
 <div class="row-col">
 	<div class="col-sm w w-auto-xs light lt bg-auto">
 		<div class="padding pos-rlt">
-			<button class="btn btn-outline btn-primary btn-block"
+			<button id="save_btn" class="btn btn-outline btn-primary btn-block"
 					onclick="save()">保存</button>
+			<button id="delete_btn" class="btn btn-outline btn-primary btn-block"
+					onclick="deleteCode()" style= "display:none">删除</button>
 			<div class="hidden-xs-down m-t" id="inbox-menu">
 				<div class="m-y">皮肤</div>
 				<div class="nav-active-primary">
@@ -84,7 +86,7 @@
 				<!-- header -->
 				<div class="m-b">
 					<div class="btn-toolbar">
-						<input id="searchFilter" type="text" class="form-control" placeholder="Say something">
+						<input id="title" type="text" class="form-control" placeholder="Title...">
 					</div>
 				</div>
 				<!-- / header -->
@@ -99,11 +101,28 @@
 </div>
 </body>
 <script type="text/javascript">
+var infoId = View.getQStr("infoId");
+var authorId = 1;
+var CodeObj = {};//全局的Code，如果是编辑，则会给上值，是新增则是空
 /*初始化*/
 $(function(){
 	editor.setValue("");//代码编辑器初始化
 	editor.setOption("theme","monokai");
 	editor.setOption("mode","htmlmixed");
+
+	if(infoId){
+		$("#delete_btn").show();
+		var url = Const.Api_URL + "/MyCodeController/getCode";
+		View.get(url,"infoId="+infoId,function(resp){
+			CodeObj = resp;
+			$("#title").val(resp.title);
+			editor.setValue(changeBack(resp.tcdeContent.content) || "");
+			editor.setOption("mode",resp.mode);
+			$("#codeType").selectpicker('val',resp.mode);
+		},function(){
+
+		});
+	}
 });
 
 /*监听区*/
@@ -114,10 +133,45 @@ $('#skinType').change(function(){
 	editor.setOption("theme",$("#skinType").val());
 });
 
-/*方法区*/
-function save() {
-	window.parent.getUrl("/infinite/myCode.html");
+function validate() {
+	
 }
 
+/*方法区*/
+function save() {
+	validate();
+	if($("#title").val() == ""){
+		window.parent.getUrl("/infinite/myCode.html");
+		return;
+	}
+	var myCode = CodeObj;
+	myCode.title = $("#title").val();
+	myCode.mode = editor.getOption("mode");
+	myCode.custId = authorId;
+	if (!myCode.tcdeContent) {
+		myCode.tcdeContent = {};
+	}
+	myCode.tcdeContent.content = editor.getValue();
+	myCode.tcdeContent.mode = editor.getOption("mode");
+	var url = Const.Api_URL + "/MyCodeController/saveCode";
+	View.post(url,myCode,function(resp){
+		window.parent.getUrl("/infinite/myCode.html");
+	},function(){
+
+	});
+}
+
+function deleteCode(){
+	//删除确认框
+
+	var url = Const.Api_URL + "/MyCodeController/deleteCode";
+	View.post(url, CodeObj, function (resp) {
+		//删除成功提示框
+
+		window.parent.getUrl("/infinite/myCode.html");
+	}, function () {
+
+	});
+}
 </script>
 </html>

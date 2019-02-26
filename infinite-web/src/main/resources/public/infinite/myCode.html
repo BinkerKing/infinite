@@ -74,7 +74,7 @@
         <!-- header -->
         <div class="m-b">
           <div class="btn-toolbar">
-            <input id="searchFilter" type="text" class="form-control" placeholder="Say something">
+            <input id="searchFilter" type="text" class="form-control" placeholder="Say something" autocomplete="off">
           </div>
         </div>
         <!-- / header -->
@@ -94,7 +94,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title" id="modalLabel">代码</h4>
+        <h4 id="codeTitle" class="modal-title" id="modalLabel"></h4>
       </div>
       <div class="modal-body" id="_modalDialog_body">
         <textarea id="code" name="code"></textarea>
@@ -139,7 +139,7 @@
   }
 
   function edit(){
-    window.parent.getUrl("/infinite/newCode.html");
+    window.parent.getUrl("/infinite/newCode.html?infoId="+CurCode.id);
   }
 
   /***数据获取***/
@@ -202,7 +202,8 @@
     var url = Const.Api_URL + "/MyCodeController/getCode";
     View.get(url,"infoId="+infoId,function(resp){
       CurCode = resp;
-      editor.setValue(resp.tcdeContent.content || "");//代码编辑器初始化
+      $("#codeTitle").text(resp.title);
+      editor.setValue(changeBack(resp.tcdeContent.content) || "");//代码编辑器初始化
       editor.setOption("theme","monokai");
       editor.setOption("mode",resp.tcdeContent.mode || "htmlmixed");
     },function(){
