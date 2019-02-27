@@ -89,7 +89,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-				<h4 class="modal-title" id="modalLabel">文章</h4>
+				<h4 id="atcTitle" class="modal-title" id="modalLabel"></h4>
 			</div>
 			<div class="modal-body" id="_modalDialog_body">
 				<iframe id="atcView" src="" frameBorder="0" width="99.6%"></iframe>
@@ -183,8 +183,9 @@ function getInfoById(id){
 	}
 }
 
-function getAtc(id){
+function getAtc(id,title){
 	CurAtcId = id;
+	$("#atcTitle").text(title);
 	$("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
 }
 
@@ -233,7 +234,7 @@ function addZero(num){
 				class="fa fa-paperclip m-l-sm"></i>
 		</div>
 		<div>
-			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{item.id}})">{{item.titleInfo}}</a>
+			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a>
 			<span class="label label-xs m-l-sm text-u-c">Bootstrap</span>
 		</div>
 		<div class="text-ellipsis text-muted text-sm">主人太懒，没有留下任何说明</div>
