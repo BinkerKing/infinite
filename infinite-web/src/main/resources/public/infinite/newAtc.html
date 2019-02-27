@@ -156,24 +156,22 @@ function deleteAtc(){
 		closeOnConfirm:false,
 		closeOnCancel:false
 	},function(isConfirm){
-	    if(isConfirm)
-	    {
-	        swal({title:"删除成功！",
-	            text:"您已经永久删除了这条数据。",
-	            type:"success"},function(){window.location="/video/destroy/"+id})
+	    if(isConfirm){
+	    	var url = Const.Api_URL + "/MyAtcController/deleteAtc";
+	    	View.post(url, AtcObj, function (resp) {
+	    		//删除成功提示框
+				swal({title:"删除成功！",text:"您已经永久删除了这条数据。",type:"success"},function(){
+	            	window.parent.getUrl("/infinite/myAtc.html");
+	            })
+	    	}, function () {
+	    		swal({title:"失败",text:"删除失败！",type:"error"})
+	    	});
 	    }
 	    else{
 	        swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
 	    }
 	});
-	var url = Const.Api_URL + "/MyAtcController/deleteAtc";
-	View.post(url, AtcObj, function (resp) {
-		//删除成功提示框
-
-		window.parent.getUrl("/infinite/myAtc.html");
-	}, function () {
-
-	});
+	
 }
 
 //Alt+S 保存
