@@ -18,7 +18,8 @@
 	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/plugins/multiselect/css/multi-select.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/plugins/select2/css/select2.min.css" />
-	
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-sweetalert/sweet-alert.css"><!-- Sweet Alert -->
+
 	<!-- App css -->
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/bootstrap.min.css"/><!-- bootstrap -->
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/core.css" />
@@ -28,7 +29,7 @@
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/menu.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/responsive.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/plugins/switchery/switchery.min.css" /><!--复选框样式 -->
-	
+
 	<link rel="import" href="/common/codemirror-js.html" />
 	<link rel="import" href="/common/form-js.html" />
 </head>
@@ -61,8 +62,8 @@
 			</div>
 			<div class="control-group">
 				<div class="controls">
-					<label class="control-label m-t-10">描述</label>
-					<textarea class="input-large form-control" id="note" rows="3" placeholder="Enter a desc ..."></textarea>
+					<label class="control-label m-t-10">备注说明</label>
+					<textarea class="input-large form-control" id="note" rows="3" placeholder="Enter a note ..."></textarea>
 				</div>
 			</div>
 
@@ -154,10 +155,10 @@ function validate() {
 /*方法区*/
 function save() {
 	validate();
-	if($("#title").val() == ""){
-		window.parent.getUrl("/infinite/myCode.html");
+	if($("#titleInfo").val() == ""){
 		return;
 	}
+
 	var myCode = CodeObj;
 	myCode.title = $("#title").val();
 	myCode.mode = editor.getOption("mode");
@@ -170,24 +171,82 @@ function save() {
 	myCode.tcdeContent.content = editor.getValue();
 	myCode.tcdeContent.mode = editor.getOption("mode");
 	var url = Const.Api_URL + "/MyCodeController/saveCode";
-	View.post(url,myCode,function(resp){
+	View.post(url, myCode, function (resp) {
+		//删除成功提示框
 		window.parent.getUrl("/infinite/myCode.html");
-	},function(){
-
+	}, function () {
 	});
+
+	// swal({title:"您确定要保存代码吗",
+	// 	text:"您已经编辑完代码了吗？",
+	// 	type:"warning",
+	// 	showCancelButton:true,
+	// 	confirmButtonColor:"#DD6B55",
+	// 	confirmButtonText:"确定保存！",
+	// 	cancelButtonText:"取消",
+	// 	closeOnConfirm:false,
+	// 	closeOnCancel:false
+	// },function(isConfirm){
+	// 	if(isConfirm){
+	// 		var myCode = CodeObj;
+	// 		myCode.title = $("#title").val();
+	// 		myCode.mode = editor.getOption("mode");
+	// 		myCode.custId = authorId;
+	// 		myCode.publishStatus = $('input[name="radio"]:checked').val();
+	// 		myCode.note = $("#note").val();
+	// 		if (!myCode.tcdeContent) {
+	// 			myCode.tcdeContent = {};
+	// 		}
+	// 		myCode.tcdeContent.content = editor.getValue();
+	// 		myCode.tcdeContent.mode = editor.getOption("mode");
+	// 		var url = Const.Api_URL + "/MyCodeController/saveCode";
+	// 		View.post(url, myCode, function (resp) {
+	// 			//删除成功提示框
+	// 			swal({title:"保存成功！",text:"您已经保存了代码。",showCancelButton: false,type:"success"},function(){
+	// 				window.parent.getUrl("/infinite/myCode.html");
+	// 			});
+	// 		}, function () {
+	// 			swal({title:"失败",text:"保存失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
+	// 		});
+	// 	}else{
+	// 		swal.close();
+	// 		// swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
+	// 	}
+	// });
 }
 
 function deleteCode(){
-	//删除确认框
-
 	var url = Const.Api_URL + "/MyCodeController/deleteCode";
 	View.post(url, CodeObj, function (resp) {
 		//删除成功提示框
-
 		window.parent.getUrl("/infinite/myCode.html");
 	}, function () {
-
 	});
+	// swal({title:"您确定要删除这条数据吗",
+	// 	text:"删除后将无法恢复，请谨慎操作！",
+	// 	type:"warning",
+	// 	showCancelButton:true,
+	// 	confirmButtonColor:"#DD6B55",
+	// 	confirmButtonText:"确定删除！",
+	// 	cancelButtonText:"取消",
+	// 	closeOnConfirm:false,
+	// 	closeOnCancel:false
+	// },function(isConfirm){
+	// 	if(isConfirm){
+	// 		var url = Const.Api_URL + "/MyCodeController/deleteCode";
+	// 		View.post(url, CodeObj, function (resp) {
+	// 			//删除成功提示框
+	// 			swal({title:"删除成功！",text:"您已经永久删除了这条数据。",showCancelButton: false,type:"success"},function(){
+	// 				window.parent.getUrl("/infinite/myCode.html");
+	// 			});
+	// 		}, function () {
+	// 			swal({title:"失败",text:"删除失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
+	// 		});
+	// 	}else{
+	// 		swal.close();
+	// 		// swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
+	// 	}
+	// });
 }
 </script>
 </html>
