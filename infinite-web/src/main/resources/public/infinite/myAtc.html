@@ -42,18 +42,17 @@
 
 					</div>
 				</div>
-				<div class="m-y">Labels</div>
+				<label class="control-label">Title</label>
 				<div class="nav-active-white">
 					<ul class="nav nav-pills nav-stacked nav-sm">
-						<li class="nav-item"><a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-primary"></i> Angular
-						</a> <a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-info"></i> Bootstrap
-						</a> <a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-warn"></i> Client
-						</a> <a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-accent"></i> Work
-						</a></li>
+						<li class="nav-item">
+							<a class="nav-link" onclick="searchByStatus(0)">
+								<i class="fa m-r-sm fa-circle text-info"></i> 未发布
+							</a>
+							<a class="nav-link" onclick="searchByStatus(1)">
+								<i class="fa m-r-sm fa-circle text-warn"></i> 已发布
+							</a>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -189,6 +188,16 @@ function getAtc(id,title){
 	$("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
 }
 
+function searchByStatus(status){
+	var searchList=[];
+	for(var i=0;i<AtcList.length;i++){
+		if(AtcList[i].publishStatus == status){
+			searchList.push(AtcList[i]);
+		}
+	}
+	reload_AtcListTmpl(searchList);
+}
+
 /***页面渲染***/
 //渲染文章列表模板
 function reload_AtcListTmpl(list){
@@ -225,8 +234,11 @@ function addZero(num){
 {{each list as item}}
 <div class="list-item b-l b-l-2x b-info">
 	<div class="list-left">
-		<span class="w-40 avatar"> <img src="/temp2/assets/images/a0.jpg">
-		</span>
+		{{if item.publishStatus===1}}
+		<span class="avatar-sm-box bg-orange">P</span>
+		{{else if item.publishStatus===0}}
+		<span class="avatar-sm-box bg-success">L</span>
+		{{/if}}
 	</div>
 	<div class="list-body">
 		<div class="pull-right text-muted text-xs">
@@ -235,9 +247,13 @@ function addZero(num){
 		</div>
 		<div>
 			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a>
-			<span class="label label-xs m-l-sm text-u-c">Bootstrap</span>
+			<span class="label label-xs m-l-sm text-u-c"></span>
 		</div>
+		{{if item.description===""}}
 		<div class="text-ellipsis text-muted text-sm">主人太懒，没有留下任何说明</div>
+		{{else}}
+		<div class="text-ellipsis text-muted text-sm">{{item.description}}</div>
+		{{/if}}
 	</div>
 </div>
 {{/each}}

@@ -40,9 +40,13 @@ public class TCdeInfo {
 	@Column(name = "note")
 	private String note;
 
-	//@Comment("代码类型")
+	//@Comment("模式")
 	@Column(name = "mode")
 	private String mode;
+
+	//@Comment("发布状态 0：未发布 1:发布 ")
+	@Column(name = "publish_status")
+	private Byte publishStatus;
 	
 	@Transient
 	private TCdeContent tcdeContent;

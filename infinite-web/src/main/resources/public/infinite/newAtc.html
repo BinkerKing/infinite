@@ -19,7 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="/temp1/plugins/multiselect/css/multi-select.css" />
 	<link rel="stylesheet" type="text/css" href="/temp1/plugins/select2/css/select2.min.css" />
     <link rel="stylesheet" type="text/css" href="/temp1/plugins/bootstrap-sweetalert/sweet-alert.css"><!-- Sweet Alert -->
-	
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/toastr/toastr.min.css"/><!-- Notification css (Toastr) -->
 	<!-- App css -->
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/bootstrap.min.css"/><!-- bootstrap -->
 	<link rel="stylesheet" type="text/css" href="/temp1/assets/css/core.css" />
@@ -49,19 +49,30 @@
 
 					</div>
 				</div>
-				<div class="m-y">Labels</div>
-				<div class="nav-active-white">
-					<ul class="nav nav-pills nav-stacked nav-sm">
-						<li class="nav-item"><a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-primary"></i> Angular
-						</a> <a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-info"></i> Bootstrap
-						</a> <a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-warn"></i> Client
-						</a> <a class="nav-link"> <i
-								class="fa m-r-sm fa-circle text-accent"></i> Work
-						</a></li>
-					</ul>
+
+				<div class="control-group" id="toastTypeGroup">
+					<div class="controls">
+						<label class="m-y">发布状态</label>
+						<div class="radio radio-warning">
+							<input type="radio" name="radio" id="radio1" value="0"
+								   checked>
+							<label for="radio1">
+								本地-个人空间
+							</label>
+						</div>
+						<div class="radio radio-success">
+							<input type="radio" name="radio" id="radio2" value="1">
+							<label for="radio2">
+								发布-共享空间
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<label class="control-label m-t-10">描述</label>
+						<textarea class="input-large form-control" id="desc" rows="3" placeholder="Enter a desc ..."></textarea>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -110,7 +121,9 @@ $(function(){
 		var param = "id="+ atcId;
 		View.get(url,param,function(resp){
 			$("#titleInfo").val(resp.titleInfo);
+			$("input:radio[value='"+resp.publishStatus+"']").attr('checked','true');
 			$('.summernote').summernote('code',resp.tatcContent.htmlContent);
+			$("#desc").val(resp.description);
 			AtcObj = resp;
 		},function(){
 
@@ -125,22 +138,44 @@ function validate(){
 function save(){
 	validate();
 	if($("#titleInfo").val() == ""){
-		window.parent.getUrl("/infinite/myAtc.html");
+		swal({title:"保存失败",text:"标题不能为空！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
 		return;
 	}
-	var tAtcInfomation = AtcObj;
-	tAtcInfomation.titleInfo = $("#titleInfo").val();
-	tAtcInfomation.authorId = authorId
-	if (!tAtcInfomation.tatcContent) {
-		tAtcInfomation.tatcContent = {};
-	}
-	tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
-	tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
-	var url = Const.Api_URL + "/MyAtcController/saveAtc";
-	View.post(url, tAtcInfomation, function (resp) {
-		window.parent.getUrl("/infinite/myAtc.html");
-	}, function () {
 
+	swal({title:"您确定要保存文章吗",
+		text:"您已经编辑完文章了吗？",
+		type:"warning",
+		showCancelButton:true,
+		confirmButtonColor:"#DD6B55",
+		confirmButtonText:"确定保存！",
+		cancelButtonText:"取消",
+		closeOnConfirm:false,
+		closeOnCancel:false
+	},function(isConfirm){
+		if(isConfirm){
+			var tAtcInfomation = AtcObj;
+			tAtcInfomation.titleInfo = $("#titleInfo").val();
+			tAtcInfomation.authorId = authorId
+			tAtcInfomation.publishStatus = $('input[name="radio"]:checked').val();
+			tAtcInfomation.description = $("#desc").val();
+			if (!tAtcInfomation.tatcContent) {
+				tAtcInfomation.tatcContent = {};
+			}
+			tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
+			tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
+			var url = Const.Api_URL + "/MyAtcController/saveAtc";
+			View.post(url, tAtcInfomation, function (resp) {
+				//删除成功提示框
+				swal({title:"保存成功！",text:"您已经保存了文章。",showCancelButton: false,type:"success"},function(){
+					window.parent.getUrl("/infinite/myAtc.html");
+				});
+			}, function () {
+				swal({title:"失败",text:"保存失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
+			});
+		}else{
+			swal.close();
+			// swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
+		}
 	});
 }
 
@@ -160,15 +195,15 @@ function deleteAtc(){
 	    	var url = Const.Api_URL + "/MyAtcController/deleteAtc";
 	    	View.post(url, AtcObj, function (resp) {
 	    		//删除成功提示框
-				swal({title:"删除成功！",text:"您已经永久删除了这条数据。",type:"success"},function(){
-	            	window.parent.getUrl("/infinite/myAtc.html");
-	            })
+				swal({title:"删除成功！",text:"您已经永久删除了这条数据。",showCancelButton: false,type:"success"},function(){
+					window.parent.getUrl("/infinite/myAtc.html");
+				});
 	    	}, function () {
-	    		swal({title:"失败",text:"删除失败！",type:"error"})
+	    		swal({title:"失败",text:"删除失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
 	    	});
-	    }
-	    else{
-	        swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
+	    }else{
+			swal.close();
+	        // swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
 	    }
 	});
 	

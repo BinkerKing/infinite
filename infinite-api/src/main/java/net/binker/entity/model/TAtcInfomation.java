@@ -97,6 +97,10 @@ public class TAtcInfomation {
 	//@Comment("文章状态  0-无效 1-有效")
 	@Column(name = "valid_flag")
 	private Byte validFlag;
+
+	//@Comment("描述")
+	@Column(name = "description")
+	private String description;
 	
 	//正文内容
 	@Transient
