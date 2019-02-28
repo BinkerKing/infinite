@@ -25,4 +25,10 @@ public class Const {
 	
 	//未发布
 	public static final Byte ATC_INFO_PUBLISH_STATUS_NO= 0;
+
+	//数据有效
+	public static final Byte ATC_INFO_VALIDFLAG_YES = 1;
+
+	//数据无效
+	public static final Byte ATC_INFO_VALIDFLAG_NO= 0;
 }

@@ -25,9 +25,9 @@ public class AtcController {
 		return new Resp(tAtcInfomation,CodeDef.SUCCESS);
 	}
 	
-	@RequestMapping(value = "/getAtcList", method = RequestMethod.POST)
-	public Resp getAtcList(@RequestBody SearchParam param){
-		List<TAtcInfomation> tAtcInfomationList = tAtcInfomationService.getAtcList(param.getStatus(),param.getSearch(),param.getLable());
+	@RequestMapping(value = "/getAllShareAtcList", method = RequestMethod.GET)
+	public Resp getAllShareAtcList(){
+		List<TAtcInfomation> tAtcInfomationList = tAtcInfomationService.getAllShareAtcList();
 		return new Resp(tAtcInfomationList,CodeDef.SUCCESS);
 	}
 	

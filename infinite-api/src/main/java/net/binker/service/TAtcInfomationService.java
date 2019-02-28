@@ -20,6 +20,8 @@ public interface TAtcInfomationService {
 	
 	//获取共享章列表
 	public List<TAtcInfomation> getAtcList(String status, String search, String lable);
+
+	public List<TAtcInfomation> getAllShareAtcList();
 	
 	public String saveNote(TAtcNote note);
 	

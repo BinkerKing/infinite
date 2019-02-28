@@ -12,6 +12,8 @@
 	<link rel="import" href="/common/depjs.html" />
     <link rel="import" href="/common/depcss.html" />
 	<link rel="import" href="/common/form-js.html" />
+	<script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+	<script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
 </head>
 <body>
 <div class="row-col">
@@ -25,7 +27,7 @@
 
 					</div>
 				</div>
-				<label class="control-label">Title</label>
+				<label class="control-label">发布状态</label>
 				<div class="nav-active-white">
 					<ul class="nav nav-pills nav-stacked nav-sm">
 						<li class="nav-item">
@@ -70,17 +72,23 @@
 	<div class="modal-dialog modal-full">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-				<div class="modal-title">
-					<div class="col-sm-8">
-						<h4 id="atcTitle" id="modalLabel"></h4>
+				<div class="modal-title" >
+					<div class="col-sm-10">
+						<h4 id="atcTitle"></h4>
 					</div>
-					<div class="col-sm-3">
-						<div class="col-sm-3">
+					<div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
+						<div class="col-sm-2">
+						</div>
+						<div class="col-sm-2">
 							<a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-2">
 							<a href="javascript:edit();"><i class="glyphicon glyphicon-pencil"></i></a>
+						</div>
+						<div class="col-sm-3">
+						</div>
+						<div class="col-sm-1">
+							<a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close" class="glyphicon glyphicon-remove"></i></a>
 						</div>
 					</div>
 				</div>
@@ -94,7 +102,7 @@
 </body>
 <script type="text/javascript">
 /*全局变量区*/
-var min_height = document.documentElement.clientHeight - 200;//获取屏幕高度-头部高度
+var min_height = window.screen.availHeight - 370;//获取屏幕高度-头部高度
 var AuthorId = 1;
 var Status = 1;//1-所有 2-已发布 3-未发布
 

@@ -81,6 +81,7 @@ public class TAtcInfomationServiceImpl implements TAtcInfomationService {
 		TAtcContent content = tAtcContentRepo.save(lc.getTatcContent());
 		lc.setContentId(content.getId());
 		lc.setCreateTime(new Date());
+		lc.setValidFlag(Const.ATC_INFO_VALIDFLAG_YES);
 		tAtcInfomationRepo.save(lc);
 		return null;
 	}
@@ -116,6 +117,12 @@ public class TAtcInfomationServiceImpl implements TAtcInfomationService {
 		tAtcInfomationList = filterLable(tAtcInfomationList,lable);
 		//二层过滤：搜索框
 		tAtcInfomationList = filterSearch(tAtcInfomationList,search);
+		return tAtcInfomationList;
+	}
+
+	@Override
+	public List<TAtcInfomation> getAllShareAtcList(){
+		List<TAtcInfomation> tAtcInfomationList = tAtcInfomationRepo.findByPublish();
 		return tAtcInfomationList;
 	}
 

@@ -1,0 +1,234 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Infinite - 共享手记</title>
+    
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="import" href="/common/form-js.html" />
+    <script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+    <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+</head>
+<body>
+<div id="atcPageBody" class="container">
+<div class="blog-list-wrapper">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="p-20">
+                <div id="atcListDiv"></div>
+            </div>
+        </div> <!-- end col -->
+
+        <div class="col-sm-4">
+            <div class="p-20">
+
+                <div class="">
+                    <h4 class="text-uppercase">搜索</h4>
+                    <div class="border m-b-20"></div>
+                    <div class="form-group search-box">
+                        <input type="text" id="searchFilter" class="form-control" placeholder="Search here...">
+                        <button type="submit" class="btn btn-search" onclick="search()"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">排行榜</h4>
+                    <div class="border m-b-20"></div>
+
+                    <ul class="blog-categories-list list-unstyled">
+                        <li><a href="#">Lifestyle</a></li>
+                        <li><a href="#">Music</a></li>
+                        <li><a href="#">Travel</a></li>
+                        <li><a href="#">Fashion</a></li>
+                        <li><a href="#">Videos</a></li>
+                    </ul>
+                </div>
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">热门手记</h4>
+                    <div class="border m-b-20"></div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">Exclusive: Get a First Look at the Fall Collection</a> </h5>
+                            <p class="font-13 text-muted">
+                                Sep 03, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">The Most Impressive London Streets</a> </h5>
+                            <p class="font-13 text-muted">
+                                Sep 03, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">How To Beat The Heat</a> </h5>
+                            <p class="font-13 text-muted">
+                                Aug 21, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">Newsletter</h4>
+                    <div class="border m-b-20"></div>
+
+                    <form>
+                        <div class="input-group m-t-10">
+                            <input type="email" id="example-input2-group2" name="example-input2-group2" class="form-control" placeholder="Email">
+                            <span class="input-group-btn">
+                                                    <button type="button" class="btn waves-effect waves-light btn-primary">Submit</button>
+                                                    </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div>
+</div>
+</div> <!-- container -->
+
+<!-- 文章展示model -->
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" >
+                    <div class="col-sm-10">
+                        <h4 id="atcTitle"></h4>
+                    </div>
+                    <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-1">
+                            <a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close" class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body" id="_modalDialog_body">
+                <iframe id="atcView" src="" frameBorder="0" width="99.6%"></iframe>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+<script>
+var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
+var AtcList = [];//所有的
+var CurAtcId = "";//当前点击文章ID
+$(function(){
+	initAtcList();
+    $('#atcView').attr('height',min_height+"px");
+});
+
+//监听搜索框的回车
+$('#searchFilter').bind('keypress',function(e){
+    if(e.keyCode == 13)
+        search();
+});
+
+function initAtcList(){
+	var url = Const.Api_URL + "/AtcController/getAllShareAtcList";
+	View.get(url,null,function(resp){
+        AtcList = resp;
+        reload_AtcListTmpl(resp);
+	},function(){
+		
+	});
+}
+
+function edit(){
+    window.parent.getUrl("/infinite/newAtc.html?atcId="+CurAtcId);
+}
+
+function toPage(){
+    window.parent.getUrl("/infinite/atcPage.html?atcId="+CurAtcId);
+}
+
+function collect(){
+    if($("#collect-icon").attr("class")=="glyphicon glyphicon-star-empty"){
+        //收藏
+        $("#collect-icon").attr("class","glyphicon glyphicon-star");
+        $("#collect-icon").css("color","orange");
+        //弹框，收藏成功
+        swal({title:"收藏成功",text:"请在我的手记中查看。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+    }else{
+        $("#collect-icon").attr("class","glyphicon glyphicon-star-empty");
+        //取消收藏
+        $("#collect-icon").css("color","");
+        //弹框，取消收藏
+        swal({title:"取消收藏",text:"已取消收藏。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+    }
+}
+
+function getAtc(id,title){
+    CurAtcId = id;
+    $("#atcTitle").text(title);
+    $("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
+}
+
+function search(){
+    var searchFilter = $("#searchFilter").val();
+    if(searchFilter == ""){
+        reload_AtcListTmpl(AtcList);
+        return;
+    }
+    var searchList=[];
+    for(var i=0;i<AtcList.length;i++){
+        if(AtcList[i].titleInfo.indexOf(searchFilter)!=-1 || AtcList[i].description.indexOf(searchFilter)!=-1){
+            searchList.push(AtcList[i]);
+        }
+    }
+    reload_AtcListTmpl(searchList);
+}
+
+/***页面渲染***/
+//渲染文章列表模板
+function reload_AtcListTmpl(list){
+    var data = {};
+    data.list = list;
+    for(var i=0;i<data.list.length;i++){
+        data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+    }
+    var temp = new Tmpl("atcListTmpl",data);
+    temp.reset("atcListDiv");
+}
+
+</script>
+
+<script id="atcListTmpl" type="text/html">
+<!-- 文章列表模板 -->
+{{each list as item}}
+<div class="blog-post m-b-30">
+    <div class="text-muted"><span>by <a class="text-dark font-secondary">{{item.authorName}}</a>,</span> <span>{{item.createTime}}</span></div>
+    <div class="post-title">
+        <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
+    </div>
+    <div>
+        <p>{{item.description}}</p>
+    </div>
+</div>
+{{/each}}
+</script>
+
+</html>

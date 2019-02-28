@@ -76,14 +76,27 @@
   <div class="modal-dialog modal-full">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h4 id="codeTitle" class="modal-title" id="modalLabel"></h4>
+        <div class="col-sm-10">
+          <h4 id="codeTitle"></h4>
+        </div>
+        <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
+          <div class="col-sm-2">
+          </div>
+          <div class="col-sm-2">
+            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+          </div>
+          <div class="col-sm-2">
+            <a href="javascript:edit();"><i class="glyphicon glyphicon-pencil"></i></a>
+          </div>
+          <div class="col-sm-3">
+          </div>
+          <div class="col-sm-1">
+            <a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close" class="glyphicon glyphicon-remove"></i></a>
+          </div>
+        </div>
       </div>
       <div class="modal-body" id="_modalDialog_body">
         <textarea id="code" name="code"></textarea>
-        <a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="edit()">
-          <i class="glyphicon glyphicon-pencil"></i>
-        </a>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal -->
@@ -123,6 +136,22 @@
 
   function edit(){
     window.parent.getUrl("/infinite/newCode.html?infoId="+CurCode.id);
+  }
+
+  function collect(){
+    if($("#collect-icon").attr("class")=="glyphicon glyphicon-star-empty"){
+      //收藏
+      $("#collect-icon").attr("class","glyphicon glyphicon-star");
+      $("#collect-icon").css("color","orange");
+      //弹框，收藏成功
+      swal({title:"收藏成功",text:"请在我的代码库中查看。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+    }else{
+      $("#collect-icon").attr("class","glyphicon glyphicon-star-empty");
+      //取消收藏
+      $("#collect-icon").css("color","");
+      //弹框，取消收藏
+      swal({title:"取消收藏",text:"已取消收藏。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+    }
   }
 
   /***数据获取***/
