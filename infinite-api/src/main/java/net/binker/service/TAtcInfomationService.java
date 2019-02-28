@@ -2,6 +2,7 @@ package net.binker.service;
 
 import java.util.List;
 
+import net.binker.entity.model.TAtcComment;
 import net.binker.entity.model.TAtcInfomation;
 import net.binker.entity.model.TAtcNote;
 
@@ -22,6 +23,10 @@ public interface TAtcInfomationService {
 	public List<TAtcInfomation> getAtcList(String status, String search, String lable);
 
 	public List<TAtcInfomation> getAllShareAtcList();
+
+	public List<TAtcComment> getCommentList(Long atcId);
+
+	public String submitComment(TAtcComment lc);
 	
 	public String saveNote(TAtcNote note);
 	

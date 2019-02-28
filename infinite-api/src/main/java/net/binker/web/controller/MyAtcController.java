@@ -3,6 +3,7 @@ package net.binker.web.controller;
 import net.binker.config.CodeDef;
 import net.binker.core.entity.Resp;
 import net.binker.entity.model.SearchParam;
+import net.binker.entity.model.TAtcComment;
 import net.binker.entity.model.TAtcInfomation;
 import net.binker.entity.model.TAtcNote;
 import net.binker.service.TAtcInfomationService;
@@ -48,6 +49,19 @@ public class MyAtcController {
 		if(tAtcInfomation == null)
 			return new Resp().setCode(CodeDef.ERROR);
 		return new Resp(tAtcInfomation,CodeDef.SUCCESS);
+	}
+
+	@RequestMapping(value = "/getCommentList", method = RequestMethod.GET)
+	public Resp getCommentList(@RequestParam("atcId") Long atcId){
+		List<TAtcComment> tAtcCommentList = tAtcInfomationService.getCommentList(atcId);
+		return new Resp(tAtcCommentList,CodeDef.SUCCESS);
+	}
+
+	@RequestMapping(value = "/saveComment", method = RequestMethod.POST)
+	public Resp saveComment(@RequestBody TAtcComment lc){
+		tAtcInfomationService.submitComment(lc);
+		List<TAtcComment> tAtcCommentList = tAtcInfomationService.getCommentList(lc.getAtcId());
+		return new Resp(tAtcCommentList).setCode(CodeDef.SUCCESS);
 	}
 	
 	@RequestMapping(value = "/saveNote", method = RequestMethod.POST)

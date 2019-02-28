@@ -2,10 +2,12 @@ package net.binker.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import net.binker.config.Const;
+import net.binker.entity.model.TAtcComment;
 import net.binker.entity.model.TAtcContent;
 import net.binker.entity.model.TAtcInfomation;
 import net.binker.entity.model.TAtcNote;
 import net.binker.service.TAtcInfomationService;
+import net.binker.service.repo.TAtcCommentRepo;
 import net.binker.service.repo.TAtcContentRepo;
 import net.binker.service.repo.TAtcInfomationRepo;
 import net.binker.service.repo.TAtcNoteRepo;
@@ -25,6 +27,9 @@ public class TAtcInfomationServiceImpl implements TAtcInfomationService {
 	
 	@Autowired
 	private TAtcContentRepo tAtcContentRepo;
+
+	@Autowired
+	private TAtcCommentRepo tAtcCommentRepo;
 	
 	@Autowired
 	private TAtcNoteRepo tAtcNoteRepo;
@@ -124,6 +129,19 @@ public class TAtcInfomationServiceImpl implements TAtcInfomationService {
 	public List<TAtcInfomation> getAllShareAtcList(){
 		List<TAtcInfomation> tAtcInfomationList = tAtcInfomationRepo.findByPublish();
 		return tAtcInfomationList;
+	}
+
+	@Override
+	public List<TAtcComment> getCommentList(Long atcId){
+		List<TAtcComment> tAtcCommentList = tAtcCommentRepo.findByAtcId(atcId);
+		return tAtcCommentList;
+	}
+
+	@Override
+	public String submitComment(TAtcComment lc){
+		lc.setCreateTime(new Date());
+		tAtcCommentRepo.save(lc);
+		return null;
 	}
 
 	@Override
