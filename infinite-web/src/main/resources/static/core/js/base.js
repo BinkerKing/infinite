@@ -499,3 +499,23 @@ function changeBack(str){
 	str = str.replace(new RegExp("&#62;",'g'),">");
 	return str;
 }
+
+/*日期格式化*/
+function getMyDate(str) {
+	var oDate = new Date(str),
+			oYear = oDate.getFullYear(),
+			oMonth = oDate.getMonth()+1,
+			oDay = oDate.getDate(),
+			oHour = oDate.getHours(),
+			oMin = oDate.getMinutes(),
+			oSen = oDate.getSeconds(),
+			oTime = oYear +'-'+ addZero(oMonth) +'-'+ addZero(oDay);
+	return oTime;
+}
+
+function addZero(num){
+	if(parseInt(num) < 10){
+		num = '0'+num;
+	}
+	return num;
+}
