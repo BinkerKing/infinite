@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Infinite - 模板管理列表</title>
+    <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" type="text/css" href="/temp2/assets/styles/app.css" /><!--模板二的样式 -->
+
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="import" href="/common/form-js.html" />
+    <script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+    <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+</head>
+<body>
+<div class="row-col">
+    <div class="col-sm w w-auto-xs light lt bg-auto">
+        <div class="padding pos-rlt">
+            <button class="btn btn-outline btn-primary btn-block"
+                    onclick="addTmpl()">新建模板</button>
+            <div class="hidden-xs-down m-t" id="inbox-menu">
+                <div class="nav-active-primary">
+                    <div class="nav nav-pills nav-sm flex-column">
+
+                    </div>
+                </div>
+                <label class="control-label">发布状态</label>
+                <div class="nav-active-white">
+                    <ul class="nav nav-pills nav-stacked nav-sm">
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="searchByStatus(0)">
+                                <i class="fa m-r-sm fa-circle text-info"></i> 未发布
+                            </a>
+                            <a class="nav-link" onclick="searchByStatus(1)">
+                                <i class="fa m-r-sm fa-circle text-warn"></i> 已发布
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div ui-view class="padding pos-rlt">
+            <a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addTmpl()">
+                <i class="glyphicon glyphicon-pencil"></i>
+            </a>
+            <div>
+                <!-- header -->
+                <div class="m-b">
+                    <div class="btn-toolbar">
+                        <input id="searchFilter" type="text" class="form-control" autocomplete="off" placeholder="Say something">
+                    </div>
+                </div>
+                <!-- / header -->
+                <!-- list -->
+                <div class="list white">
+                    <div id="tmplListDiv"></div>
+                </div>
+                <!-- / list -->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 文章展示model -->
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" >
+                    <div class="col-sm-10">
+                        <h4 id="temlTitle"></h4>
+                    </div>
+                    <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:edit();"><i class="glyphicon glyphicon-pencil"></i></a>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-1">
+                            <a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close" class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body" id="_modalDialog_body">
+                <iframe id="tmplView" src="" frameBorder="0" width="99.6%"></iframe>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+<script type="text/javascript">
+    /*全局变量区*/
+    var min_height = window.screen.availHeight - 370;//获取屏幕高度-头部高度
+    var Status = 1;//1-所有 2-已发布 3-未发布
+
+    var TmplList = [];//所有的
+    var PublishList = [];//已发布的
+    var UnPublishList = [];//未发布的
+
+    var CurTmplId = "";
+    /*初始化*/
+    $(function(){
+        initTmplList();
+        $('#tmplView').attr('height',min_height+"px");
+    });
+
+    /*监听区*/
+    //监听搜索框的回车
+    $('#searchFilter').bind('keypress',function(e){
+        if(e.keyCode == 13)
+            searchByTitle();
+    });
+    $("#searchFilter").bind("input propertychange",function(){
+        searchByTitle();
+    });
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+    });
+
+    /*方法区*/
+    function addTmpl(){
+        window.parent.getUrl("/system/newTmpl.html");
+    }
+
+    function edit(){
+        window.parent.getUrl("/infinite/newTmpl.html?tmplId="+CurTmplId);
+    }
+
+    /***数据获取***/
+    //获取所有模板列表，并初始化全局变量
+    function initTmplList(){
+        var url = Const.Api_URL + "/TmplController/getTmplList";
+        var param = {
+            authorId : AuthorId,
+            status : 1,
+            search : "",
+            lable : ""
+        };
+        View.post(url,param,function(resp){
+            TmplList = resp;
+            reload_TmplListTmpl(resp);
+        },function(){
+
+        });
+    }
+
+    //全局变量搜索:标题搜索
+    function searchByTitle(){
+        var titleSearch = $("#searchFilter").val();
+        if(titleSearch == ""){
+            reload_TmplListTmpl(TmplList);
+            return;
+        }
+        var searchList=[];
+        for(var i=0;i<TmplList.length;i++){
+            if(TmplList[i].titleInfo.indexOf(titleSearch)!=-1){
+                searchList.push(TmplList[i]);
+            }
+        }
+        reload_TmplListTmpl(searchList);
+    }
+
+    //通过id获取文章信息
+    function getInfoById(id){
+        for(var i=0;i<TmplList.length;i++){
+            if(TmplList[i].id==id){
+                return TmplList[i];
+            }
+        }
+    }
+
+    function getTmpl(id,title){
+        CurTmplId = id;
+        $("#tmplTitle").text(title);
+        $("#tmplView").attr("src","/infinite/tmplView.html?tmplId="+id);
+    }
+
+    function searchByStatus(status){
+        var searchList=[];
+        for(var i=0;i<TmplList.length;i++){
+            if(TmplList[i].publishStatus == status){
+                searchList.push(TmplList[i]);
+            }
+        }
+        reload_TmplListTmpl(searchList);
+    }
+
+    /***页面渲染***/
+//渲染文章列表模板
+    function reload_TmplListTmpl(list){
+        var data = {};
+        data.list = list;
+        for(var i=0;i<data.list.length;i++){
+            data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+        }
+        var temp = new Tmpl("tmplListTmpl",data);
+        temp.reset("tmplListDiv");
+    }
+
+</script>
+<script id="tmplListTmpl" type="text/html">
+    {{each list as item}}
+    <div class="list-item b-l b-l-2x b-info">
+        <div class="list-left">
+            {{if item.publishStatus===1}}
+            <span class="avatar-sm-box bg-orange">P</span>
+            {{else if item.publishStatus===0}}
+            <span class="avatar-sm-box bg-success">L</span>
+            {{/if}}
+        </div>
+        <div class="list-body">
+            <div class="pull-right text-muted text-xs">
+                <span class="hidden-xs">{{item.createTime}}</span> <i
+                    class="fa fa-paperclip m-l-sm"></i>
+            </div>
+            <div>
+                <a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getTmpl({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a>
+                <span class="label label-xs m-l-sm text-u-c"></span>
+            </div>
+            {{if item.description===""}}
+            <div class="text-ellipsis text-muted text-sm">主人太懒，没有留下任何说明</div>
+            {{else}}
+            <div class="text-ellipsis text-muted text-sm">{{item.description}}</div>
+            {{/if}}
+        </div>
+    </div>
+    {{/each}}
+</script>
+</html>
