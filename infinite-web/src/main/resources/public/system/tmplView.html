@@ -1,0 +1,60 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Infinite - 查看模版</title>
+    
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+</head>
+<body>
+<div id="tmplViewBody" class="wrapper wrapper-content animated fadeInRight article">
+    <div class="row justify-content-md-center">
+        <div class="col-lg-10">
+            <div id="tmplViewDiv"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+var tmplId = View.getQStr("tmplId");
+$(function(){
+	initTmplView();
+	$("#tmplViewBody").slimScroll({
+		width: 'auto', //可滚动区域宽度
+		height: '100%' //可滚动区域高度
+	});
+});
+function setScroll(){
+	$("#tmplViewBody").slimScroll({
+		alwaysVisible: true
+	});
+}
+$(window).on("resize",setScroll);
+
+function initTmplView(){
+	var url = Const.Api_URL + "/TmplController/getOneTmpl";
+	var param = "id="+ tmplId;
+	View.get(url,param,function(resp){
+		var data = {};
+		data.data = resp;
+		var temp = new Tmpl("tmplViewTmpl",data);
+		temp.reset("tmplViewDiv");
+	},function(){
+		
+	});
+}
+
+</script>
+<script id="tmplViewTmpl" type="text/html">
+<div class="ibox">
+	<div class="ibox-content">
+        <div class="alert alert-info" role="alert">
+            {{data.description}}
+        </div>
+        {{@data.tsysTmplcontent.htmlContent}}
+	</div>
+</div>
+</script>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Infinite - 模板管理列表</title>
+    <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" type="text/css" href="/temp2/assets/styles/app.css" /><!--模板二的样式 -->
+    <link rel="stylesheet" type="text/css" href="/tools/bootstrap-table/src/bootstrap-table.scss" />
+
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="import" href="/common/form-js.html" />
+    <script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+    <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+    <script src="/tools/bootstrap-table/src/bootstrap-table.js" />
+    <script src="/tools/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+<div class="row-col">
+    <div class="demo-box m-t-20">
+        <table id="table"></table>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    /*全局变量区*/
+    var min_height = window.screen.availHeight - 370;//获取屏幕高度-头部高度
+    /*初始化*/
+    $(function(){
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+
+        //2.初始化Button的点击事件
+        var oButtonInit = new ButtonInit();
+        oButtonInit.Init();
+
+        $('#tmplView').attr('height',min_height+"px");
+    });
+
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#tb_departments').bootstrapTable({
+                url: Const.Api_URL + "/TmplController/getTmplList",         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber:1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'Name',
+                    title: '部门名称'
+                }, {
+                    field: 'ParentName',
+                    title: '上级部门'
+                }, {
+                    field: 'Level',
+                    title: '部门级别'
+                }, {
+                    field: 'Desc',
+                    title: '描述'
+                }, ]
+            });
+        };
+
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                departmentname: $("#txt_search_departmentname").val(),
+                statu: $("#txt_search_statu").val()
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+
+    var ButtonInit = function () {
+        var oInit = new Object();
+        var postdata = {};
+
+        oInit.Init = function () {
+            //初始化页面上面的按钮事件
+        };
+
+        return oInit;
+    };
+</script>
+</html>

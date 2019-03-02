@@ -27,15 +27,15 @@
 
                     </div>
                 </div>
-                <label class="control-label">发布状态</label>
+                <label class="control-label">启用状态</label>
                 <div class="nav-active-white">
                     <ul class="nav nav-pills nav-stacked nav-sm">
                         <li class="nav-item">
                             <a class="nav-link" onclick="searchByStatus(0)">
-                                <i class="fa m-r-sm fa-circle text-info"></i> 未发布
+                                <i class="fa m-r-sm fa-circle text-info"></i> 启用
                             </a>
                             <a class="nav-link" onclick="searchByStatus(1)">
-                                <i class="fa m-r-sm fa-circle text-warn"></i> 已发布
+                                <i class="fa m-r-sm fa-circle text-warn"></i> 禁用
                             </a>
                         </li>
                     </ul>
@@ -67,20 +67,20 @@
     </div>
 </div>
 
-<!-- 文章展示model -->
+<!-- 模版展示model -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
     <div class="modal-dialog modal-full">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title" >
                     <div class="col-sm-10">
-                        <h4 id="temlTitle"></h4>
+                        <h4 id="tmplTitle"></h4>
                     </div>
                     <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                            <a href="javascript:pulish();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
                         </div>
                         <div class="col-sm-2">
                             <a href="javascript:edit();"><i class="glyphicon glyphicon-pencil"></i></a>
@@ -135,20 +135,30 @@
     }
 
     function edit(){
-        window.parent.getUrl("/infinite/newTmpl.html?tmplId="+CurTmplId);
+        window.parent.getUrl("/system/newTmpl.html?tmplId="+CurTmplId);
+    }
+
+    function pulish(){
+        if($("#collect-icon").attr("class")=="glyphicon glyphicon-star-empty"){
+            //启动
+            $("#collect-icon").attr("class","glyphicon glyphicon-star");
+            $("#collect-icon").css("color","orange");
+            //弹框，启动成功
+            swal({title:"启用模版",text:"模版已启用",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+        }else{
+            $("#collect-icon").attr("class","glyphicon glyphicon-star-empty");
+            //禁用
+            $("#collect-icon").css("color","");
+            //弹框，取消收藏
+            swal({title:"禁用模版",text:"模版已禁用。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+        }
     }
 
     /***数据获取***/
     //获取所有模板列表，并初始化全局变量
     function initTmplList(){
         var url = Const.Api_URL + "/TmplController/getTmplList";
-        var param = {
-            authorId : AuthorId,
-            status : 1,
-            search : "",
-            lable : ""
-        };
-        View.post(url,param,function(resp){
+        View.post(url,null,function(resp){
             TmplList = resp;
             reload_TmplListTmpl(resp);
         },function(){
@@ -172,19 +182,10 @@
         reload_TmplListTmpl(searchList);
     }
 
-    //通过id获取文章信息
-    function getInfoById(id){
-        for(var i=0;i<TmplList.length;i++){
-            if(TmplList[i].id==id){
-                return TmplList[i];
-            }
-        }
-    }
-
     function getTmpl(id,title){
         CurTmplId = id;
         $("#tmplTitle").text(title);
-        $("#tmplView").attr("src","/infinite/tmplView.html?tmplId="+id);
+        $("#tmplView").attr("src","/system/tmplView.html?tmplId="+id);
     }
 
     function searchByStatus(status){
@@ -198,7 +199,7 @@
     }
 
     /***页面渲染***/
-//渲染文章列表模板
+    //渲染模版列表模板
     function reload_TmplListTmpl(list){
         var data = {};
         data.list = list;

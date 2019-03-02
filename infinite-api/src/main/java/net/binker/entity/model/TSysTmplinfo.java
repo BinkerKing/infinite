@@ -39,16 +39,12 @@ public class TSysTmplinfo {
 	@Column(name = "publish_status")
 	private Byte publishStatus;
 	
-	//@Comment("模板状态  0-无效 1-有效")
-	@Column(name = "valid_flag")
-	private Byte validFlag;
-
 	//@Comment("描述")
 	@Column(name = "description")
 	private String description;
 	
 	//模板内容
 	@Transient
-	private TSysTmplcontent tSysTmplcontent;
+	private TSysTmplcontent tsysTmplcontent;
 
 }

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Infinite - 新增模版</title>
+	<meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+
+	<link rel="stylesheet" type="text/css" href="/temp2/assets/styles/app.css" /><!--模板二的样式 -->
+
+	<!-- 插件 css-->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/toastr/toastr.min.css"/><!-- Notification css (Toastr) -->
+	<!-- App css -->
+	<link rel="stylesheet" type="text/css" href="/temp1/plugins/summernote/summernote.css"/><!-- Summernote富文本框 css -->
+	
+	<script src="/temp1/plugins/summernote/summernote.min.js"></script><!-- Summernote富文本框 JS -->
+	<script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+    <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+</head>
+<body>
+<div class="row-col">
+	<div class="col-sm w w-auto-xs light lt bg-auto">
+		<div class="padding pos-rlt">
+			<button id="btn_save" class="btn btn-outline btn-primary btn-block"
+					onclick="save()">保存</button>
+			<button id="delete_btn" class="btn btn-outline btn-primary btn-block"
+					onclick="deleteTmpl()" style= "display:none">删除</button>
+			<div class="hidden-xs-down m-t" id="inbox-menu">
+				<div class="nav-active-primary">
+					<div class="nav nav-pills nav-sm flex-column">
+
+					</div>
+				</div>
+
+				<div class="control-group" id="toastTypeGroup">
+					<div class="controls">
+						<label class="m-y">启用状态</label>
+						<div class="radio radio-warning">
+							<input type="radio" name="radio" id="radio1" value="0"
+								   checked>
+							<label for="radio1">
+								禁用
+							</label>
+						</div>
+						<div class="radio radio-success">
+							<input type="radio" name="radio" id="radio2" value="1">
+							<label for="radio2">
+								启用
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<label class="control-label m-t-10">描述</label>
+						<textarea class="input-large form-control" id="desc" rows="3" placeholder="Enter a desc ..."></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm">
+		<div ui-view class="padding pos-rlt">
+			<div>
+				<!-- header -->
+				<div class="m-b">
+					<div class="btn-toolbar">
+						<input id="titleInfo" type="text" class="form-control" placeholder="Title">
+					</div>
+				</div>
+				<!-- / header -->
+				<!-- list -->
+				<div class="list white">
+					<div class="summernote"></div>
+				</div>
+				<!-- / list -->
+			</div>
+
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+var tmplId = View.getQStr("tmplId");
+var TmplObj = {};//全局的Tmpl，如果是编辑，则会给上值，是新增则是空
+$(function(){
+	$('.summernote').summernote({
+		height: 480,                 // set editor height
+		minHeight: null,             // set minimum height of editor
+		maxHeight: null,             // set maximum height of editor
+		focus: false                 // set focus to editable area after initializing summernote
+	});
+
+	$('.inline-editor').summernote({
+		airMode: false
+	});
+
+	if(tmplId){
+		//编辑
+		$("#delete_btn").show();
+		var url = Const.Api_URL + "/TmplController/getOneTmpl";
+		var param = "id="+ tmplId;
+		View.get(url,param,function(resp){
+			$("#titleInfo").val(resp.titleInfo);
+			$("input:radio[value='"+resp.publishStatus+"']").attr('checked','true');
+			$('.summernote').summernote('code',resp.tsysTmplcontent.htmlContent);
+			$("#desc").val(resp.description);
+			TmplObj = resp;
+		},function(){
+
+		});
+	}
+});
+
+function validate(){
+	
+}
+
+function save(){
+	validate();
+	if($("#titleInfo").val() == ""){
+		swal({title:"保存失败",text:"标题不能为空！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
+		return;
+	}
+
+	swal({title:"您确定要保存模版吗",
+		text:"您已经编辑完模版了吗？",
+		type:"warning",
+		showCancelButton:true,
+		confirmButtonColor:"#DD6B55",
+		confirmButtonText:"确定保存！",
+		cancelButtonText:"取消",
+		closeOnConfirm:false,
+		closeOnCancel:false
+	},function(isConfirm){
+		if(isConfirm){
+			var tSysTmplinfo = TmplObj;
+			tSysTmplinfo.titleInfo = $("#titleInfo").val();
+			tSysTmplinfo.publishStatus = $('input[name="radio"]:checked').val();
+			tSysTmplinfo.description = $("#desc").val();
+			if (!tSysTmplinfo.tsysTmplcontent) {
+				tSysTmplinfo.tsysTmplcontent = {};
+			}
+			tSysTmplinfo.tsysTmplcontent.htmlContent = $('.summernote').summernote('code');
+			var url = Const.Api_URL + "/TmplController/saveTmpl";
+			View.post(url, tSysTmplinfo, function (resp) {
+				//删除成功提示框
+				swal({title:"保存成功！",text:"您已经保存了模版。",showCancelButton: false,type:"success"},function(){
+					window.parent.getUrl("/system/templetManage.html");
+				});
+			}, function () {
+				swal({title:"失败",text:"保存失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
+			});
+		}else{
+			swal.close();
+			// swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
+		}
+	});
+}
+
+function deleteTmpl(){
+	//删除确认框
+	swal({title:"您确定要删除这条数据吗",
+		text:"删除后将无法恢复，请谨慎操作！",
+		type:"warning",
+		showCancelButton:true,
+		confirmButtonColor:"#DD6B55",
+		confirmButtonText:"确定删除！",
+		cancelButtonText:"取消",
+		closeOnConfirm:false,
+		closeOnCancel:false
+	},function(isConfirm){
+	    if(isConfirm){
+	    	var url = Const.Api_URL + "/TmplController/deleteTmpl";
+	    	View.post(url, TmplObj, function (resp) {
+	    		//删除成功提示框
+				swal({title:"删除成功！",text:"您已经永久删除了这条数据。",showCancelButton: false,type:"success"},function(){
+					window.parent.getUrl("/system/templetManage.html");
+				});
+	    	}, function () {
+	    		swal({title:"失败",text:"删除失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
+	    	});
+	    }else{
+			swal.close();
+	        // swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
+	    }
+	});
+	
+}
+
+//Alt+S 保存
+jQuery(document).keydown(function(e) {
+	if(e.which == 83 && e.altKey) {
+		show();
+	}
+	if(e.which == 68 && e.altKey) {
+		empty();
+	}
+	if(e.which == 67 && e.altKey) {
+		copy();
+	}
+	if(e.which == 86 && e.altKey) {
+		prase();
+	}
+});
+
+var test = "";
+
+function show(){
+	var content = $('.summernote').summernote('code');
+	View.info(content);
+}
+
+function empty(){
+	$('.summernote').summernote('code',"");
+}
+function copy(){
+	test = $('.summernote').summernote('code');
+}
+function prase(){
+	$('.summernote').summernote('code',test);
+}
+</script>
+</html>

@@ -6,7 +6,7 @@ import net.binker.entity.model.TAtcNote;
 
 import java.util.List;
 
-public interface TSysInfoService {
+public interface TSysTmplinfoService {
 
 	public List<TSysTmplinfo> getTmplList();
 	

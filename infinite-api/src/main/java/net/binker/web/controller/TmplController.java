@@ -18,26 +18,26 @@ public class TmplController {
 	public TSysTmplinfoService tAtcInfomationService;
 	
 	@RequestMapping(value = "/getTmplList", method = RequestMethod.POST)
-	public Resp getMyAtcList(@RequestBody SearchParam param){
-		List<TSysTmplinfo> tAtcInfomationList = tAtcInfomationService.getMyAtcList(param.getAuthorId(),param.getStatus(),param.getSearch(),param.getLable());
+	public Resp getMyAtcList(){
+		List<TSysTmplinfo> tAtcInfomationList = tAtcInfomationService.getTmplList();
 		return new Resp(tAtcInfomationList, CodeDef.SUCCESS);
 	}
 	
 	@RequestMapping(value = "/saveTmpl", method = RequestMethod.POST)
-	public Resp saveAtc(@RequestBody TSysTmplinfo lc){
-		tAtcInfomationService.saveAtc(lc);
+	public Resp savTmpl(@RequestBody TSysTmplinfo lc){
+		tAtcInfomationService.saveTmpl(lc);
 		return new Resp(CodeDef.SUCCESS);
 	}
 
 	@RequestMapping(value = "/deleteTmpl", method = RequestMethod.POST)
-	public Resp deleteAtc(@RequestBody TSysTmplinfo lc){
-		tAtcInfomationService.deleteAtc(lc);
+	public Resp deleteTmpl(@RequestBody TSysTmplinfo lc){
+		tAtcInfomationService.deleteTmpl(lc);
 		return new Resp(CodeDef.SUCCESS);
 	}
 	
 	@RequestMapping(value = "/getOneTmpl", method = RequestMethod.GET)
-	public Resp getMyAtcView(@RequestParam("id") Long id){
-		TSysTmplinfo tAtcInfomation = tAtcInfomationService.getMyAtcView(id);
+	public Resp getOneTmpl(@RequestParam("id") Long id){
+		TSysTmplinfo tAtcInfomation = tAtcInfomationService.getOneTmpl(id);
 		if(tAtcInfomation == null)
 			return new Resp().setCode(CodeDef.ERROR);
 		return new Resp(tAtcInfomation,CodeDef.SUCCESS);
