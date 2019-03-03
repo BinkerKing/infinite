@@ -1,0 +1,299 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Infinite - 话题</title>
+    
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="import" href="/common/form-js.html" />
+    <!-- Jquery filer css -->
+    <link href="/temp1/plugins/jquery.filer/css/jquery.filer.css" rel="stylesheet" />
+    <link href="/temp1/plugins/jquery.filer/css/themes/jquery.filer-dragdropbox-theme.css" rel="stylesheet" />
+
+    <script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+    <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+    <!-- page specific js -->
+    <script src="/temp1/assets/pages/jquery.fileuploads.init.js"></script>
+    <!-- Jquery filer js -->
+    <script src="/temp1/plugins/jquery.filer/js/jquery.filer.min.js"></script>
+</head>
+<body>
+<div id="topicPageBody" class="container">
+<div class="blog-list-wrapper">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="p-20">
+                <div id="topicListDiv"></div>
+            </div>
+        </div> <!-- end col -->
+
+        <div class="col-sm-4">
+            <div class="p-20">
+
+                <div class="">
+                    <h4 class="text-uppercase">Search</h4>
+                    <div class="border m-b-20"></div>
+                    <div class="form-group search-box">
+                        <input type="text" id="searchFilter" class="form-control" placeholder="Search here...">
+                        <button type="submit" class="btn btn-search" onclick="search()"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">Top List</h4>
+                    <div class="border m-b-20"></div>
+
+                    <ul class="blog-categories-list list-unstyled">
+                        <li><a href="#">Lifestyle</a></li>
+                        <li><a href="#">Music</a></li>
+                        <li><a href="#">Travel</a></li>
+                        <li><a href="#">Fashion</a></li>
+                        <li><a href="#">Videos</a></li>
+                    </ul>
+                </div>
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">Hot Topic</h4>
+                    <div class="border m-b-20"></div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">Exclusive: Get a First Look at the Fall Collection</a> </h5>
+                            <p class="font-13 text-muted">
+                                Sep 03, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">The Most Impressive London Streets</a> </h5>
+                            <p class="font-13 text-muted">
+                                Sep 03, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">How To Beat The Heat</a> </h5>
+                            <p class="font-13 text-muted">
+                                Aug 21, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">Join</h4>
+                    <div class="border m-b-20"></div>
+                    <button type="button" data-toggle="modal" data-target="#newTopic" class="btn btn-block btn-sm btn-success waves-effect btn-rounded waves-light">发起话题</button>
+
+                    <button type="button" class="btn btn-block btn-sm btn-success waves-effect btn-rounded waves-light">联系我们</button>
+                </div>
+
+            </div>
+        </div> <!-- end col -->
+    </div>
+</div>
+</div> <!-- container -->
+
+<!-- 文章展示model -->
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" >
+                    <div class="col-sm-10">
+                        <h4 id="topicTitle"></h4>
+                    </div>
+                    <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-1">
+                            <a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close" class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body" id="_modalDialog_body">
+                <iframe id="topicView" src="" frameBorder="0" width="99.6%"></iframe>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 发起话题model -->
+<div class="modal" id="newTopic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" >
+                    <div class="col-sm-10">
+                        <h4>新建话题</h4>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="p-10">
+                                <div class="form-group clearfix">
+                                    <div class="col-sm-12 padding-left-0 padding-right-0">
+                                        <input type="file" name="files[]" id="filer_input" multiple="multiple">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="p-10">
+                                <form id="demo-form" data-parsley-validate="">
+                                    <div class="form-group">
+                                        <label for="fullname">标题 * :</label>
+                                        <input type="text" class="form-control" name="fullname" id="fullname" required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message">描述 (20 chars min, 100 max) :</label>
+                                        <textarea id="message" class="form-control" name="message"
+                                                  data-parsley-trigger="keyup" data-parsley-minlength="20"
+                                                  data-parsley-maxlength="100"
+                                                  data-parsley-minlength-message="Come on! You need to enter at least a 20 character comment.."
+                                                  data-parsley-validation-threshold="10"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+<script>
+var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
+var TopicList = [];//所有的
+var CurInfoId = "";//当前点击话题ID
+$(function(){
+	initTopicList();
+    $('#topicView').attr('height',min_height+"px");
+});
+
+//监听搜索框的回车
+$('#searchFilter').bind('keypress',function(e){
+    if(e.keyCode == 13)
+        search();
+});
+
+//准备话题列表数据，并刷新列表显示
+function initTopicList(){
+	var url = Const.Api_URL + "/TopicController/getPublishTopicList";
+	View.get(url,null,function(resp){
+        TopicList = resp;
+        reload_TopicListTmpl(resp);
+	},function(){
+		
+	});
+}
+
+//进入话题
+function toZone(id){
+    CurInfoId = id;
+    window.parent.getUrl("/infinite/topicZone.html?infoId="+CurInfoId);
+}
+
+//查看话题信息
+function getTopic(id,title){
+    CurInfoId = id;
+    $("#topicTitle").text(title);
+    $("#topicView").attr("src","/infinite/topicView.html?topicId="+id);
+}
+
+//搜索
+function search(){
+    var searchFilter = $("#searchFilter").val();
+    if(searchFilter == ""){
+        reload_TopicListTmpl(TopicList);
+        return;
+    }
+    var searchList=[];
+    for(var i=0;i<TopicList.length;i++){
+        if(TopicList[i].titleInfo.indexOf(searchFilter)!=-1 || TopicList[i].description.indexOf(searchFilter)!=-1){
+            searchList.push(TopicList[i]);
+        }
+    }
+    reload_TopicListTmpl(searchList);
+}
+
+/***页面渲染***/
+//渲染文章列表模板
+function reload_TopicListTmpl(list){
+    var data = {};
+    data.list = list;
+    for(var i=0;i<data.list.length;i++){
+        data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+    }
+    var temp = new Tmpl("topicListTmpl",data);
+    temp.reset("topicListDiv");
+}
+
+</script>
+
+<script id="topicListTmpl" type="text/html">
+<!-- 文章列表模板 -->
+{{each list as item}}
+<div class="property-card property-horizontal">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="property-image" style="background: url('/temp1/assets/images/properties/1.jpg') center center / cover no-repeat;">
+                <span class="property-label label label-danger">For Sale</span>
+            </div>
+        </div>
+        <!-- /col 4 -->
+        <div class="col-sm-8">
+            <div class="property-content">
+                <div class="listingInfo">
+                    <div class="">
+                        <h3><a href="#" class="text-dark">{{item.titleInfo}}</a></h3>
+                        <p class="text-muted"><i class="mdi mdi-map-marker-radius m-r-5"></i>{{item.authorName}},{{item.createTime}}</p>
+                        <p class="font-13 text-muted m-b-0">{{item.description}}</p>
+                    </div>
+                </div>
+                <div class="property-action">
+                    <a href="#" ><i class="glyphicon glyphicon-user"></i><span>{{item.joinCount}}</span></a>
+                    <a href="#" ><i class="glyphicon glyphicon-book"></i><span>{{item.atcCount}}</span></a>
+                    <a href="#" ><i class="glyphicon glyphicon-question-sign"></i><span>{{item.askCount}}</span></a>
+                    <a href="#" ></i><span>{{item.codeCount}}</span></a>
+                    <div class="pull-right">
+                        <a href="javascript:toZone({{item.id}})" class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i><span>进入话题</span></a>
+                    </div>
+                </div>
+                <!-- end. Card actions -->
+            </div>
+        </div>
+        <!-- /col 8 -->
+    </div>
+    <!-- /inner row -->
+</div>
+{{/each}}
+</script>
+</html>

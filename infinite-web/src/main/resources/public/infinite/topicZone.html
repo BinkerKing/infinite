@@ -1,0 +1,347 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Infinite - 话题空间</title>
+    
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="import" href="/common/form-js.html" />
+    <script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+    <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+</head>
+<body>
+<div id="topicZonePageBody" class="container">
+<div class="blog-list-wrapper">
+    <div class="row">
+        <div id="zoneTopDiv"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="p-10">
+                <div id="topicZoneListDiv"></div>
+            </div>
+        </div> <!-- end col -->
+
+        <div class="col-sm-4">
+            <div class="p-10">
+                <button type="button" data-toggle="modal" data-target="#newTopicZone" class="btn btn-block btn-sm btn-success waves-effect btn-rounded waves-light">新建内容</button>
+
+                <div class="m-t-20">
+                    <h4 class="text-uppercase">搜索</h4>
+                    <div class="border m-b-20"></div>
+                    <div class="form-group search-box">
+                        <input type="text" id="searchFilter" class="form-control" placeholder="Search here...">
+                        <button type="submit" class="btn btn-search" onclick="search()"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">排行榜</h4>
+                    <div class="border m-b-20"></div>
+
+                    <ul class="blog-categories-list list-unstyled">
+                        <li><a href="#">Lifestyle</a></li>
+                        <li><a href="#">Music</a></li>
+                        <li><a href="#">Travel</a></li>
+                        <li><a href="#">Fashion</a></li>
+                        <li><a href="#">Videos</a></li>
+                    </ul>
+                </div>
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">热门</h4>
+                    <div class="border m-b-20"></div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">Exclusive: Get a First Look at the Fall Collection</a> </h5>
+                            <p class="font-13 text-muted">
+                                Sep 03, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">The Most Impressive London Streets</a> </h5>
+                            <p class="font-13 text-muted">
+                                Sep 03, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="media latest-post-item">
+                        <div class="media-body">
+                            <h5 class="media-heading"><a href="#">How To Beat The Heat</a> </h5>
+                            <p class="font-13 text-muted">
+                                Aug 21, 2016 | John Deo
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="m-t-50">
+                    <h4 class="text-uppercase">Newsletter</h4>
+                    <div class="border m-b-20"></div>
+
+                    <form>
+                        <div class="input-group m-t-10">
+                            <input type="email" id="example-input2-group2" name="example-input2-group2" class="form-control" placeholder="Email">
+                            <span class="input-group-btn">
+                                                    <button type="button" class="btn waves-effect waves-light btn-primary">Submit</button>
+                                                    </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div>
+</div>
+</div> <!-- container -->
+
+<!-- 文章展示model -->
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" >
+                    <div class="col-sm-10">
+                        <h4 id="topicZoneTitle"></h4>
+                    </div>
+                    <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                        </div>
+                        <div class="col-sm-3">
+                        </div>
+                        <div class="col-sm-1">
+                            <a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close" class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body" id="_modalDialog_body">
+                <iframe id="topicZoneView" src="" frameBorder="0" width="99.6%"></iframe>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 文章展示model -->
+<div class="modal" id="newTopicZone" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" >
+                    <div class="col-sm-11">
+                        <h4>选择新建类型</h4>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row m-t-10">
+
+                    <!--Pricing Column-->
+                    <article class="pricing-column col-lg-4 col-md-4">
+                        <div class="ribbon"><span>Hot</span></div>
+                        <div class="inner-box card-box">
+                            <div class="plan-header text-center">
+                                <h3 class="plan-title">Article</h3>
+                                <h2 class="plan-price">手记</h2>
+                                <div class="plan-duration">Quick Way</div>
+                            </div>
+                            <ul class="plan-stats list-unstyled text-center">
+                                <li>写一篇相关的文章</li>
+                            </ul>
+
+                            <div class="text-center">
+                                <a href="#" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                            </div>
+                        </div>
+                    </article>
+
+
+                    <!--Pricing Column-->
+                    <article class="pricing-column col-lg-4 col-md-4">
+                        <div class="inner-box card-box">
+                            <div class="plan-header text-center">
+                                <h3 class="plan-title">Ask Question</h3>
+                                <h2 class="plan-price">猿问</h2>
+                                <div class="plan-duration">Quick Way</div>
+                            </div>
+                            <ul class="plan-stats list-unstyled text-center">
+                                <li>提出你的疑问</li>
+                            </ul>
+
+                            <div class="text-center">
+                                <a href="#" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                            </div>
+                        </div>
+                    </article>
+
+
+                    <!--Pricing Column-->
+                    <article class="pricing-column col-lg-4 col-md-4">
+                        <div class="inner-box card-box">
+                            <div class="plan-header text-center">
+                                <h3 class="plan-title">Code Zone</h3>
+                                <h2 class="plan-price">代码</h2>
+                                <div class="plan-duration">Quick Way</div>
+                            </div>
+                            <ul class="plan-stats list-unstyled text-center">
+                                <li>代码片段</li>
+                            </ul>
+
+                            <div class="text-center">
+                                <a href="#" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+<script>
+var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
+var infoId = View.getQStr("infoId");
+var TopicInfo = {};
+var TopicZoneList = [];//所有的
+var CurTopicZoneId = "";//当前点击文章ID
+$(function(){
+    initZoneTop();
+	initTopicZoneList();
+    $('#topicZoneView').attr('height',min_height+"px");
+});
+
+//监听搜索框的回车
+$('#searchFilter').bind('keypress',function(e){
+    if(e.keyCode == 13)
+        search();
+});
+
+function initTopicZoneList(){
+	var url = Const.Api_URL + "/TopicController/getTopicZoneList";
+	var param = "infoId="+infoId;
+	View.get(url,param,function(resp){
+        if(!resp){
+            resp = [];
+        }
+        TopicZoneList = resp;
+        reload_TopicZoneListTmpl(resp);
+	},function(){
+		
+	});
+}
+
+function initZoneTop(){
+    var url = Const.Api_URL + "/TopicController/getTopicInfo";
+    var param = "id="+infoId;
+    View.get(url,param,function(resp){
+        if(!resp){
+            resp = {};
+        }
+        TopicInfo = resp;
+        reload_ZoneTopTmpl(resp);
+    },function(){
+
+    });
+}
+
+function edit(){
+    window.parent.getUrl("/infinite/newTopicZone.html?topicZoneId="+CurTopicZoneId);
+}
+
+function toPage(){
+    window.parent.getUrl("/infinite/topicZonePage.html?topicZoneId="+CurTopicZoneId);
+}
+
+function getTopicZone(id,title){
+    CurTopicZoneId = id;
+    $("#topicZoneTitle").text(title);
+    $("#topicZoneView").attr("src","/infinite/topicZoneView.html?topicZoneId="+id);
+}
+
+function search(){
+    var searchFilter = $("#searchFilter").val();
+    if(searchFilter == ""){
+        reload_TopicZoneListTmpl(TopicZoneList);
+        return;
+    }
+    var searchList=[];
+    for(var i=0;i<TopicZoneList.length;i++){
+        if(TopicZoneList[i].titleInfo.indexOf(searchFilter)!=-1 || TopicZoneList[i].description.indexOf(searchFilter)!=-1){
+            searchList.push(TopicZoneList[i]);
+        }
+    }
+    reload_TopicZoneListTmpl(searchList);
+}
+
+/***页面渲染***/
+//渲染文章列表模板
+function reload_TopicZoneListTmpl(list){
+    var data = {};
+    data.list = list;
+    for(var i=0;i<data.list.length;i++){
+        data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+    }
+    var temp = new Tmpl("topicZoneListTmpl",data);
+    temp.reset("topicZoneListDiv");
+}
+
+//渲染顶部模板
+function reload_ZoneTopTmpl(resp){
+    var data = {};
+    data.data = resp;
+    var temp = new Tmpl("zoneTopTmpl",data);
+    temp.reset("zoneTopDiv");
+}
+
+</script>
+
+<script id="topicZoneListTmpl" type="text/html">
+<!-- 文章列表模板 -->
+{{if list.length === 0}}
+<div class="blog-post m-b-30">
+    <div class="text-center"><h3>还没有任何内容。。。</h3></div>
+</div>
+{{/if}}
+{{each list as item}}
+<div class="card-box">
+    <div class="blog-post m-b-30">
+        <div class="text-muted"><span>by <a class="text-dark font-secondary">{{item.authorName}}</a>,</span> <span>{{item.createTime}}</span></div>
+        <div class="post-title">
+            <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getZone({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
+        </div>
+        <div>
+            <p>{{item.description}}</p>
+        </div>
+    </div>
+</div>
+{{/each}}
+</script>
+
+<script id="zoneTopTmpl" type="text/html">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">{{data.titleInfo}}</h4>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</script>
+</html>
