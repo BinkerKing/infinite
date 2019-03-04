@@ -54,6 +54,14 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="control-group" id="topic">
+					<div class="controls">
+						<label class="m-y">话题</label>
+
+					</div>
+				</div>
+
 				<div class="control-group">
 					<div class="controls">
 						<label class="control-label m-t-10">描述</label>
@@ -86,6 +94,7 @@
 </body>
 <script type="text/javascript">
 var atcId = View.getQStr("atcId");
+var topicId = View.getQStr("topicId");
 var authorId = 1;
 var AtcObj = {};//全局的ATC，如果是编辑，则会给上值，是新增则是空
 $(function(){

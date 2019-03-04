@@ -44,9 +44,9 @@
                         </li>
                         <li class="hidden-xs">
                             <form role="search" class="app-search">
-                                <input type="text" placeholder="Search..."
+                                <input id="searchFilter" type="text" placeholder="Search..."
                                        class="form-control">
-                                <a href="#"><i class="fa fa-search"></i></a>
+                                <a href="javascript:searchGlobal();"><i class="fa fa-search"></i></a>
                             </form>
                         </li>
                     </ul>
@@ -206,6 +206,11 @@ function getUrl(url){
     $('#main-frame').attr('height',min_height+"px");
     $('#main-frame').attr('src',url);
     Const.CUR_URL = url;
+}
+
+function searchGlobal(){
+    var searchFilter = $("#searchFilter").val();
+    getUrl('/infinite/searchGlobal.html?searchFilter="'+searchFilter+'"');//搜索
 }
 </script>
 </html>

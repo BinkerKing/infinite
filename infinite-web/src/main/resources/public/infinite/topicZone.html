@@ -168,7 +168,7 @@
                             </ul>
 
                             <div class="text-center">
-                                <a href="#" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                                <a href="javascript:newContent('atc');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
                             </div>
                         </div>
                     </article>
@@ -187,7 +187,7 @@
                             </ul>
 
                             <div class="text-center">
-                                <a href="#" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                                <a href="javascript:newContent('ask');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
                             </div>
                         </div>
                     </article>
@@ -206,7 +206,7 @@
                             </ul>
 
                             <div class="text-center">
-                                <a href="#" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                                <a href="javascript:newContent('code');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
                             </div>
                         </div>
                     </article>
@@ -275,6 +275,21 @@ function getTopicZone(id,title){
     CurTopicZoneId = id;
     $("#topicZoneTitle").text(title);
     $("#topicZoneView").attr("src","/infinite/topicZoneView.html?topicZoneId="+id);
+}
+
+function newContent(status){
+    switch (status) {
+        case 'atc':
+            window.parent.getUrl("/infinite/newAtc.html?topicId="+TopicInfo.id);
+            break;
+        case 'ask':
+            window.parent.getUrl("/infinite/newAsk.html?topicId="+TopicInfo.id);
+            break;
+        case 'code':
+            window.parent.getUrl("/infinite/newCode.html?topicId="+TopicInfo.id);
+            break;
+        default:break;
+    }
 }
 
 function search(){

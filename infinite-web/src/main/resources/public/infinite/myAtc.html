@@ -14,6 +14,7 @@
 	<link rel="import" href="/common/form-js.html" />
 	<script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
 	<script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+	<script src="/core/bootstrap/js/bootstrap-paginator.js"></script>
 </head>
 <body>
 <div class="row-col">
@@ -59,6 +60,9 @@
 				<!-- list -->
 				<div class="list white">
 					<div id="atcListDiv"></div>
+					<div class="page">
+						<ul class="pagination"></ul>
+					</div>
 				</div>
 				<!-- / list -->
 			</div>
@@ -111,10 +115,13 @@ var PublishList = [];//已发布的
 var UnPublishList = [];//未发布的
 
 var CurAtcId = "";
+
+var curPage = 1;//当前页
+var pageSize = 4;//每页显示数量
 /*初始化*/
 $(function(){
 	initAtcList();
-	$('#atcView').attr('height',min_height+"px");
+	$("#atcView").attr("height",min_height+"px");
 });
 
 /*监听区*/
@@ -155,11 +162,56 @@ function initAtcList(){
 	};
 	View.post(url,param,function(resp){
 		AtcList = resp;
-		reload_AtcListTmpl(resp);
+		// 调用分页函数.参数:当前所在页, 总页数(用总条数 除以 每页显示多少条,在向上取整), ajax函数
+		setPage(curPage, Math.ceil(resp.length/pageSize), reload_AtcPage);
+		reload_AtcPage();
 	},function(){
 		
 	});
 }
+
+function reload_AtcPage(){
+	var showAtcList = getCurAtcList();
+	reload_AtcListTmpl(showAtcList);
+}
+
+function getCurAtcList(){
+	var atcList = [];
+	var curPageSize = [];
+	if(curPage < Math.ceil(AtcList.length/pageSize)){
+		curPageSize = pageSize;
+	}else{
+		curPageSize = AtcList.length % pageSize;
+	}
+	for(var i=0;i<curPageSize;i++){
+		atcList.push(AtcList[i+(curPage-1)*pageSize]);
+	}
+	return atcList;
+}
+
+/**
+ *
+ * @param pageCurrent 当前所在页
+ * @param pageSum 总页数
+ * @param callback 调用ajax
+ */
+function setPage(pageCurrent, pageSum, callback) {
+	$(".pagination").bootstrapPaginator({
+		//设置版本号
+		bootstrapMajorVersion: 3,
+		// 显示第几页
+		currentPage: pageCurrent,
+		// 总页数
+		totalPages: pageSum,
+		//当单击操作按钮的时候, 执行该函数, 调用ajax渲染页面
+		onPageClicked: function (event,originalEvent,type,page) {
+			// 把当前点击的页码赋值给currentPage, 调用ajax,渲染页面
+			curPage = page;
+			callback && callback();
+		}
+	})
+}
+
 
 //全局变量搜索:标题搜索
 function searchByTitle(){
@@ -207,8 +259,11 @@ function searchByStatus(status){
 function reload_AtcListTmpl(list){
 	var data = {};
 	data.list = list;
+	var	gettype=Object.prototype.toString;
 	for(var i=0;i<data.list.length;i++){
-		data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+		if(gettype.call(data.list[i].createTime).indexOf("Number")>-1){
+			data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+		}
 	}
 	var temp = new Tmpl("atcListTmpl",data);
 	temp.reset("atcListDiv");

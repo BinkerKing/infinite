@@ -1,0 +1,202 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Infinite - 全局搜索</title>
+    
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="import" href="/common/form-js.html" />
+    <script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
+    <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
+</head>
+<body>
+<div id="atcPageBody" class="container">
+
+    <div class="row">
+        <div class="m-t-30">
+            <h3 id="resultTitle" class="h4"></h3>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="search-result-box">
+                <ul class="nav nav-tabs tabs-bordered">
+                    <li class="active">
+                        <a href="#atc" data-toggle="tab" aria-expanded="false">
+                            <span class="visible-xs"><i class="fa fa-atc"></i></span>
+                            <span class="hidden-xs"><b>手记</b> <span class="badge badge-success m-l-10">1</span></span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#ask" data-toggle="tab" aria-expanded="false">
+                            <span class="visible-xs"><i class="fa fa-ask"></i></span>
+                            <span class="hidden-xs"><b>猿问</b> <span class="badge badge-success m-l-10">1</span> </span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#code" data-toggle="tab" aria-expanded="false">
+                            <span class="visible-xs"><i class="fa fa-code"></i></span>
+                            <span class="hidden-xs"><b>代码</b> <span class="badge badge-success m-l-10">1</span> </span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#topic" data-toggle="tab" aria-expanded="false">
+                            <span class="visible-xs"><i class="fa fa-topic"></i></span>
+                            <span class="hidden-xs"><b>话题</b> <span class="badge badge-success m-l-10">1</span> </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="atc">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div id="atcSearchDiv"></div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- end All results tab -->
+
+
+                    <!-- Users tab -->
+                    <div class="tab-pane" id="ask">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div id="askSearchDiv"></div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end Users tab -->
+
+                    <div class="tab-pane active" id="code">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div id="codeSearchDiv"></div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane active" id="topic">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div id="topicSearchDiv"></div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
+var searchFilter = View.getQStr("searchFilter");
+$(function(){
+	//('#atcView').attr('height',min_height+"px");
+    $("#resultTitle").text("Search Results For [ " + searchFilter + " ]");
+    //查询手记
+    reload_AtcSearchTmpl();
+    //查询问题
+    reload_AskSearchTmpl();
+    //查询代码
+    reload_CodeSearchTmpl();
+    //查询话题
+    reload_TopicSearchTmpl();
+});
+
+
+/***页面渲染***/
+function reload_AtcSearchTmpl(list){
+    var data = {};
+    data.list = list;
+    var temp = new Tmpl("atcSearchTmpl",data);
+    temp.reset("atcSearchDiv");
+}
+function reload_AskSearchTmpl(list){
+    var data = {};
+    data.list = list;
+    var temp = new Tmpl("askSearchTmpl",data);
+    temp.reset("askSearchDiv");
+}
+function reload_CodeSearchTmpl(list){
+    var data = {};
+    data.list = list;
+    var temp = new Tmpl("codeSearchTmpl",data);
+    temp.reset("codeSearchDiv");
+}
+function reload_TopicSearchTmpl(list){
+    var data = {};
+    data.list = list;
+    var temp = new Tmpl("topicSearchTmpl",data);
+    temp.reset("topicSearchDiv");
+}
+
+</script>
+
+<script id="atcSearchTmpl" type="text/html">
+    <div class="search-item">
+        <h3 class="h5 font-600 m-b-5"><a href="#">1Zircos - Responsive Admin Template</a></h3>
+        <div class="font-13 text-success m-b-10">
+            http://coderthemes.com/zircos/index.html
+        </div>
+        <p class="m-b-0">
+            Dolor posuere proin blandit accumsan senectus netus nullam curae, ornare laoreet adipiscing luctus mauris adipiscing pretium eget fermentum, tristique lobortis est ut metus lobortis tortor tincidunt himenaeos habitant quis dictumst proin odio sagittis purus mi, nec taciti vestibulum quis in sit varius lorem sit metus mi.
+        </p>
+    </div>
+</script>
+
+<script id="askSearchTmpl" type="text/html">
+    <div class="search-item">
+        <h3 class="h5 font-600 m-b-5"><a href="#">2Zircos - Responsive Admin Template</a></h3>
+        <div class="font-13 text-success m-b-10">
+            http://coderthemes.com/zircos/index.html
+        </div>
+        <p class="m-b-0">
+            Dolor posuere proin blandit accumsan senectus netus nullam curae, ornare laoreet adipiscing luctus mauris adipiscing pretium eget fermentum, tristique lobortis est ut metus lobortis tortor tincidunt himenaeos habitant quis dictumst proin odio sagittis purus mi, nec taciti vestibulum quis in sit varius lorem sit metus mi.
+        </p>
+    </div>
+</script>
+
+<script id="codeSearchTmpl" type="text/html">
+    <div class="search-item">
+        <h3 class="h5 font-600 m-b-5"><a href="#">3Zircos - Responsive Admin Template</a></h3>
+        <div class="font-13 text-success m-b-10">
+            http://coderthemes.com/zircos/index.html
+        </div>
+        <p class="m-b-0">
+            Dolor posuere proin blandit accumsan senectus netus nullam curae, ornare laoreet adipiscing luctus mauris adipiscing pretium eget fermentum, tristique lobortis est ut metus lobortis tortor tincidunt himenaeos habitant quis dictumst proin odio sagittis purus mi, nec taciti vestibulum quis in sit varius lorem sit metus mi.
+        </p>
+    </div>
+</script>
+
+<script id="topicSearchTmpl" type="text/html">
+    <div class="search-item">
+        <h3 class="h5 font-600 m-b-5"><a href="#">4Zircos - Responsive Admin Template</a></h3>
+        <div class="font-13 text-success m-b-10">
+            http://coderthemes.com/zircos/index.html
+        </div>
+        <p class="m-b-0">
+            Dolor posuere proin blandit accumsan senectus netus nullam curae, ornare laoreet adipiscing luctus mauris adipiscing pretium eget fermentum, tristique lobortis est ut metus lobortis tortor tincidunt himenaeos habitant quis dictumst proin odio sagittis purus mi, nec taciti vestibulum quis in sit varius lorem sit metus mi.
+        </p>
+    </div>
+</script>
+
+</html>
