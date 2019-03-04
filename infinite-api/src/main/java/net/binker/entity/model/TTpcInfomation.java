@@ -56,10 +56,6 @@ public class TTpcInfomation {
 	@Column(name = "classification")
 	private String classification;
 	
-	//@Comment("空间id")
-	@Column(name = "zone_id")
-	private Long zoneId;
-	
 	//@Comment("发布状态 0：未发布 1:发布 ")
 	@Column(name = "publish_status")
 	private Byte publishStatus;
@@ -78,6 +74,6 @@ public class TTpcInfomation {
 	
 	//话题空间列表
 	@Transient
-	private TTpcZone tTpcZone;
+	private List<TTpcZone> tTpcZoneList;
 	
 }

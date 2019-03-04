@@ -1,5 +1,6 @@
 package net.binker.service.impl;
 
+import net.binker.config.Const;
 import net.binker.entity.model.*;
 import net.binker.service.TopicService;
 import net.binker.service.repo.*;
@@ -33,6 +34,13 @@ public class TopicServiceImpl implements TopicService {
 	public TTpcInfomation getTopicInfo(Long id){
 		TTpcInfomation info = tTpcInfomationRepo.findOne(id);
 		return info;
+	}
+
+	@Override
+	public String submitTopic(TTpcInfomation lc){
+		lc.setPublishStatus(Const.ATC_INFO_PUBLISH_STATUS_NO);
+		tTpcInfomationRepo.save(lc);
+		return null;
 	}
 
 }

@@ -136,12 +136,12 @@
 
 <!-- 发起话题model -->
 <div class="modal" id="newTopic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-    <div class="modal-dialog modal-full">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title" >
                     <div class="col-sm-10">
-                        <h4>新建话题</h4>
+                        <h4>发起话题</h4>
                     </div>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
@@ -149,41 +149,28 @@
                 </div>
             </div>
             <div class="modal-body">
-                <div class="card-box">
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <div class="p-10">
-                                <div class="form-group clearfix">
-                                    <div class="col-sm-12 padding-left-0 padding-right-0">
-                                        <input type="file" name="files[]" id="filer_input" multiple="multiple">
-                                    </div>
-                                </div>
+                <div class="row">
+                    <div class="p-10">
+                        <form id="demo-form" data-parsley-validate="">
+                            <div class="form-group">
+                                <label for="fullname">标题 * :</label>
+                                <input type="text" class="form-control" name="fullname" id="fullname" required="">
                             </div>
-                        </div>
-                        <div class="col-sm-7">
-                            <div class="p-10">
-                                <form id="demo-form" data-parsley-validate="">
-                                    <div class="form-group">
-                                        <label for="fullname">标题 * :</label>
-                                        <input type="text" class="form-control" name="fullname" id="fullname" required="">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="message">描述 (20 chars min, 100 max) :</label>
-                                        <textarea id="message" class="form-control" name="message"
-                                                  data-parsley-trigger="keyup" data-parsley-minlength="20"
-                                                  data-parsley-maxlength="100"
-                                                  data-parsley-minlength-message="Come on! You need to enter at least a 20 character comment.."
-                                                  data-parsley-validation-threshold="10"></textarea>
-                                    </div>
-                                </form>
+                            <div class="form-group">
+                                <label for="message">描述 (20 chars min, 100 max) :</label>
+                                <textarea id="message" class="form-control" name="message"
+                                          data-parsley-trigger="keyup" data-parsley-minlength="20"
+                                          data-parsley-maxlength="100"
+                                          data-parsley-minlength-message="Come on! You need to enter at least a 20 character comment.."
+                                          data-parsley-validation-threshold="10"></textarea>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">提交</button>
+                <button type="button" class="btn btn-primary" onclick="submit()">提交</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -244,6 +231,25 @@ function search(){
     reload_TopicListTmpl(searchList);
 }
 
+function submit(){
+    var atcInfo = {};
+    atcInfo.titleInfo = $("#fullname").val();
+    atcInfo.description = $("#message").val();
+    atcInfo.authorId = Author.id;
+    atcInfo.authorName = Author.name;
+    atcInfo.askCount = 0;
+    atcInfo.atcCount = 0;
+    atcInfo.codeCount = 0;
+    atcInfo.joinCount = 0;
+    var url = Const.Api_URL + "/TopicController/submitTopic";
+    View.post(url,atcInfo,function(resp){
+        swal({title:"提交成功",text:"已提交至管理员，审核中！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+        $('#newTopic').modal('hide');
+    },function(){
+
+    });
+}
+
 /***页面渲染***/
 //渲染文章列表模板
 function reload_TopicListTmpl(list){
@@ -263,13 +269,13 @@ function reload_TopicListTmpl(list){
 {{each list as item}}
 <div class="property-card property-horizontal">
     <div class="row">
-        <div class="col-sm-4">
-            <div class="property-image" style="background: url('/temp1/assets/images/properties/1.jpg') center center / cover no-repeat;">
-                <span class="property-label label label-danger">For Sale</span>
+        <div class="col-sm-3">
+            <div class="property-image" style="background: url('//img4.mukewang.com/5c3f0a250001e5ab03600480.jpg') center center / cover no-repeat;margin:25px 0px 25px 25px;">
+                <span class="property-label label label-danger">Hot</span>
             </div>
         </div>
         <!-- /col 4 -->
-        <div class="col-sm-8">
+        <div class="col-sm-9">
             <div class="property-content">
                 <div class="listingInfo">
                     <div class="">
@@ -282,7 +288,7 @@ function reload_TopicListTmpl(list){
                     <a href="#" ><i class="glyphicon glyphicon-user"></i><span>{{item.joinCount}}</span></a>
                     <a href="#" ><i class="glyphicon glyphicon-book"></i><span>{{item.atcCount}}</span></a>
                     <a href="#" ><i class="glyphicon glyphicon-question-sign"></i><span>{{item.askCount}}</span></a>
-                    <a href="#" ></i><span>{{item.codeCount}}</span></a>
+                    <a href="#" ><i class="glyphicon glyphicon-sound-stereo"></i><span>{{item.codeCount}}</span></a>
                     <div class="pull-right">
                         <a href="javascript:toZone({{item.id}})" class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i><span>进入话题</span></a>
                     </div>

@@ -2,6 +2,7 @@ package net.binker.web.controller;
 
 import net.binker.config.CodeDef;
 import net.binker.core.entity.Resp;
+import net.binker.entity.model.TSysTmplinfo;
 import net.binker.entity.model.TTpcInfomation;
 import net.binker.entity.model.TTpcZone;
 import net.binker.service.TopicService;
@@ -33,5 +34,11 @@ public class TopicController {
 	public Resp getTopicInfo(@RequestParam("id") Long id){
 		TTpcInfomation info = topicService.getTopicInfo(id);
 		return new Resp(info, CodeDef.SUCCESS);
+	}
+
+	@RequestMapping(value = "/submitTopic", method = RequestMethod.POST)
+	public Resp submitTopic(@RequestBody TTpcInfomation lc){
+		topicService.submitTopic(lc);
+		return new Resp().setCode(CodeDef.SUCCESS);
 	}
 }

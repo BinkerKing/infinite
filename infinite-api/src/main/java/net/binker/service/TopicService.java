@@ -11,5 +11,7 @@ public interface TopicService {
 	public List<TTpcZone> getTopicZoneList(Long infoId);
 
 	public TTpcInfomation getTopicInfo(Long id);
+
+	public String submitTopic(TTpcInfomation lc);
 	
 }
