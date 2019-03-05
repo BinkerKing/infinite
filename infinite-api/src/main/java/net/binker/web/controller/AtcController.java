@@ -30,5 +30,11 @@ public class AtcController {
 		List<TAtcInfomation> tAtcInfomationList = tAtcInfomationService.getAllShareAtcList();
 		return new Resp(tAtcInfomationList,CodeDef.SUCCESS);
 	}
+
+	@RequestMapping(value = "/getSearchResult", method = RequestMethod.GET)
+	public Resp getSearchResult(@RequestParam("filter") String filter){
+		List<TAtcInfomation> tAtcInfomationList = tAtcInfomationService.getSearchResult(filter);
+		return new Resp(tAtcInfomationList,CodeDef.SUCCESS);
+	}
 	
 }

@@ -41,4 +41,10 @@ public class TopicController {
 		topicService.submitTopic(lc);
 		return new Resp().setCode(CodeDef.SUCCESS);
 	}
+
+	@RequestMapping(value = "/getSearchResult", method = RequestMethod.GET)
+	public Resp getSearchResult(@RequestParam("filter") String filter){
+		List<TTpcInfomation> topicList = topicService.getSearchResult(filter);
+		return new Resp(topicList,CodeDef.SUCCESS);
+	}
 }

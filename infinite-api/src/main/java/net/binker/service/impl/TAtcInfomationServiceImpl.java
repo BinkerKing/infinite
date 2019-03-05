@@ -167,4 +167,13 @@ public class TAtcInfomationServiceImpl implements TAtcInfomationService {
 		return null;
 	}
 
+	/*
+	 *搜索结果方式1:最原始方案，在语句中用like搜索
+	 * */
+	@Override
+	public List<TAtcInfomation> getSearchResult(String filter){
+		List<TAtcInfomation> resultList = tAtcInfomationRepo.findSearchResult(filter);
+		return resultList;
+	}
+
 }

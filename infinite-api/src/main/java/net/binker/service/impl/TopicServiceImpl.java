@@ -43,4 +43,13 @@ public class TopicServiceImpl implements TopicService {
 		return null;
 	}
 
+	/*
+	 *搜索结果方式1:最原始方案，在语句中用like搜索
+	 * */
+	@Override
+	public List<TTpcInfomation> getSearchResult(String filter){
+		List<TTpcInfomation> resultList = tTpcInfomationRepo.findSearchResult(filter);
+		return resultList;
+	}
+
 }

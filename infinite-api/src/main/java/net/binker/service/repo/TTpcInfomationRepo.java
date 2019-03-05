@@ -14,5 +14,6 @@ public interface TTpcInfomationRepo extends JpaRepository<TTpcInfomation, Long> 
 	@Query("from TTpcInfomation where publishStatus = '1'")
 	public List<TTpcInfomation> findByPublish();
 
-
+	@Query("from TTpcInfomation where titleInfo like %?1% or description like %?1%")
+	List<TTpcInfomation> findSearchResult(String filter);
 }

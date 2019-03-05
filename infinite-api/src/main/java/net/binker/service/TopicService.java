@@ -13,5 +13,6 @@ public interface TopicService {
 	public TTpcInfomation getTopicInfo(Long id);
 
 	public String submitTopic(TTpcInfomation lc);
-	
+
+	public List<TTpcInfomation> getSearchResult(String filter);
 }

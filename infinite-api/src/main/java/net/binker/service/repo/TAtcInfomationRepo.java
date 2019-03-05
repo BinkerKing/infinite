@@ -18,4 +18,7 @@ public interface TAtcInfomationRepo extends JpaRepository<TAtcInfomation, Long> 
 	
 	@Query("from TAtcInfomation where publishStatus = 1 and validFlag = 1")
 	List<TAtcInfomation> findByPublish();
+
+	@Query("from TAtcInfomation where titleInfo like %?1% or description like %?1%")
+	List<TAtcInfomation> findSearchResult(String filter);
 }

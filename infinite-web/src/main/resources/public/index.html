@@ -210,7 +210,7 @@ function getUrl(url){
 
 function searchGlobal(){
     var searchFilter = $("#searchFilter").val();
-    getUrl('/infinite/searchGlobal.html?searchFilter="'+searchFilter+'"');//搜索
+    getUrl(encodeURI('/infinite/searchGlobal.html?searchFilter='+searchFilter));//搜索
 }
 </script>
 </html>

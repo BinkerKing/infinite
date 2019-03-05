@@ -21,7 +21,7 @@
 	<div class="col-sm w w-auto-xs light lt bg-auto">
 		<div class="padding pos-rlt">
 			<button class="btn btn-outline btn-primary btn-block"
-					onclick="addAtc()">写文章</button>
+					onclick="skip.addAtc()">写文章</button>
 			<div class="hidden-xs-down m-t" id="inbox-menu">
 				<div class="nav-active-primary">
 					<div class="nav nav-pills nav-sm flex-column">
@@ -32,10 +32,10 @@
 				<div class="nav-active-white">
 					<ul class="nav nav-pills nav-stacked nav-sm">
 						<li class="nav-item">
-							<a class="nav-link" onclick="searchByStatus(0)">
+							<a class="nav-link" onclick="searchUtil.searchByStatus(0)">
 								<i class="fa m-r-sm fa-circle text-info"></i> 未发布
 							</a>
-							<a class="nav-link" onclick="searchByStatus(1)">
+							<a class="nav-link" onclick="searchUtil.searchByStatus(1)">
 								<i class="fa m-r-sm fa-circle text-warn"></i> 已发布
 							</a>
 						</li>
@@ -46,7 +46,7 @@
 	</div>
 	<div class="col-sm">
 		<div ui-view class="padding pos-rlt">
-			<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addAtc()">
+			<a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="skip.addAtc()">
 				<i class="glyphicon glyphicon-pencil"></i>
 			</a>
 			<div>
@@ -84,10 +84,10 @@
 						<div class="col-sm-2">
 						</div>
 						<div class="col-sm-2">
-							<a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+							<a href="javascript:skip.toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
 						</div>
 						<div class="col-sm-2">
-							<a href="javascript:edit();"><i class="glyphicon glyphicon-pencil"></i></a>
+							<a href="javascript:skip.edit();"><i class="glyphicon glyphicon-pencil"></i></a>
 						</div>
 						<div class="col-sm-3">
 						</div>
@@ -105,170 +105,162 @@
 </div>
 </body>
 <script type="text/javascript">
-/*全局变量区*/
-var min_height = window.screen.availHeight - 370;//获取屏幕高度-头部高度
-var AuthorId = 1;
-var Status = 1;//1-所有 2-已发布 3-未发布
+/*****全局变量区*****/
+var Global = {
+    min_height : window.screen.availHeight - 370,//获取屏幕高度-头部高度
+	Status : 1,//1-所有 2-已发布 3-未发布
+};
 
-var AtcList = [];//所有的
-var PublishList = [];//已发布的
-var UnPublishList = [];//未发布的
-
-var CurAtcId = "";
-
-var curPage = 1;//当前页
-var pageSize = 4;//每页显示数量
-/*初始化*/
+/*****初始化******/
 $(function(){
-	initAtcList();
-	$("#atcView").attr("height",min_height+"px");
+	initData.initAtcList();
+	$("#atcView").attr("height",Global.min_height+"px");
 });
 
-/*监听区*/
-//监听搜索框的回车
-$('#searchFilter').bind('keypress',function(e){ 
+/*****监听区******/
+$('#searchFilter').bind('keypress',function(e){ //监听搜索框的回车
 	if(e.keyCode == 13)      
-		searchByTitle();
+		searchUtil.searchByTitle();
 });
 $("#searchFilter").bind("input propertychange",function(){
-	searchByTitle();
+    searchUtil.searchByTitle();
 });
 $('body').on('hidden.bs.modal', '.modal', function () {
 	$(this).removeData('bs.modal');
 });
 
-/*方法区*/
-function addAtc(){
-	window.parent.getUrl("/infinite/newAtc.html");
-}
-
-function edit(){
-	window.parent.getUrl("/infinite/newAtc.html?atcId="+CurAtcId);
-}
-
-function toPage(){
-	window.parent.getUrl("/infinite/atcPage.html?atcId="+CurAtcId);
-}
+/*****跳转****/
+var skip = {
+    addAtc : function(){
+        window.parent.getUrl("/infinite/newAtc.html");
+	},
+    edit : function(){
+        window.parent.getUrl("/infinite/newAtc.html?atcId="+Global.CurAtcId);
+	},
+	toPage : function(){
+        window.parent.getUrl("/infinite/atcPage.html?atcId="+Global.CurAtcId);
+	},
+	getAtc : function(id,title){
+        Global.CurAtcId = id;
+        $("#atcTitle").text(title);
+        $("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
+	}
+};
 
 /***数据获取***/
-//获取所有文章列表，并初始化全局变量
-function initAtcList(){
-	var url = Const.Api_URL + "/MyAtcController/getMyAtcList";
-	var param = {
-		authorId : AuthorId,
-		status : 1,
-		search : "",
-		lable : ""
-	};
-	View.post(url,param,function(resp){
-		AtcList = resp;
-		// 调用分页函数.参数:当前所在页, 总页数(用总条数 除以 每页显示多少条,在向上取整), ajax函数
-		setPage(curPage, Math.ceil(resp.length/pageSize), reload_AtcPage);
-		reload_AtcPage();
-	},function(){
-		
-	});
-}
+var initData = {
+    AtcList : [],//所有的
+    PublishList : [],//已发布的
+    UnPublishList : [],//未发布的
+    CurAtcId : "",//当前点击文章id
 
-function reload_AtcPage(){
-	var showAtcList = getCurAtcList();
-	reload_AtcListTmpl(showAtcList);
-}
+    initAtcList : function(){
+		var url = Const.Api_URL + "/MyAtcController/getMyAtcList";
+		var param = {
+			authorId : Author.id,
+			status : 1,
+			search : "",
+			lable : ""
+		};
+		View.post(url,param,function(resp){
+            this.AtcList = resp;
+			// 调用分页函数.参数:当前所在页, 总页数(用总条数 除以 每页显示多少条,在向上取整), ajax函数
+            pageUtil.setPage(pageUtil.curPage, Math.ceil(resp.length/pageUtil.pageSize), TmplFun.reload_AtcPage);
+            pageUtil.reload_AtcPage();
+		},function(){
 
-function getCurAtcList(){
-	var atcList = [];
-	var curPageSize = [];
-	if(curPage < Math.ceil(AtcList.length/pageSize)){
-		curPageSize = pageSize;
-	}else{
-		curPageSize = AtcList.length % pageSize;
-	}
-	for(var i=0;i<curPageSize;i++){
-		atcList.push(AtcList[i+(curPage-1)*pageSize]);
-	}
-	return atcList;
-}
-
-/**
- *
- * @param pageCurrent 当前所在页
- * @param pageSum 总页数
- * @param callback 调用ajax
- */
-function setPage(pageCurrent, pageSum, callback) {
-	$(".pagination").bootstrapPaginator({
-		//设置版本号
-		bootstrapMajorVersion: 3,
-		// 显示第几页
-		currentPage: pageCurrent,
-		// 总页数
-		totalPages: pageSum,
-		//当单击操作按钮的时候, 执行该函数, 调用ajax渲染页面
-		onPageClicked: function (event,originalEvent,type,page) {
-			// 把当前点击的页码赋值给currentPage, 调用ajax,渲染页面
-			curPage = page;
-			callback && callback();
-		}
-	})
-}
-
-
-//全局变量搜索:标题搜索
-function searchByTitle(){
-	var titleSearch = $("#searchFilter").val();
-	if(titleSearch == ""){
-		reload_AtcListTmpl(AtcList);
-		return;
-	}
-	var searchList=[];
-	for(var i=0;i<AtcList.length;i++){
-		if(AtcList[i].titleInfo.indexOf(titleSearch)!=-1){
-			searchList.push(AtcList[i]);
-		}
-	}
-	reload_AtcListTmpl(searchList);
-}
-
-//通过id获取文章信息
-function getInfoById(id){
-	for(var i=0;i<AtcList.length;i++){
-		if(AtcList[i].id==id){
-			return AtcList[i];
-		}
+		});
 	}
 }
 
-function getAtc(id,title){
-	CurAtcId = id;
-	$("#atcTitle").text(title);
-	$("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
+/***翻页***/
+var pageUtil = {
+    curPage : 1,//当前页
+    pageSize : 4,//每页显示数量
+
+    setPage : function (pageCurrent, pageSum, callback){
+        $(".pagination").bootstrapPaginator({
+            //设置版本号
+            bootstrapMajorVersion: 3,
+            // 显示第几页
+            currentPage: pageCurrent,
+            // 总页数
+            totalPages: pageSum,
+            //当单击操作按钮的时候, 执行该函数, 调用ajax渲染页面
+            onPageClicked: function (event,originalEvent,type,page) {
+                // 把当前点击的页码赋值给currentPage, 调用ajax,渲染页面
+                pageUtil.curPage = page;
+                callback && callback();
+            }
+        })
+	},
+    getCurAtcList : function(){
+        var atcList = [];
+        var curPageSize = [];
+        if(this.curPage < Math.ceil(initData.AtcList.length/this.pageSize)){
+            curPageSize = this.pageSize;
+        }else{
+            curPageSize = initData.AtcList.length % this.pageSize;
+        }
+        for(var i=0;i<curPageSize;i++){
+            atcList.push(initData.AtcList[i+(this.curPage-1)*this.pageSize]);
+        }
+        return atcList;
+    },
+	reload_AtcPage : function (){
+        TmplFun.reload_AtcListTmpl(this.getCurAtcList());
+    }
 }
 
-function searchByStatus(status){
-	var searchList=[];
-	for(var i=0;i<AtcList.length;i++){
-		if(AtcList[i].publishStatus == status){
-			searchList.push(AtcList[i]);
-		}
+/***搜索***/
+var searchUtil = {
+    searchByTitle : function (){//全局变量搜索:标题搜索
+        var titleSearch = $("#searchFilter").val();
+        if(titleSearch == ""){
+            TmplFun.reload_AtcListTmpl(initData.AtcList);
+            return;
+        }
+        var searchList=[];
+        for(var i=0;i<initData.AtcList.length;i++){
+            if(initData.AtcList[i].titleInfo.indexOf(titleSearch)!=-1){
+                searchList.push(initData.AtcList[i]);
+            }
+        }
+        TmplFun.reload_AtcListTmpl(searchList);
+	},
+    getInfoById : function (id){//通过id获取文章信息
+        for(var i=0;i<initData.AtcList.length;i++){
+            if(initData.AtcList[i].id==id){
+                return initData.AtcList[i];
+            }
+        }
+	},
+    searchByStatus : function (status){
+        var searchList=[];
+        for(var i=0;i<initData.AtcList.length;i++){
+            if(initData.AtcList[i].publishStatus == status){
+                searchList.push(initData.AtcList[i]);
+            }
+        }
+        TmplFun.reload_AtcListTmpl(searchList);
 	}
-	reload_AtcListTmpl(searchList);
 }
 
-/***页面渲染***/
-//渲染文章列表模板
-function reload_AtcListTmpl(list){
-	var data = {};
-	data.list = list;
-	var	gettype=Object.prototype.toString;
-	for(var i=0;i<data.list.length;i++){
-		if(gettype.call(data.list[i].createTime).indexOf("Number")>-1){
-			data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
-		}
+/***模板渲染***/
+var TmplFun = {
+    reload_AtcListTmpl : function (list){//渲染文章列表模板
+        var data = {};
+        data.list = list;
+        var	gettype=Object.prototype.toString;
+        for(var i=0;i<data.list.length;i++){
+            if(gettype.call(data.list[i].createTime).indexOf("Number")>-1){
+                data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+            }
+        }
+        var temp = new Tmpl("atcListTmpl",data);
+        temp.reset("atcListDiv");
 	}
-	var temp = new Tmpl("atcListTmpl",data);
-	temp.reset("atcListDiv");
 }
-
 </script>
 <script id="atcListTmpl" type="text/html">
 {{each list as item}}
@@ -286,7 +278,7 @@ function reload_AtcListTmpl(list){
 				class="fa fa-paperclip m-l-sm"></i>
 		</div>
 		<div>
-			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a>
+			<a href class="_500" data-toggle="modal" data-target="#myModal" onclick="skip.getAtc({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a>
 			<span class="label label-xs m-l-sm text-u-c"></span>
 		</div>
 		{{if item.description===""}}

@@ -519,3 +519,13 @@ function addZero(num){
 	}
 	return num;
 }
+
+function isEmpty(obj){
+    if(typeof obj == "undefined" || obj == null){
+        return true;
+    }else if(obj.match(/^\s*$/)){  //空|空格|换行
+        return true;
+    }else{
+    	return false;
+	}
+}
