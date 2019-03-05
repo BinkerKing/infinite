@@ -60,7 +60,7 @@
 				<!-- list -->
 				<div class="list white">
 					<div id="atcListDiv"></div>
-					<div class="page">
+					<div id="page" class="page">
 						<ul class="pagination"></ul>
 					</div>
 				</div>
@@ -152,6 +152,7 @@ var initData = {
     AtcList : [],//所有的
     PublishList : [],//已发布的
     UnPublishList : [],//未发布的
+	showList : [],//展示列表，分页根据展示的来
     CurAtcId : "",//当前点击文章id
 
     initAtcList : function(){
@@ -163,9 +164,10 @@ var initData = {
 			lable : ""
 		};
 		View.post(url,param,function(resp){
-            this.AtcList = resp;
+			initData.AtcList = resp;
+			initData.showList = resp;
 			// 调用分页函数.参数:当前所在页, 总页数(用总条数 除以 每页显示多少条,在向上取整), ajax函数
-            pageUtil.setPage(pageUtil.curPage, Math.ceil(resp.length/pageUtil.pageSize), TmplFun.reload_AtcPage);
+            pageUtil.setPage(pageUtil.curPage, Math.ceil(resp.length/pageUtil.pageSize), pageUtil.reload_AtcPage);
             pageUtil.reload_AtcPage();
 		},function(){
 
@@ -176,7 +178,7 @@ var initData = {
 /***翻页***/
 var pageUtil = {
     curPage : 1,//当前页
-    pageSize : 4,//每页显示数量
+    pageSize : 12,//每页显示数量
 
     setPage : function (pageCurrent, pageSum, callback){
         $(".pagination").bootstrapPaginator({
@@ -197,19 +199,25 @@ var pageUtil = {
     getCurAtcList : function(){
         var atcList = [];
         var curPageSize = [];
-        if(this.curPage < Math.ceil(initData.AtcList.length/this.pageSize)){
-            curPageSize = this.pageSize;
+        if(pageUtil.curPage < Math.ceil(initData.showList.length/pageUtil.pageSize)){
+            curPageSize = pageUtil.pageSize;
         }else{
-            curPageSize = initData.AtcList.length % this.pageSize;
+            curPageSize = initData.showList.length % pageUtil.pageSize;
         }
         for(var i=0;i<curPageSize;i++){
-            atcList.push(initData.AtcList[i+(this.curPage-1)*this.pageSize]);
+            atcList.push(initData.showList[i+(pageUtil.curPage-1)*pageUtil.pageSize]);
         }
         return atcList;
     },
 	reload_AtcPage : function (){
-        TmplFun.reload_AtcListTmpl(this.getCurAtcList());
-    }
+		$("#page").show();
+        TmplFun.reload_AtcListTmpl(pageUtil.getCurAtcList());
+    },
+	noData : function (){
+		$("#page").hide();
+		initData.showList = [];
+		TmplFun.reload_AtcListTmpl(initData.showList);
+	}
 }
 
 /***搜索***/
@@ -226,7 +234,14 @@ var searchUtil = {
                 searchList.push(initData.AtcList[i]);
             }
         }
-        TmplFun.reload_AtcListTmpl(searchList);
+        if(searchList.length == 0 ){
+			pageUtil.noData();
+		}else{
+			initData.showList = searchList;
+			pageUtil.curPage = 1;
+			pageUtil.setPage(pageUtil.curPage, Math.ceil(searchList.length/pageUtil.pageSize), pageUtil.reload_AtcPage);
+			pageUtil.reload_AtcPage();
+		}
 	},
     getInfoById : function (id){//通过id获取文章信息
         for(var i=0;i<initData.AtcList.length;i++){
@@ -263,6 +278,9 @@ var TmplFun = {
 }
 </script>
 <script id="atcListTmpl" type="text/html">
+{{if list.length === 0}}
+	<h4>暂无数据</h4>
+{{/if}}
 {{each list as item}}
 <div class="list-item b-l b-l-2x b-info">
 	<div class="list-left">
