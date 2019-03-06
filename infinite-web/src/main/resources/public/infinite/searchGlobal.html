@@ -16,7 +16,7 @@
 
     <div class="row">
         <div class="m-t-30">
-            <h3 id="resultTitle" class="h4"></h3>
+            <h4 id="resultTitle"></h4>
         </div>
     </div>
 
@@ -114,6 +114,7 @@ $(function(){
     if(isEmpty(searchFilter)){
         return;//为空，则提示
     }
+    $("#resultTitle").text("搜索 [ " + searchFilter +  "], ");
     //查询手记
     init_AtcSearch();
     //查询问题
@@ -133,7 +134,7 @@ function init_AtcSearch(){
         $("#atcCount").text(resp.length);
         var endTime = new Date();
         var interval = parseInt(endTime - startTime);
-        $("#resultTitle").text("搜索 [ " + searchFilter + " ] ，用时：" + interval + " ms");
+        $("#resultTitle").text($("#resultTitle").text() + "手记列表用时：" + interval + "ms ");
     },function(){
 
     });
@@ -150,9 +151,13 @@ function init_CodeSearch(){
 function init_TopicSearch(){
     var url = Const.Api_URL + "/TopicController/getSearchResult";
     var param = "filter=" + searchFilter;
+    var startTime = new Date();
     View.get(url,param,function(resp){
         $("#topicCount").text(resp.length);
         reload_TopicSearchTmpl(resp);
+        var endTime = new Date();
+        var interval = parseInt(endTime - startTime);
+        $("#resultTitle").text( $("#resultTitle").text() + "话题列表用时：" + interval + "ms ");
     },function(){
 
     });

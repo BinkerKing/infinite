@@ -19,6 +19,7 @@
 </body>
 <script>
 var atcId = View.getQStr("atcId");
+/*****初始化******/
 $(function(){
 	initAtcView();
 	$("#atcViewBody").slimScroll({
@@ -26,6 +27,8 @@ $(function(){
 		height: '100%' //可滚动区域高度
 	});
 });
+
+/*****滚动条插件******/
 function setScroll(){
 	$("#atcViewBody").slimScroll({
 		alwaysVisible: true
@@ -33,6 +36,7 @@ function setScroll(){
 }
 $(window).on("resize",setScroll);
 
+/*****初始化数据******/
 function initAtcView(){
 	var url = Const.Api_URL + "/MyAtcController/getMyAtcView";
 	var param = "id="+ atcId;

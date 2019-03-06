@@ -1,241 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Infinite - 我的代码列表</title>
-  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8"/>
+    <title>Infinite - 我的代码列表</title>
+    <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <link rel="stylesheet" type="text/css" href="/temp2/assets/styles/app.css" /><!--模板二的样式 -->
+    <link rel="stylesheet" type="text/css" href="/temp2/assets/styles/app.css"/><!--模板二的样式 -->
 
-  <link rel="import" href="/common/depjs.html" />
-  <link rel="import" href="/common/depcss.html" />
-  <link rel="import" href="/common/form-js.html" />
-  <link rel="import" href="/common/codemirror-js.html" />
+    <link rel="import" href="/common/depjs.html"/>
+    <link rel="import" href="/common/depcss.html"/>
+    <link rel="import" href="/common/form-js.html"/>
+    <link rel="import" href="/common/codemirror-js.html"/>
 </head>
 <body>
 <div class="row-col">
-  <div class="col-sm w w-auto-xs light lt bg-auto">
-    <div class="padding pos-rlt">
-      <button class="btn btn-outline btn-primary btn-block"
-              onclick="addCode()">码代码</button>
-      <div class="hidden-xs-down m-t" id="inbox-menu">
-        <div class="nav-active-primary">
-          <div class="nav nav-pills nav-sm flex-column">
+    <div class="col-sm w w-auto-xs light lt bg-auto">
+        <div class="padding pos-rlt">
+            <button class="btn btn-outline btn-primary btn-block"
+                    onclick="skip.addCode()">码代码
+            </button>
+            <div class="hidden-xs-down m-t" id="inbox-menu">
+                <div class="nav-active-primary">
+                    <div class="nav nav-pills nav-sm flex-column">
 
-          </div>
+                    </div>
+                </div>
+                <div class="m-y">Labels</div>
+                <div class="nav-active-white">
+                    <ul class="nav nav-pills nav-stacked nav-sm">
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="searchUtil.searchByMod('clike')">
+                                <i class="fa m-r-sm fa-circle text-primary"></i> JAVA
+                            </a>
+                            <a class="nav-link" onclick="searchUtil.searchByMod('javascript')">
+                                <i class="fa m-r-sm fa-circle text-info"></i> JS
+                            </a>
+                            <a class="nav-link" onclick="searchUtil.searchByMod('htmlmixed')">
+                                <i class="fa m-r-sm fa-circle text-warn"></i> HTML
+                            </a>
+                            <a class="nav-link" onclick="searchUtil.searchByMod('css')">
+                                <i class="fa m-r-sm fa-circle text-accent"></i> CSS
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="m-y">Labels</div>
-        <div class="nav-active-white">
-          <ul class="nav nav-pills nav-stacked nav-sm">
-            <li class="nav-item">
-              <a class="nav-link" onclick="searchByMod('clike')">
-                <i class="fa m-r-sm fa-circle text-primary"></i> JAVA
-              </a>
-              <a class="nav-link" onclick="searchByMod('javascript')">
-                <i class="fa m-r-sm fa-circle text-info"></i> JS
-              </a>
-              <a class="nav-link" onclick="searchByMod('htmlmixed')">
-                <i class="fa m-r-sm fa-circle text-warn"></i> HTML
-              </a>
-              <a class="nav-link" onclick="searchByMod('css')">
-                <i class="fa m-r-sm fa-circle text-accent"></i> CSS
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
     </div>
-  </div>
-  <div class="col-sm">
-    <div ui-view class="padding pos-rlt">
-      <a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="addCode()">
-        <i class="glyphicon glyphicon-pencil"></i>
-      </a>
-      <div>
-        <!-- header -->
-        <div class="m-b">
-          <div class="btn-toolbar">
-            <input id="searchFilter" type="text" class="form-control" placeholder="Say something" autocomplete="off">
-          </div>
+    <div class="col-sm">
+        <div ui-view class="padding pos-rlt">
+            <a href="#" class="md-btn md-fab md-fab-bottom-right pos-fix red" onclick="skip.addCode()">
+                <i class="glyphicon glyphicon-pencil"></i>
+            </a>
+            <div>
+                <!-- header -->
+                <div class="m-b">
+                    <div class="btn-toolbar">
+                        <input id="searchFilter" type="text" class="form-control" placeholder="Say something"
+                               autocomplete="off">
+                    </div>
+                </div>
+                <!-- / header -->
+                <!-- list -->
+                <div class="list white">
+                    <div id="codeListDiv"></div>
+                </div>
+                <!-- / list -->
+            </div>
         </div>
-        <!-- / header -->
-        <!-- list -->
-        <div class="list white">
-          <div id="codeListDiv"></div>
-        </div>
-        <!-- / list -->
-      </div>
     </div>
-  </div>
 </div>
 
 <!-- 代码展示model -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-  <div class="modal-dialog modal-full">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="col-sm-10">
-          <h4 id="codeTitle"></h4>
-        </div>
-        <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
-          <div class="col-sm-2">
-          </div>
-          <div class="col-sm-2">
-            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
-          </div>
-          <div class="col-sm-2">
-            <a href="javascript:edit();"><i class="glyphicon glyphicon-pencil"></i></a>
-          </div>
-          <div class="col-sm-3">
-          </div>
-          <div class="col-sm-1">
-            <a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close" class="glyphicon glyphicon-remove"></i></a>
-          </div>
-        </div>
-      </div>
-      <div class="modal-body" id="_modalDialog_body">
-        <textarea id="code" name="code"></textarea>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal -->
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-sm-10">
+                    <h4 id="codeTitle"></h4>
+                </div>
+                <div class="col-sm-2" style="margin-top: 10px;margin-bottom: 10px;">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="javascript:operate.collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="javascript:skip.edit();"><i class="glyphicon glyphicon-pencil"></i></a>
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="javascript:void(0);"><i data-dismiss="modal" aria-label="Close"
+                                                         class="glyphicon glyphicon-remove"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body" id="_modalDialog_body">
+                <textarea id="code" name="code"></textarea>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 </body>
 <script type="text/javascript">
-  /*全局变量区*/
-  var min_height = document.documentElement.clientHeight - 200;//获取屏幕高度-头部高度
-  var AuthorId = 1;
-  var Status = 1;//1-所有 2-已发布 3-未发布
+    /*****全局变量区*****/
+    var Global = {
+        min_height: window.screen.availHeight - 370,//获取屏幕高度-头部高度
+        Status: 1//1-所有 2-已发布 3-未发布
+    };
 
-  var CodeList = [];//所有的
-  var PublishList = [];//已发布的
-  var UnPublishList = [];//未发布的
-
-  var CurCode = {};//当前代码
-  /*初始化*/
-  $(function(){
-    initCodeList();
-    $('#codeView').attr('height',min_height+"px");
-  });
-
-  /*监听区*/
-  //监听搜索框的回车
-  $('#searchFilter').bind('keypress',function(e){
-    if(e.keyCode == 13)
-      searchByTitle();
-  });
-  $("#searchFilter").bind("input propertychange",function(){
-    searchByTitle();
-  })
-
-  /*方法区*/
-  function addCode(){
-    window.parent.getUrl("/infinite/newCode.html");
-  }
-
-  function edit(){
-    window.parent.getUrl("/infinite/newCode.html?infoId="+CurCode.id);
-  }
-
-  function collect(){
-    if($("#collect-icon").attr("class")=="glyphicon glyphicon-star-empty"){
-      //收藏
-      $("#collect-icon").attr("class","glyphicon glyphicon-star");
-      $("#collect-icon").css("color","orange");
-      //弹框，收藏成功
-      swal({title:"收藏成功",text:"请在我的代码库中查看。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
-    }else{
-      $("#collect-icon").attr("class","glyphicon glyphicon-star-empty");
-      //取消收藏
-      $("#collect-icon").css("color","");
-      //弹框，取消收藏
-      swal({title:"取消收藏",text:"已取消收藏。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
-    }
-  }
-
-  /***数据获取***/
-//获取所有文章列表，并初始化全局变量
-  function initCodeList(){
-    var url = Const.Api_URL + "/MyCodeController/getCodeList";
-    View.get(url,"custId="+AuthorId,function(resp){
-      CodeList = resp;
-      reload_CodeListTmpl(resp);
-    },function(){
-
+    /*****初始化******/
+    $(function () {
+        initData.initCodeList();
+        $('#codeView').attr('height', Global.min_height + "px");
     });
-  }
 
-  //全局变量搜索:标题搜索
-  function searchByTitle(){
-    var titleSearch = $("#searchFilter").val();
-    if(titleSearch == ""){
-      reload_CodeListTmpl(CodeList);
-      return;
-    }
-    var searchList=[];
-    for(var i=0;i<CodeList.length;i++){
-      if(CodeList[i].title.indexOf(titleSearch)!=-1){
-        searchList.push(CodeList[i]);
-      }
-    }
-    reload_CodeListTmpl(searchList);
-  }
-
-  function searchByMod(mod){
-    var searchList=[];
-    for(var i=0;i<CodeList.length;i++){
-      if(CodeList[i].mode.indexOf(mod)!=-1){
-        searchList.push(CodeList[i]);
-      }
-    }
-    reload_CodeListTmpl(searchList);
-  }
-
-  //通过id获取文章信息
-  function getInfoById(id){
-    for(var i=0;i<CodeList.length;i++){
-      if(CodeList[i].id==id){
-        return CodeList[i];
-      }
-    }
-  }
-
-  /***页面渲染***/
-//渲染文章列表模板
-  function reload_CodeListTmpl(list){
-    var data = {};
-    data.list = list;
-    var temp = new Tmpl("codeListTmpl",data);
-    temp.reset("codeListDiv");
-  }
-
-  function getCode(infoId){
-    var url = Const.Api_URL + "/MyCodeController/getCode";
-    View.get(url,"infoId="+infoId,function(resp){
-      CurCode = resp;
-      $("#codeTitle").text(resp.title);
-      editor.setValue(changeBack(resp.tcdeContent.content) || "");//代码编辑器初始化
-      editor.setOption("theme","monokai");
-      editor.setOption("mode",resp.tcdeContent.mode || "htmlmixed");
-    },function(){
-
+    /******监听区******/
+    $('#searchFilter').bind('keypress', function (e) {//监听搜索框的回车
+        if (e.keyCode == 13)
+            searchUtil.searchByTitle();
     });
-  }
+    $("#searchFilter").bind("input propertychange", function () {//监听搜索框的字符改变
+        searchUtil.searchByTitle();
+    })
+
+    /*****跳转****/
+    var skip = {
+        addCode : function () {
+            window.parent.getUrl("/infinite/newCode.html");
+        },
+        edit : function () {
+            window.parent.getUrl("/infinite/newCode.html?infoId=" + initData.CurCode.id);
+        }
+    }
+
+    /***数据获取***/
+    var initData = {
+        CodeList : [],//所有的
+        PublishList : [],//已发布的
+        UnPublishList : [],//未发布的
+        CurCode : {},//当前点击代码
+
+        initCodeList : function () {//获取所有文章列表，并初始化全局变量
+            var url = Const.Api_URL + "/MyCodeController/getCodeList";
+            View.get(url, "custId=" + Author.id, function (resp) {
+                initData.CodeList = resp;
+                TmplFun.reload_CodeListTmpl(resp);
+            }, function () {
+
+            });
+        },
+        getCode : function (infoId) {
+            var url = Const.Api_URL + "/MyCodeController/getCode";
+            View.get(url, "infoId=" + infoId, function (resp) {
+                initData.CurCode = resp;
+                $("#codeTitle").text(resp.title);
+                editor.setValue(changeBack(resp.tcdeContent.content) || "");//代码编辑器初始化
+                editor.setOption("theme", "monokai");
+                editor.setOption("mode", resp.tcdeContent.mode || "htmlmixed");
+            }, function () {
+
+            });
+        }
+    }
+
+    /***翻页***/
+    var pageUtil = {
+
+    }
+
+    /***搜索***/
+    var searchUtil = {
+        searchByTitle : function () {//搜索：标题
+            var CodeList = initData.CodeList;
+            var searchList = [];
+            var titleSearch = $("#searchFilter").val();
+            if (titleSearch == "") {
+                TmplFun.reload_CodeListTmpl(CodeList);
+                return;
+            }
+            for (var i = 0; i < CodeList.length; i++) {
+                if (CodeList[i].title.indexOf(titleSearch) != -1) {
+                    searchList.push(CodeList[i]);
+                }
+            }
+            TmplFun.reload_CodeListTmpl(searchList);
+        },
+
+        searchByMod : function (mod) {//搜索：代码类型
+            var searchList = [];
+            var CodeList = initData.CodeList;
+            for (var i = 0; i < CodeList.length; i++) {
+                if (CodeList[i].mode.indexOf(mod) != -1) {
+                    searchList.push(CodeList[i]);
+                }
+            }
+            TmplFun.reload_CodeListTmpl(searchList);
+        }
+    }
+
+    /***操作***/
+    var operate = {
+        collect : function () {
+            if ($("#collect-icon").attr("class") == "glyphicon glyphicon-star-empty") {
+                //收藏
+                $("#collect-icon").attr("class", "glyphicon glyphicon-star");
+                $("#collect-icon").css("color", "orange");
+                //弹框，收藏成功
+                swal({
+                    title: "收藏成功",
+                    text: "请在我的代码库中查看。",
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    timer: 1500,
+                    type: "success"
+                });
+            } else {
+                $("#collect-icon").attr("class", "glyphicon glyphicon-star-empty");
+                //取消收藏
+                $("#collect-icon").css("color", "");
+                //弹框，取消收藏
+                swal({
+                    title: "取消收藏",
+                    text: "已取消收藏。",
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    timer: 1500,
+                    type: "success"
+                });
+            }
+        }
+    }
+
+
+    /***模板渲染***/
+    var TmplFun = {
+        reload_CodeListTmpl : function (list) {//渲染文章列表模板
+            var data = {};
+            data.list = list;
+            var temp = new Tmpl("codeListTmpl", data);
+            temp.reset("codeListDiv");
+        }
+    }
+
 </script>
 <script id="codeListTmpl" type="text/html">
-  {{each list}}
-  {{if $value.mode==='clike'}}
-  <div class="list-item b-l b-l-2x b-info">
-  {{else if $value.mode==='htmlmixed'}}
-  <div class="list-item b-l b-l-2x b-warn">
-  {{else if $value.mode==='css'}}
-  <div class="list-item b-l b-l-2x b-warning">
-  {{else if $value.mode==='javascript'}}
-  <div class="list-item b-l b-l-2x b-primary">
-  {{else}}
-  <div class="list-item b-l b-l-2x">
-  {{/if}}
+{{each list}}
+
+{{if $value.mode==='clike'}}
+    <div class="list-item b-l b-l-2x b-info">
+{{else if $value.mode==='htmlmixed'}}
+    <div class="list-item b-l b-l-2x b-warn">
+{{else if $value.mode==='css'}}
+    <div class="list-item b-l b-l-2x b-warning">
+{{else if $value.mode==='javascript'}}
+    <div class="list-item b-l b-l-2x b-primary">
+{{else}}
+    <div class="list-item b-l b-l-2x">
+{{/if}}
+
     <div class="list-left">
 		<span class="w-40 avatar">
           {{if $value.mode==='clike'}}
@@ -249,21 +275,24 @@
           {{/if}}
 		</span>
     </div>
+
     <div class="list-body">
-      <div class="pull-right text-muted text-xs">
-        <i class="fa fa-paperclip m-l-sm"></i>
-      </div>
-      <div>
-        <a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getCode({{$value.id}})">{{$value.title}}</a>
-        <span class="label label-xs m-l-sm text-u-c"></span>
-      </div>
-      {{if $value.note==='' || !$value.note}}
-      <div class="text-ellipsis text-muted text-sm">主人太懒，没有任何备注</div>
-      {{else}}
-      <div class="text-ellipsis text-muted text-sm">{{$value.note}}</div>
-      {{/if}}
+        <div class="pull-right text-muted text-xs">
+            <i class="fa fa-paperclip m-l-sm"></i>
+        </div>
+        <div>
+            <a href class="_500" data-toggle="modal" data-target="#myModal"
+               onclick="initData.getCode({{$value.id}})">{{$value.title}}</a>
+            <span class="label label-xs m-l-sm text-u-c"></span>
+        </div>
+        {{if $value.note==='' || !$value.note}}
+            <div class="text-ellipsis text-muted text-sm">主人太懒，没有任何备注</div>
+        {{else}}
+            <div class="text-ellipsis text-muted text-sm">{{$value.note}}</div>
+        {{/if}}
     </div>
-  </div>
-  {{/each}}
+
+    </div>
+{{/each}}
 </script>
 </html>

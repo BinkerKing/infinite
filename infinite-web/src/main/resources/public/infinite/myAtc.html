@@ -166,6 +166,7 @@ var initData = {
 		View.post(url,param,function(resp){
 			initData.AtcList = resp;
 			initData.showList = resp;
+
 			// 调用分页函数.参数:当前所在页, 总页数(用总条数 除以 每页显示多少条,在向上取整), ajax函数
             pageUtil.setPage(pageUtil.curPage, Math.ceil(resp.length/pageUtil.pageSize), pageUtil.reload_AtcPage);
             pageUtil.reload_AtcPage();
