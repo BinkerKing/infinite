@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping(value = "/MyAskController")
-public class MyAskController {
+@RequestMapping(value = "/AskController")
+public class AskController {
 
 }

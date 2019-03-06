@@ -6,22 +6,18 @@ import net.binker.entity.model.TAtcComment;
 import net.binker.entity.model.TAtcInfomation;
 import net.binker.entity.model.TAtcNote;
 
-public interface TAtcInfomationService {
+public interface AtcService {
 
-	//获取我的文章列表
-	public List<TAtcInfomation> getMyAtcList(Long authorId, String status, String search, String lable);
-	
+	public List<TAtcInfomation> getMyAtcList(Long authorId);
+
 	public String saveAtc(TAtcInfomation lc);
 
 	public String deleteAtc(TAtcInfomation lc);
 	
 	public String saveAtcInfo(TAtcInfomation lc);
 	
-	public TAtcInfomation getMyAtcView(Long id);
+	public TAtcInfomation getAtcView(Long id);
 	
-	//获取共享章列表
-	public List<TAtcInfomation> getAtcList(String status, String search, String lable);
-
 	public List<TAtcInfomation> getAllShareAtcList();
 
 	public List<TAtcComment> getCommentList(Long atcId);

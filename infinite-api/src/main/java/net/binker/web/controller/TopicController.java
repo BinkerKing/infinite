@@ -25,8 +25,8 @@ public class TopicController {
 	}
 
 	@RequestMapping(value = "/getTopicZoneList", method = RequestMethod.GET)
-	public Resp getTopicZoneList(@RequestParam("infoId") Long infoId){
-		List<TTpcZone> zoneList = topicService.getTopicZoneList(infoId);
+	public Resp getTopicZoneList(@RequestParam("topicId") Long topicId){
+		List<TTpcZone> zoneList = topicService.getTopicZoneList(topicId);
 		return new Resp(zoneList, CodeDef.SUCCESS);
 	}
 

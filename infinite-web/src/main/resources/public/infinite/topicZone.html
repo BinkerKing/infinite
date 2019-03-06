@@ -34,7 +34,7 @@
                     <div class="border m-b-20"></div>
                     <div class="form-group search-box">
                         <input type="text" id="searchFilter" class="form-control" placeholder="Search here...">
-                        <button type="submit" class="btn btn-search" onclick="search()"><i class="fa fa-search"></i></button>
+                        <button type="submit" class="btn btn-search" onclick="operate.search()"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
 
@@ -117,10 +117,10 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+                            <a href="javascript:operate.collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                            <a href="javascript:skip.toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
                         </div>
                         <div class="col-sm-3">
                         </div>
@@ -168,7 +168,7 @@
                             </ul>
 
                             <div class="text-center">
-                                <a href="javascript:newContent('atc');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                                <a href="javascript:skip.newContent('atc');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
                             </div>
                         </div>
                     </article>
@@ -187,7 +187,7 @@
                             </ul>
 
                             <div class="text-center">
-                                <a href="javascript:newContent('ask');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                                <a href="javascript:skip.newContent('ask');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
                             </div>
                         </div>
                     </article>
@@ -206,7 +206,7 @@
                             </ul>
 
                             <div class="text-center">
-                                <a href="javascript:newContent('code');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
+                                <a href="javascript:skip.newContent('code');" class="btn btn-danger btn-bordred btn-rounded waves-effect waves-light">Choose</a>
                             </div>
                         </div>
                     </article>
@@ -219,114 +219,126 @@
 </body>
 <script>
 var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
-var infoId = View.getQStr("infoId");
-var TopicInfo = {};
-var TopicZoneList = [];//所有的
-var CurTopicZoneId = "";//当前点击文章ID
+var topicId = View.getQStr("topicId");
 $(function(){
-    initZoneTop();
-	initTopicZoneList();
+    initData.initZoneTop();
+    initData.initTopicZoneList();
     $('#topicZoneView').attr('height',min_height+"px");
 });
 
-//监听搜索框的回车
+/*****监听********/
 $('#searchFilter').bind('keypress',function(e){
     if(e.keyCode == 13)
         search();
 });
 
-function initTopicZoneList(){
-	var url = Const.Api_URL + "/TopicController/getTopicZoneList";
-	var param = "infoId="+infoId;
-	View.get(url,param,function(resp){
-        if(!resp){
-            resp = [];
+var skip = {
+    edit : function () {
+        window.parent.getUrl("/infinite/newTopicZone.html?topicZoneId="+initData.CurTopicZoneId);
+    },
+    toPage : function () {
+        window.parent.getUrl("/infinite/topicZonePage.html?topicZoneId="+initData.CurTopicZoneId);
+    },
+    newContent : function (status) {
+        var TopicInfo = initData.TopicInfo;
+        switch (status) {
+            case 'atc':
+                window.parent.getUrl("/infinite/newAtc.html?topicId="+TopicInfo.id);
+                break;
+            case 'ask':
+                window.parent.getUrl("/infinite/newAsk.html?topicId="+TopicInfo.id);
+                break;
+            case 'code':
+                window.parent.getUrl("/infinite/newCode.html?topicId="+TopicInfo.id);
+                break;
+            default:break;
         }
-        TopicZoneList = resp;
-        reload_TopicZoneListTmpl(resp);
-	},function(){
-		
-	});
-}
-
-function initZoneTop(){
-    var url = Const.Api_URL + "/TopicController/getTopicInfo";
-    var param = "id="+infoId;
-    View.get(url,param,function(resp){
-        if(!resp){
-            resp = {};
-        }
-        TopicInfo = resp;
-        reload_ZoneTopTmpl(resp);
-    },function(){
-
-    });
-}
-
-function edit(){
-    window.parent.getUrl("/infinite/newTopicZone.html?topicZoneId="+CurTopicZoneId);
-}
-
-function toPage(){
-    window.parent.getUrl("/infinite/topicZonePage.html?topicZoneId="+CurTopicZoneId);
-}
-
-function getTopicZone(id,title){
-    CurTopicZoneId = id;
-    $("#topicZoneTitle").text(title);
-    $("#topicZoneView").attr("src","/infinite/topicZoneView.html?topicZoneId="+id);
-}
-
-function newContent(status){
-    switch (status) {
-        case 'atc':
-            window.parent.getUrl("/infinite/newAtc.html?topicId="+TopicInfo.id);
-            break;
-        case 'ask':
-            window.parent.getUrl("/infinite/newAsk.html?topicId="+TopicInfo.id);
-            break;
-        case 'code':
-            window.parent.getUrl("/infinite/newCode.html?topicId="+TopicInfo.id);
-            break;
-        default:break;
+    },
+    getAtcView : function (atcId,title) {
+        initData.CurInfoId = atcId;
+        $("#topicZoneTitle").text(title);
+        $("#topicZoneView").attr("src","/infinite/atcView.html?atcId="+atcId);
+    },
+    getAskView : function (atcId,title) {
+        initData.CurInfoId = atcId;
+        $("#topicZoneTitle").text(title);
+        $("#topicZoneView").attr("src","/infinite/atcView.html?atcId="+atcId);
+    },
+    getCodeView : function (atcId,title) {
+        initData.CurInfoId = atcId;
+        $("#topicZoneTitle").text(title);
+        $("#topicZoneView").attr("src","/infinite/atcView.html?atcId="+atcId);
     }
 }
 
-function search(){
-    var searchFilter = $("#searchFilter").val();
-    if(searchFilter == ""){
-        reload_TopicZoneListTmpl(TopicZoneList);
-        return;
+var initData = {
+    TopicInfo : {},
+    TopicZoneList : [],//所有的
+    CurInfoId : "",//当前点击文章ID
+
+    initTopicZoneList : function (){//获取话题中，明细列表
+        var url = Const.Api_URL + "/TopicController/getTopicZoneList";
+        var param = "topicId="+topicId;
+        View.get(url,param,function(resp){
+            if(!resp){
+                resp = [];
+            }
+            initData.TopicZoneList = resp;
+            TmplFun.reload_TopicZoneListTmpl(resp);
+        },function(){
+
+        });
+    },
+    initZoneTop : function () {//获取话题信息，用于顶部展示
+        var url = Const.Api_URL + "/TopicController/getTopicInfo";
+        var param = "id="+topicId;
+        View.get(url,param,function(resp){
+            if(!resp){
+                resp = {};
+            }
+            initData.TopicInfo = resp;
+            TmplFun.reload_ZoneTopTmpl(resp);
+        },function(){
+
+        });
     }
-    var searchList=[];
-    for(var i=0;i<TopicZoneList.length;i++){
-        if(TopicZoneList[i].titleInfo.indexOf(searchFilter)!=-1 || TopicZoneList[i].description.indexOf(searchFilter)!=-1){
-            searchList.push(TopicZoneList[i]);
-        }
-    }
-    reload_TopicZoneListTmpl(searchList);
 }
 
+var operate = {
+    search : function () {
+        var searchFilter = $("#searchFilter").val();
+        var TopicZoneList = initData.TopicZoneList;
+        if(searchFilter == ""){
+            TmplFun.reload_TopicZoneListTmpl(TopicZoneList);
+            return;
+        }
+        var searchList=[];
+        for(var i=0;i<TopicZoneList.length;i++){
+            if(TopicZoneList[i].titleInfo.indexOf(searchFilter)!=-1 || TopicZoneList[i].description.indexOf(searchFilter)!=-1){
+                searchList.push(TopicZoneList[i]);
+            }
+        }
+        TmplFun.reload_TopicZoneListTmpl(searchList);
+    }
+}
 /***页面渲染***/
-//渲染文章列表模板
-function reload_TopicZoneListTmpl(list){
-    var data = {};
-    data.list = list;
-    for(var i=0;i<data.list.length;i++){
-        data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+var TmplFun = {
+    reload_TopicZoneListTmpl : function (list) {
+        var data = {};
+        data.list = list;
+        for(var i=0;i<data.list.length;i++){
+            data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+        }
+        var temp = new Tmpl("topicZoneListTmpl",data);
+        temp.reset("topicZoneListDiv");
+    },
+    reload_ZoneTopTmpl : function (resp) {
+        var data = {};
+        data.data = resp;
+        var temp = new Tmpl("zoneTopTmpl",data);
+        temp.reset("zoneTopDiv");
     }
-    var temp = new Tmpl("topicZoneListTmpl",data);
-    temp.reset("topicZoneListDiv");
 }
-
-//渲染顶部模板
-function reload_ZoneTopTmpl(resp){
-    var data = {};
-    data.data = resp;
-    var temp = new Tmpl("zoneTopTmpl",data);
-    temp.reset("zoneTopDiv");
-}
-
 </script>
 
 <script id="topicZoneListTmpl" type="text/html">
@@ -337,17 +349,55 @@ function reload_ZoneTopTmpl(resp){
 </div>
 {{/if}}
 {{each list as item}}
+{{if item.classification === "1"}}
 <div class="card-box">
     <div class="blog-post m-b-30">
         <div class="text-muted"><span>by <a class="text-dark font-secondary">{{item.authorName}}</a>,</span> <span>{{item.createTime}}</span></div>
         <div class="post-title">
-            <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getZone({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
+            <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="skip.getAtcView({{item.infoId}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
         </div>
         <div>
             <p>{{item.description}}</p>
         </div>
     </div>
 </div>
+{{else if item.classification === "2"}}
+<div class="card-box">
+    <div class="blog-post m-b-30">
+        <div class="text-muted"><span>by <a class="text-dark font-secondary">{{item.authorName}}</a>,</span> <span>{{item.createTime}}</span></div>
+        <div class="post-title">
+            <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="skip.getAskView({{item.infoId}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
+        </div>
+        <div>
+            <p>{{item.description}}</p>
+        </div>
+    </div>
+</div>
+{{else if item.classification === "3"}}
+<div class="card-box">
+    <div class="blog-post m-b-30">
+        <div class="text-muted"><span>by <a class="text-dark font-secondary">{{item.authorName}}</a>,</span> <span>{{item.createTime}}</span></div>
+        <div class="post-title">
+            <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="skip.getCodeView({{item.infoId}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
+        </div>
+        <div>
+            <p>{{item.description}}</p>
+        </div>
+    </div>
+</div>
+{{else}}
+<div class="card-box">
+    <div class="blog-post m-b-30">
+        <div class="text-muted"><span>by <a class="text-dark font-secondary">{{item.authorName}}</a>,</span> <span>{{item.createTime}}</span></div>
+        <div class="post-title">
+            <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="skip.getAtcView({{item.infoId}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
+        </div>
+        <div>
+            <p>{{item.description}}</p>
+        </div>
+    </div>
+</div>
+{{/if}}
 {{/each}}
 </script>
 

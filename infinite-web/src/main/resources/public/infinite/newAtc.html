@@ -154,8 +154,8 @@ var initData = {
     AtcObj : {},
     initAtc : function () {
         $("#delete_btn").show();
-        var url = Const.Api_URL + "/MyAtcController/getMyAtcView";
-        var param = "id="+ atcId;
+        var url = Const.Api_URL + "/AtcController/getAtcView";
+        var param = "atcId="+ atcId;
         View.get(url,param,function(resp){
             $("#titleInfo").val(resp.titleInfo);
             $("input:radio[value='"+resp.publishStatus+"']").attr('checked','true');
@@ -202,7 +202,7 @@ var operate = {
 				}
 				tAtcInfomation.tatcContent.htmlContent = $('.summernote').summernote('code');
 				tAtcInfomation.tatcContent.titleInfo = $("#titleInfo").val();
-				var url = Const.Api_URL + "/MyAtcController/saveAtc";
+				var url = Const.Api_URL + "/AtcController/saveAtc";
 				View.post(url, tAtcInfomation, function (resp) {
 					//删除成功提示框
 					swal({title:"保存成功！",text:"您已经保存了文章。",showCancelButton: false,type:"success"},function(){
@@ -230,7 +230,7 @@ var operate = {
             closeOnCancel:false
         },function(isConfirm){
             if(isConfirm){
-                var url = Const.Api_URL + "/MyAtcController/deleteAtc";
+                var url = Const.Api_URL + "/AtcController/deleteAtc";
                 View.post(url, initData.AtcObj, function (resp) {
                     //删除成功提示框
                     swal({title:"删除成功！",text:"您已经永久删除了这条数据。",showCancelButton: false,type:"success"},function(){

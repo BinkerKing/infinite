@@ -20,9 +20,9 @@
 	<div class="col-sm w w-auto-xs light lt bg-auto">
 		<div class="padding pos-rlt">
 			<button id="save_btn" class="btn btn-outline btn-primary btn-block"
-					onclick="save()">保存</button>
+					onclick="operate.save()">保存</button>
 			<button id="delete_btn" class="btn btn-outline btn-primary btn-block"
-					onclick="deleteCode()" style= "display:none">删除</button>
+					onclick="operate.deleteCode()" style= "display:none">删除</button>
 
 			<div class="control-group" id="toastTypeGroup">
 				<div class="controls">
@@ -98,8 +98,8 @@
 <script type="text/javascript">
 var infoId = View.getQStr("infoId");
 var topicId = View.getQStr("topicId");
-var authorId = 1;
 var CodeObj = {};//全局的Code，如果是编辑，则会给上值，是新增则是空
+
 /*初始化*/
 $(function(){
 	editor.setValue("");//代码编辑器初始化
@@ -108,7 +108,7 @@ $(function(){
 
 	if(infoId){
 		$("#delete_btn").show();
-		var url = Const.Api_URL + "/MyCodeController/getCode";
+		var url = Const.Api_URL + "/CodeController/getCode";
 		View.get(url,"infoId="+infoId,function(resp){
 			CodeObj = resp;
 			$("#title").val(resp.title);
@@ -123,7 +123,7 @@ $(function(){
 	}
 });
 
-/*监听区*/
+/*******监听区*******/
 $('#codeType').change(function(){
 	editor.setOption("mode",$("#codeType").val());
 });
@@ -131,105 +131,43 @@ $('#skinType').change(function(){
 	editor.setOption("theme",$("#skinType").val());
 });
 
-function validate() {
-	
-}
+/*******操作*******/
+var operate = {
+	validate : function () {
 
-/*方法区*/
-function save() {
-	validate();
-	if($("#titleInfo").val() == ""){
-		return;
+	},
+	save : function () {
+		this.validate();
+		if($("#titleInfo").val() == ""){
+			return;
+		}
+
+		var myCode = CodeObj;
+		myCode.title = $("#title").val();
+		myCode.mode = editor.getOption("mode");
+		myCode.custId = Author.id;
+		myCode.publishStatus = $('input[name="radio"]:checked').val();
+		myCode.note = $("#note").val();
+		if (!myCode.tcdeContent) {
+			myCode.tcdeContent = {};
+		}
+		myCode.tcdeContent.content = editor.getValue();
+		myCode.tcdeContent.mode = editor.getOption("mode");
+		var url = Const.Api_URL + "/CodeController/saveCode";
+		View.post(url, myCode, function (resp) {
+			//删除成功提示框
+			window.parent.getUrl("/infinite/myCode.html");
+		}, function () {
+		});
+	},
+	deleteCode : function () {
+		var url = Const.Api_URL + "/CodeController/deleteCode";
+		View.post(url, CodeObj, function (resp) {
+			//删除成功提示框
+			window.parent.getUrl("/infinite/myCode.html");
+		}, function () {
+		});
 	}
-
-	var myCode = CodeObj;
-	myCode.title = $("#title").val();
-	myCode.mode = editor.getOption("mode");
-	myCode.custId = authorId;
-	myCode.publishStatus = $('input[name="radio"]:checked').val();
-	myCode.note = $("#note").val();
-	if (!myCode.tcdeContent) {
-		myCode.tcdeContent = {};
-	}
-	myCode.tcdeContent.content = editor.getValue();
-	myCode.tcdeContent.mode = editor.getOption("mode");
-	var url = Const.Api_URL + "/MyCodeController/saveCode";
-	View.post(url, myCode, function (resp) {
-		//删除成功提示框
-		window.parent.getUrl("/infinite/myCode.html");
-	}, function () {
-	});
-
-	// swal({title:"您确定要保存代码吗",
-	// 	text:"您已经编辑完代码了吗？",
-	// 	type:"warning",
-	// 	showCancelButton:true,
-	// 	confirmButtonColor:"#DD6B55",
-	// 	confirmButtonText:"确定保存！",
-	// 	cancelButtonText:"取消",
-	// 	closeOnConfirm:false,
-	// 	closeOnCancel:false
-	// },function(isConfirm){
-	// 	if(isConfirm){
-	// 		var myCode = CodeObj;
-	// 		myCode.title = $("#title").val();
-	// 		myCode.mode = editor.getOption("mode");
-	// 		myCode.custId = authorId;
-	// 		myCode.publishStatus = $('input[name="radio"]:checked').val();
-	// 		myCode.note = $("#note").val();
-	// 		if (!myCode.tcdeContent) {
-	// 			myCode.tcdeContent = {};
-	// 		}
-	// 		myCode.tcdeContent.content = editor.getValue();
-	// 		myCode.tcdeContent.mode = editor.getOption("mode");
-	// 		var url = Const.Api_URL + "/MyCodeController/saveCode";
-	// 		View.post(url, myCode, function (resp) {
-	// 			//删除成功提示框
-	// 			swal({title:"保存成功！",text:"您已经保存了代码。",showCancelButton: false,type:"success"},function(){
-	// 				window.parent.getUrl("/infinite/myCode.html");
-	// 			});
-	// 		}, function () {
-	// 			swal({title:"失败",text:"保存失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
-	// 		});
-	// 	}else{
-	// 		swal.close();
-	// 		// swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
-	// 	}
-	// });
-}
-
-function deleteCode(){
-	var url = Const.Api_URL + "/MyCodeController/deleteCode";
-	View.post(url, CodeObj, function (resp) {
-		//删除成功提示框
-		window.parent.getUrl("/infinite/myCode.html");
-	}, function () {
-	});
-	// swal({title:"您确定要删除这条数据吗",
-	// 	text:"删除后将无法恢复，请谨慎操作！",
-	// 	type:"warning",
-	// 	showCancelButton:true,
-	// 	confirmButtonColor:"#DD6B55",
-	// 	confirmButtonText:"确定删除！",
-	// 	cancelButtonText:"取消",
-	// 	closeOnConfirm:false,
-	// 	closeOnCancel:false
-	// },function(isConfirm){
-	// 	if(isConfirm){
-	// 		var url = Const.Api_URL + "/MyCodeController/deleteCode";
-	// 		View.post(url, CodeObj, function (resp) {
-	// 			//删除成功提示框
-	// 			swal({title:"删除成功！",text:"您已经永久删除了这条数据。",showCancelButton: false,type:"success"},function(){
-	// 				window.parent.getUrl("/infinite/myCode.html");
-	// 			});
-	// 		}, function () {
-	// 			swal({title:"失败",text:"删除失败！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"error"});
-	// 		});
-	// 	}else{
-	// 		swal.close();
-	// 		// swal({title:"已取消",text:"您取消了删除操作！",type:"error"})
-	// 	}
-	// });
 }
 </script>
 </html>

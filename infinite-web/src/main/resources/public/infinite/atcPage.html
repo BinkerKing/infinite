@@ -117,8 +117,8 @@ function setScroll(){
 $(window).on("resize",setScroll);
 
 function initAtcContent(){
-	var url = Const.Api_URL + "/MyAtcController/getMyAtcView";
-	var param = "id="+ AtcId;
+	var url = Const.Api_URL + "/AtcController/getAtcView";
+	var param = "atcId="+ AtcId;
 	View.get(url,param,function(resp){
         reload_atcContentTmpl(resp);
 	},function(){
@@ -131,7 +131,7 @@ function initAuthorContent(){
 }
 
 function initCommentList(){
-    var url = Const.Api_URL + "/MyAtcController/getCommentList";
+    var url = Const.Api_URL + "/AtcController/getCommentList";
     var param = "atcId="+ AtcId;
     View.get(url,param,function(resp){
         reload_commentListTmpl(resp);
@@ -141,7 +141,7 @@ function initCommentList(){
 }
 
 function submitComment(){
-    var url = Const.Api_URL + "/MyAtcController/saveComment";
+    var url = Const.Api_URL + "/AtcController/saveComment";
     var tAtcComment = {
         authorId : Author.id,
         authorName : Author.name,

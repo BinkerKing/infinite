@@ -145,7 +145,7 @@
         CurCode : {},//当前点击代码
 
         initCodeList : function () {//获取所有文章列表，并初始化全局变量
-            var url = Const.Api_URL + "/MyCodeController/getCodeList";
+            var url = Const.Api_URL + "/CodeController/getMyCodeList";
             View.get(url, "custId=" + Author.id, function (resp) {
                 initData.CodeList = resp;
                 TmplFun.reload_CodeListTmpl(resp);
@@ -154,7 +154,7 @@
             });
         },
         getCode : function (infoId) {
-            var url = Const.Api_URL + "/MyCodeController/getCode";
+            var url = Const.Api_URL + "/CodeController/getCode";
             View.get(url, "infoId=" + infoId, function (resp) {
                 initData.CurCode = resp;
                 $("#codeTitle").text(resp.title);

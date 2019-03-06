@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.binker.entity.model.TAskInfomation;
 
-public interface TAskInfomationService {
+public interface AskService {
 
 	public List<TAskInfomation> getMyAskList(Long authorId, String status, String search, String lable);
 	

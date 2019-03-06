@@ -37,7 +37,7 @@
                     <div class="border m-b-20"></div>
                     <div class="form-group search-box">
                         <input type="text" id="searchFilter" class="form-control" placeholder="Search here...">
-                        <button type="submit" class="btn btn-search" onclick="search()"><i class="fa fa-search"></i></button>
+                        <button type="submit" class="btn btn-search" onclick="operate.search()"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
 
@@ -114,10 +114,10 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+                            <a href="javascript:operate.collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                            <a href="javascript:skip.toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
                         </div>
                         <div class="col-sm-3">
                         </div>
@@ -170,7 +170,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" onclick="submit()">提交</button>
+                <button type="button" class="btn btn-primary" onclick="operate.submit()">提交</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -178,10 +178,9 @@
 </body>
 <script>
 var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
-var TopicList = [];//所有的
-var CurInfoId = "";//当前点击话题ID
+
 $(function(){
-	initTopicList();
+	initData.initTopicList();
     $('#topicView').attr('height',min_height+"px");
 });
 
@@ -191,77 +190,82 @@ $('#searchFilter').bind('keypress',function(e){
         search();
 });
 
+var skip = {
+    toZone : function (id) {
+        initData.CurInfoId = id;
+        window.parent.getUrl("/infinite/topicZone.html?topicId="+id);
+    },
+    getTopic : function (id,title) {
+        initData.CurInfoId = id;
+        $("#topicTitle").text(title);
+        $("#topicView").attr("src","/infinite/topicView.html?topicId="+id);
+    }
+}
+
 //准备话题列表数据，并刷新列表显示
-function initTopicList(){
-	var url = Const.Api_URL + "/TopicController/getPublishTopicList";
-	View.get(url,null,function(resp){
-        TopicList = resp;
-        reload_TopicListTmpl(resp);
-	},function(){
-		
-	});
-}
+var initData = {
+    TopicList : [],//所有的
+    CurInfoId : "",//当前点击话题ID
 
-//进入话题
-function toZone(id){
-    CurInfoId = id;
-    window.parent.getUrl("/infinite/topicZone.html?infoId="+CurInfoId);
-}
+    initTopicList : function () {
+        var url = Const.Api_URL + "/TopicController/getPublishTopicList";
+        View.get(url,null,function(resp){
+            initData.TopicList = resp;
+            TmplFun.reload_TopicListTmpl(resp);
+        },function(){
 
-//查看话题信息
-function getTopic(id,title){
-    CurInfoId = id;
-    $("#topicTitle").text(title);
-    $("#topicView").attr("src","/infinite/topicView.html?topicId="+id);
-}
-
-//搜索
-function search(){
-    var searchFilter = $("#searchFilter").val();
-    if(searchFilter == ""){
-        reload_TopicListTmpl(TopicList);
-        return;
+        });
     }
-    var searchList=[];
-    for(var i=0;i<TopicList.length;i++){
-        if(TopicList[i].titleInfo.indexOf(searchFilter)!=-1 || TopicList[i].description.indexOf(searchFilter)!=-1){
-            searchList.push(TopicList[i]);
+}
+
+var operate = {
+    search : function () {
+        var searchFilter = $("#searchFilter").val();
+        if(searchFilter == ""){
+            TmplFun.reload_TopicListTmpl(TopicList);
+            return;
         }
+        var searchList=[];
+        var TopicList = initData.TopicList;
+        for(var i=0;i<TopicList.length;i++){
+            if(TopicList[i].titleInfo.indexOf(searchFilter)!=-1 || TopicList[i].description.indexOf(searchFilter)!=-1){
+                searchList.push(TopicList[i]);
+            }
+        }
+        TmplFun.reload_TopicListTmpl(searchList);
+    },
+    submit : function () {
+        var atcInfo = {};
+        atcInfo.titleInfo = $("#fullname").val();
+        atcInfo.description = $("#message").val();
+        atcInfo.authorId = Author.id;
+        atcInfo.authorName = Author.name;
+        atcInfo.askCount = 0;
+        atcInfo.atcCount = 0;
+        atcInfo.codeCount = 0;
+        atcInfo.joinCount = 0;
+        var url = Const.Api_URL + "/TopicController/submitTopic";
+        View.post(url,atcInfo,function(resp){
+            swal({title:"提交成功",text:"已提交至管理员，审核中！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+            $('#newTopic').modal('hide');
+        },function(){
+
+        });
     }
-    reload_TopicListTmpl(searchList);
-}
-
-function submit(){
-    var atcInfo = {};
-    atcInfo.titleInfo = $("#fullname").val();
-    atcInfo.description = $("#message").val();
-    atcInfo.authorId = Author.id;
-    atcInfo.authorName = Author.name;
-    atcInfo.askCount = 0;
-    atcInfo.atcCount = 0;
-    atcInfo.codeCount = 0;
-    atcInfo.joinCount = 0;
-    var url = Const.Api_URL + "/TopicController/submitTopic";
-    View.post(url,atcInfo,function(resp){
-        swal({title:"提交成功",text:"已提交至管理员，审核中！",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
-        $('#newTopic').modal('hide');
-    },function(){
-
-    });
 }
 
 /***页面渲染***/
-//渲染文章列表模板
-function reload_TopicListTmpl(list){
-    var data = {};
-    data.list = list;
-    for(var i=0;i<data.list.length;i++){
-        data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+var TmplFun = {
+    reload_TopicListTmpl : function (list) {
+        var data = {};
+        data.list = list;
+        for(var i=0;i<data.list.length;i++){
+            data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+        }
+        var temp = new Tmpl("topicListTmpl",data);
+        temp.reset("topicListDiv");
     }
-    var temp = new Tmpl("topicListTmpl",data);
-    temp.reset("topicListDiv");
 }
-
 </script>
 
 <script id="topicListTmpl" type="text/html">
@@ -290,7 +294,7 @@ function reload_TopicListTmpl(list){
                     <a href="#" ><i class="glyphicon glyphicon-question-sign"></i><span>{{item.askCount}}</span></a>
                     <a href="#" ><i class="glyphicon glyphicon-sound-stereo"></i><span>{{item.codeCount}}</span></a>
                     <div class="pull-right">
-                        <a href="javascript:toZone({{item.id}})" class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i><span>进入话题</span></a>
+                        <a href="javascript:skip.toZone({{item.id}})" class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i><span>进入话题</span></a>
                     </div>
                 </div>
                 <!-- end. Card actions -->

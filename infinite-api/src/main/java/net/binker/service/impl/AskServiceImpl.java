@@ -3,7 +3,7 @@ package net.binker.service.impl;
 import net.binker.config.Const;
 import net.binker.entity.model.TAskContent;
 import net.binker.entity.model.TAskInfomation;
-import net.binker.service.TAskInfomationService;
+import net.binker.service.AskService;
 import net.binker.service.repo.TAskContentRepo;
 import net.binker.service.repo.TAskInfomationRepo;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TAskInfomationServiceImpl implements TAskInfomationService {
+public class AskServiceImpl implements AskService {
 	
 	@Autowired
 	private TAskInfomationRepo tAskInfomationRepo;

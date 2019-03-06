@@ -156,14 +156,9 @@ var initData = {
     CurAtcId : "",//当前点击文章id
 
     initAtcList : function(){
-		var url = Const.Api_URL + "/MyAtcController/getMyAtcList";
-		var param = {
-			authorId : Author.id,
-			status : 1,
-			search : "",
-			lable : ""
-		};
-		View.post(url,param,function(resp){
+		var url = Const.Api_URL + "/AtcController/getMyAtcList";
+		var param =  "authorId=" + Author.id;
+		View.get(url,param,function(resp){
 			initData.AtcList = resp;
 			initData.showList = resp;
 
@@ -251,14 +246,21 @@ var searchUtil = {
             }
         }
 	},
-    searchByStatus : function (status){
+    searchByStatus : function (status){//通过发布状态搜索
         var searchList=[];
         for(var i=0;i<initData.AtcList.length;i++){
             if(initData.AtcList[i].publishStatus == status){
                 searchList.push(initData.AtcList[i]);
             }
         }
-        TmplFun.reload_AtcListTmpl(searchList);
+		if(searchList.length == 0 ){
+			pageUtil.noData();
+		}else{
+			initData.showList = searchList;
+			pageUtil.curPage = 1;
+			pageUtil.setPage(pageUtil.curPage, Math.ceil(searchList.length/pageUtil.pageSize), pageUtil.reload_AtcPage);
+			pageUtil.reload_AtcPage();
+		}
 	}
 }
 

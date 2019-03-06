@@ -38,8 +38,8 @@ $(window).on("resize",setScroll);
 
 /*****初始化数据******/
 function initAtcView(){
-	var url = Const.Api_URL + "/MyAtcController/getMyAtcView";
-	var param = "id="+ atcId;
+	var url = Const.Api_URL + "/AtcController/getAtcView";
+	var param = "atcId="+ atcId;
 	View.get(url,param,function(resp){
 		var data = {};
 		data.data = resp;

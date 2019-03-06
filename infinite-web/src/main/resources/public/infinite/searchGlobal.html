@@ -16,7 +16,7 @@
 
     <div class="row">
         <div class="m-t-30">
-            <h4 id="resultTitle"></h4>
+            <h6 id="resultTitle"></h6>
         </div>
     </div>
 
@@ -107,88 +107,87 @@
 </div>
 </body>
 <script>
-var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
 var searchFilter = View.getQStr("searchFilter");
 $(function(){
-	//('#atcView').attr('height',min_height+"px");
     if(isEmpty(searchFilter)){
         return;//为空，则提示
     }
     $("#resultTitle").text("搜索 [ " + searchFilter +  "], ");
     //查询手记
-    init_AtcSearch();
+    initData.init_AtcSearch();
     //查询问题
-    init_AskSearch();
+    initData.init_AskSearch();
     //查询代码
-    init_CodeSearch();
+    initData.init_CodeSearch();
     //查询话题
-    init_TopicSearch();
+    initData.init_TopicSearch();
 });
 
-function init_AtcSearch(){
-    var url = Const.Api_URL + "/AtcController/getSearchResult";
-    var param = "filter=" + searchFilter;
-    var startTime = new Date();
-    View.get(url,param,function(resp){
-        reload_AtcSearchTmpl(resp);
-        $("#atcCount").text(resp.length);
-        var endTime = new Date();
-        var interval = parseInt(endTime - startTime);
-        $("#resultTitle").text($("#resultTitle").text() + "手记列表用时：" + interval + "ms ");
-    },function(){
+/***数据准备***/
+var initData = {
+    init_AtcSearch : function () {
+        var url = Const.Api_URL + "/AtcController/getSearchResult";
+        var param = "filter=" + searchFilter;
+        var startTime = new Date();
+        View.get(url,param,function(resp){
+            TmplFun.reload_AtcSearchTmpl(resp);
+            $("#atcCount").text(resp.length);
+            var endTime = new Date();
+            var interval = parseInt(endTime - startTime);
+            $("#resultTitle").text($("#resultTitle").text() + "手记列表用时：" + interval + "ms ");
+        },function(){
 
-    });
-}
+        });
+    },
+    init_AskSearch : function () {
+        TmplFun.reload_AskSearchTmpl();
+    },
+    init_CodeSearch : function () {
+        TmplFun.reload_CodeSearchTmpl();
+    },
+    init_TopicSearch : function () {
+        var url = Const.Api_URL + "/TopicController/getSearchResult";
+        var param = "filter=" + searchFilter;
+        var startTime = new Date();
+        View.get(url,param,function(resp){
+            $("#topicCount").text(resp.length);
+            TmplFun.reload_TopicSearchTmpl(resp);
+            var endTime = new Date();
+            var interval = parseInt(endTime - startTime);
+            $("#resultTitle").text( $("#resultTitle").text() + "话题列表用时：" + interval + "ms ");
+        },function(){
 
-function init_AskSearch(){
-    reload_AskSearchTmpl();
-}
-
-function init_CodeSearch(){
-    reload_CodeSearchTmpl();
-}
-
-function init_TopicSearch(){
-    var url = Const.Api_URL + "/TopicController/getSearchResult";
-    var param = "filter=" + searchFilter;
-    var startTime = new Date();
-    View.get(url,param,function(resp){
-        $("#topicCount").text(resp.length);
-        reload_TopicSearchTmpl(resp);
-        var endTime = new Date();
-        var interval = parseInt(endTime - startTime);
-        $("#resultTitle").text( $("#resultTitle").text() + "话题列表用时：" + interval + "ms ");
-    },function(){
-
-    });
-}
-
-/***页面渲染***/
-function reload_AtcSearchTmpl(list){
-    var data = {};
-    data.list = list;
-    var temp = new Tmpl("atcSearchTmpl",data);
-    temp.reset("atcSearchDiv");
-}
-function reload_AskSearchTmpl(list){
-    var data = {};
-    data.list = list;
-    var temp = new Tmpl("askSearchTmpl",data);
-    temp.reset("askSearchDiv");
-}
-function reload_CodeSearchTmpl(list){
-    var data = {};
-    data.list = list;
-    var temp = new Tmpl("codeSearchTmpl",data);
-    temp.reset("codeSearchDiv");
-}
-function reload_TopicSearchTmpl(list){
-    var data = {};
-    data.list = list;
-    var temp = new Tmpl("topicSearchTmpl",data);
-    temp.reset("topicSearchDiv");
+        });
+    }
 }
 
+/***模版渲染***/
+var TmplFun = {
+    reload_AtcSearchTmpl : function (list) {
+        var data = {};
+        data.list = list;
+        var temp = new Tmpl("atcSearchTmpl",data);
+        temp.reset("atcSearchDiv");
+    },
+    reload_AskSearchTmpl : function (list) {
+        var data = {};
+        data.list = list;
+        var temp = new Tmpl("askSearchTmpl",data);
+        temp.reset("askSearchDiv");
+    },
+    reload_CodeSearchTmpl : function (list) {
+        var data = {};
+        data.list = list;
+        var temp = new Tmpl("codeSearchTmpl",data);
+        temp.reset("codeSearchDiv");
+    },
+    reload_TopicSearchTmpl : function (list) {
+        var data = {};
+        data.list = list;
+        var temp = new Tmpl("topicSearchTmpl",data);
+        temp.reset("topicSearchDiv");
+    }
+}
 </script>
 
 <script id="atcSearchTmpl" type="text/html">

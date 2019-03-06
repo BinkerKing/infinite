@@ -40,6 +40,10 @@ public class TTpcZone {
 	@Column(name = "classification")
 	private String classification;
 	
+	//@Comment("话题信息ID")
+	@Column(name = "topic_id")
+	private Long topicId;
+
 	//@Comment("信息ID")
 	@Column(name = "info_id")
 	private Long infoId;

@@ -112,10 +112,10 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+                            <a href="javascript:operate.collect();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
+                            <a href="javascript:skip.toPage();"><i class="glyphicon glyphicon-align-left"></i></a>
                         </div>
                         <div class="col-sm-3">
                         </div>
@@ -134,10 +134,8 @@
 </body>
 <script>
 var min_height = window.screen.availHeight - 364;//获取屏幕高度-头部高度
-var AtcList = [];//所有的
-var CurAtcId = "";//当前点击文章ID
 $(function(){
-	initAtcList();
+	initData.initAtcList();
     $('#atcView').attr('height',min_height+"px");
 });
 
@@ -147,50 +145,58 @@ $('#searchFilter').bind('keypress',function(e){
         search();
 });
 
-function initAtcList(){
-	var url = Const.Api_URL + "/AtcController/getAllShareAtcList";
-	View.get(url,null,function(resp){
-        AtcList = resp;
-        reload_AtcListTmpl(resp);
-	},function(){
-		
-	});
+var skip = {
+    edit : function () {
+        window.parent.getUrl("/infinite/newAtc.html?atcId="+initData.CurAtcId);
+    },
+    toPage : function () {
+        window.parent.getUrl("/infinite/atcPage.html?atcId="+initData.CurAtcId);
+    },
+    getAtc : function (id,title) {
+        initData.CurAtcId = id;
+        $("#atcTitle").text(title);
+        $("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
+    }
 }
+var initData = {
+    AtcList : [],//所有的
+    CurAtcId : "",//当前点击文章ID
 
-function edit(){
-    window.parent.getUrl("/infinite/newAtc.html?atcId="+CurAtcId);
-}
+    initAtcList : function () {
+        var url = Const.Api_URL + "/AtcController/getAllShareAtcList";
+        View.get(url,null,function(resp){
+            initData.AtcList = resp;
+            TmplFun.reload_AtcListTmpl(resp);
+        },function(){
 
-function toPage(){
-    window.parent.getUrl("/infinite/atcPage.html?atcId="+CurAtcId);
-}
-
-function collect(){
-    if($("#collect-icon").attr("class")=="glyphicon glyphicon-star-empty"){
-        //收藏
-        $("#collect-icon").attr("class","glyphicon glyphicon-star");
-        $("#collect-icon").css("color","orange");
-        //弹框，收藏成功
-        swal({title:"收藏成功",text:"请在我的手记中查看。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
-    }else{
-        $("#collect-icon").attr("class","glyphicon glyphicon-star-empty");
-        //取消收藏
-        $("#collect-icon").css("color","");
-        //弹框，取消收藏
-        swal({title:"取消收藏",text:"已取消收藏。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+        });
     }
 }
 
-function getAtc(id,title){
-    CurAtcId = id;
-    $("#atcTitle").text(title);
-    $("#atcView").attr("src","/infinite/atcView.html?atcId="+id);
+
+var operate = {
+    collect : function () {
+        if($("#collect-icon").attr("class")=="glyphicon glyphicon-star-empty"){
+            //收藏
+            $("#collect-icon").attr("class","glyphicon glyphicon-star");
+            $("#collect-icon").css("color","orange");
+            //弹框，收藏成功
+            swal({title:"收藏成功",text:"请在我的手记中查看。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+        }else{
+            $("#collect-icon").attr("class","glyphicon glyphicon-star-empty");
+            //取消收藏
+            $("#collect-icon").css("color","");
+            //弹框，取消收藏
+            swal({title:"取消收藏",text:"已取消收藏。",showConfirmButton: false,showCancelButton: false, timer:1500,type:"success"});
+        }
+    }
 }
 
 function search(){
     var searchFilter = $("#searchFilter").val();
+    var AtcList = initData.AtcList;
     if(searchFilter == ""){
-        reload_AtcListTmpl(AtcList);
+        TmplFun.reload_AtcListTmpl(AtcList);
         return;
     }
     var searchList=[];
@@ -199,21 +205,22 @@ function search(){
             searchList.push(AtcList[i]);
         }
     }
-    reload_AtcListTmpl(searchList);
+    TmplFun.reload_AtcListTmpl(searchList);
 }
 
 /***页面渲染***/
 //渲染文章列表模板
-function reload_AtcListTmpl(list){
-    var data = {};
-    data.list = list;
-    for(var i=0;i<data.list.length;i++){
-        data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+var TmplFun = {
+    reload_AtcListTmpl : function (list) {
+        var data = {};
+        data.list = list;
+        for(var i=0;i<data.list.length;i++){
+            data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+        }
+        var temp = new Tmpl("atcListTmpl",data);
+        temp.reset("atcListDiv");
     }
-    var temp = new Tmpl("atcListTmpl",data);
-    temp.reset("atcListDiv");
 }
-
 </script>
 
 <script id="atcListTmpl" type="text/html">
@@ -222,7 +229,7 @@ function reload_AtcListTmpl(list){
 <div class="blog-post m-b-30">
     <div class="text-muted"><span>by <a class="text-dark font-secondary">{{item.authorName}}</a>,</span> <span>{{item.createTime}}</span></div>
     <div class="post-title">
-        <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getAtc({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
+        <h3><a href class="_500" data-toggle="modal" data-target="#myModal" onclick="skip.getAtc({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a></h3>
     </div>
     <div>
         <p>{{item.description}}</p>

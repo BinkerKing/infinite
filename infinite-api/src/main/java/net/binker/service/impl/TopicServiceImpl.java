@@ -25,8 +25,8 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public List<TTpcZone> getTopicZoneList(Long infoId){
-		List<TTpcZone> zoneList = tTpcZoneRepo.findByInfoId(infoId);
+	public List<TTpcZone> getTopicZoneList(Long topicId){
+		List<TTpcZone> zoneList = tTpcZoneRepo.findByTopicId(topicId);
 		return zoneList;
 	}
 
