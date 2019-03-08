@@ -18,8 +18,8 @@
 <div class="row-col">
     <div class="demo-box m-t-20">
         <div id="toolbar">
-
-
+            <button class="btn btn-outline btn-primary btn-block"
+                    onclick="addTmpl()">新建模板</button>
         </div>
         <table id="ArbetTable"></table>
     </div>
@@ -34,9 +34,15 @@
         var url = Const.Api_URL + "/TmplController/test";
         var $table = TableUtil.init(url);
         //传入table的DOM，访问地址url,
+        $table.height =500;
+        $('#ArbetTable').bootstrapTable("refresh");
 
         $('#tmplView').attr('height',min_height+"px");
     });
+
+    function addTmpl(){
+        window.parent.getUrl("/system/newTmpl.html");
+    }
 
 </script>
 </html>

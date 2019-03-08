@@ -108,7 +108,7 @@ body.fixed-left .side-menu.left {
   bottom: 50px;
   margin-bottom: -70px;
   margin-top: 0;
-  padding-bottom: 70px;
+  padding-bottom: 0px;
   position: fixed;
 }
 .content-page {
@@ -116,7 +116,7 @@ body.fixed-left .side-menu.left {
   overflow: hidden;
 }
 .content-page .content {
-  padding: 0 5px 10px 5px;
+  padding: 0px 0px 0px 0px;
   margin-top: 70px;
 }
 .button-menu-mobile {
@@ -551,7 +551,4 @@ body.fixed-left .side-menu.left {
   float: right;
   background-color: transparent !important;
 }
-/* Body min-height set */
-body.fixed-left-void {
-  min-height: 1250px;
-}
+

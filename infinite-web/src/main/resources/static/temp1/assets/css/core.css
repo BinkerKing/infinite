@@ -47,6 +47,9 @@ h6 {
   font-family: 'Hind Madurai', sans-serif;
   margin: 10px 0;
 }
+.margin-0 {
+  margin: 0px;
+}
 h5 {
   font-size: 15px;
 }
