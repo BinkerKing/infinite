@@ -13,12 +13,11 @@
     <script src="/temp1/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script><!-- Sweet-Alert  -->
     <script src="/temp1/assets/pages/jquery.sweet-alert.init.js"></script>
     <script src="/core/bootstrap/js/bootstrap-paginator.js"></script>
-    <link rel="stylesheet" type="text/css" href="/temp1/plugins/summernote/summernote.css"/><!-- Summernote富文本框 css -->
 
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/temp1/plugins/tooltipster/tooltipster.bundle.min.css">
+    <link rel="stylesheet" href="/temp1/plugins/summernote/summernote.css"/><!-- Summernote富文本框 css -->
 
     <link rel="stylesheet" href="/tools/zTree_v3/css/demo.css" type="text/css">
-
     <link rel="stylesheet" href="/tools/zTree_v3/css/awesomeStyle/awesome.css" type="text/css">
 
     <script src="/temp1/plugins/summernote/summernote.min.js"></script><!-- Summernote富文本框 JS -->
@@ -28,118 +27,40 @@
     <script type="text/javascript" src="/tools/zTree_v3/js/jquery.ztree.core.js"></script>
     <script type="text/javascript" src="/tools/zTree_v3/js/jquery.ztree.excheck.js"></script>
     <script type="text/javascript" src="/tools/zTree_v3/js/jquery.ztree.exedit.js"></script>
-    <style>
-    .note-tree-menu {
-        float : left;
-        background-color: #85abb6;
-        height: 600px;
-        width: 230px;
-        overflow:auto;
-    }
-    .note-atc-menu {
-        float : left;
-        background-color: #b6ae89;
-        height: 600px;
-        width: 230px;
-        overflow:auto;
-    }
-    .note-content {
-        overflow:hidden;
-        background-color: #a5a0b6;
-        height: 600px;
-    }
-    .note-atc-menu-title {
-        margin: 0px;
-        color: #505458;
-        font-family: 'Hind Madurai', sans-serif;
-    }
-    .note-atc-menu-date {
-        font-size:10px;
-        margin: 0px;
-    }
-    .note-atc-menu-desc {
-        font-size:12px;
-        margin-top: 10px;
-        text-overflow: ellipsis;
-        overflow:hidden;
-        display:-webkit-box;
-        -webkit-line-clamp:2;
-        -webkit-box-orient:vertical;
-    }
-    </style>
-    <SCRIPT type="text/javascript">
-        var setting = {
-            view: {
-                selectedMulti: false
-            },
-            check: {
-                enable: false
-                ,chkStyle: 'radio'
-                ,radioType: "level"
-            },
-            data: {
-                simpleData: {
-                    enable: true
-                }
-            },
-            edit: {
-                enable: true
-            },
-            callback: {
-                onRightClick: OnRightClick
-            }
-        };
 
-        var zNodes =[
-            { id:1, pId:0, name:"pNode 1", open:true},
-            { id:11, pId:1, name:"pNode 11"},
-            { id:111, pId:11, name:" sNode 111"},
-            { id:112, pId:11, name:"sNode 112"},
-            { id:113, pId:11, name:"sNode 113"},
-            { id:114, pId:11, name:"sNode 114"},
-            { id:12, pId:1, name:"pNode 12"},
-            { id:121, pId:12, name:"sNode 121"},
-            { id:122, pId:12, name:"sNode 122"},
-            { id:123, pId:12, name:"sNode 123"},
-            { id:124, pId:12, name:"sNode 124"},
-            { id:13, pId:1, name:"pNode 13", isParent:true},
-            { id:2, pId:0, name:"pNode 2"},
-            { id:21, pId:2, name:"pNode 21", open:true},
-            { id:211, pId:21, name:"sNode 211"},
-            { id:212, pId:21, name:"sNode 212"},
-            { id:213, pId:21, name:"sNode 213"},
-            { id:214, pId:21, name:"sNode 214"},
-            { id:22, pId:2, name:"pNode 22"},
-            { id:221, pId:22, name:"sNode 221"},
-            { id:222, pId:22, name:"sNode 222"},
-            { id:223, pId:22, name:"sNode 223"},
-            { id:224, pId:22, name:"sNode 224"},
-            { id:23, pId:2, name:"pNode 23"},
-            { id:231, pId:23, name:"sNode 231"},
-            { id:232, pId:23, name:"sNode 232"},
-            { id:233, pId:23, name:"sNode 233"},
-            { id:234, pId:23, name:"sNode 234"},
-            { id:3, pId:0, name:"pNode 3", isParent:true}
-        ];
-        function setCheck() {
-            setting.check.chkStyle = $("#r1").attr("checked")? "checkbox":"radio";
-            setting.check.enable = (!$("#disablechk").attr("checked"));
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-        }
+    <script src="/temp1/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="/temp1/assets/pages/jquery.tooltipster.js"></script>
+    <script type="text/javascript">
+    var TreeUtils = {
+        addCount : 1,
+        zTree : {},
+        rMenu : {},
+        setting : {},
+        zNodes :[],
+        treeId : "",
 
-        var newCount = 1;
+        init : function (treeId,menuId,setting,zNodes) {
 
-        function OnRightClick(event, treeId, treeNode) {
+            $.fn.zTree.init($("#"+treeId), setting, zNodes);
+
+            TreeUtils.zNodes = zNodes;
+            TreeUtils.setting = setting;
+            TreeUtils.zTree = $.fn.zTree.getZTreeObj(treeId);
+            TreeUtils.rMenu = $("#"+menuId);
+            TreeUtils.treeId = treeId;
+        },
+
+        OnRightClick : function (event, treeId, treeNode){
+            var zTree = TreeUtils.zTree;
             if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
                 zTree.cancelSelectedNode();
-                showRMenu("root", event.clientX, event.clientY);
+                TreeUtils.showRMenu("root", event.clientX, event.clientY);
             } else if (treeNode && !treeNode.noR) {
                 zTree.selectNode(treeNode);
-                showRMenu("node", event.clientX, event.clientY);
+                TreeUtils.showRMenu("node", event.clientX, event.clientY);
             }
-        }
-
-        function showRMenu(type, x, y) {
+        },
+        showRMenu : function (type, x, y){
             $("#rMenu ul").show();
             if (type=="root") {
                 $("#m_del").hide();
@@ -153,58 +74,21 @@
 
             y += document.body.scrollTop;
             x += document.body.scrollLeft;
-            rMenu.css({"top":y+"px", "left":x+"px", "visibility":"visible"});
+            TreeUtils.rMenu.css({"top":y+"px", "left":x+"px", "visibility":"visible"});
 
-            $("body").bind("mousedown", onBodyMouseDown);
-        }
-        function hideRMenu() {
-            if (rMenu) rMenu.css({"visibility": "hidden"});
-            $("body").unbind("mousedown", onBodyMouseDown);
-        }
-        function onBodyMouseDown(event){
+            $("body").bind("mousedown", TreeUtils.onBodyMouseDown);
+        },
+        hideRMenu : function () {
+            if (TreeUtils.rMenu) TreeUtils.rMenu.css({"visibility": "hidden"});
+            $("body").unbind("mousedown", TreeUtils.onBodyMouseDown);
+        },
+        onBodyMouseDown : function () {
             if (!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length>0)) {
-                rMenu.css({"visibility" : "hidden"});
+                TreeUtils.rMenu.css({"visibility" : "hidden"});
             }
         }
-        var addCount = 1;
-        function addTreeNode() {
-            hideRMenu();
-            var newNode = { name:"增加" + (addCount++)};
-            if (zTree.getSelectedNodes()[0]) {
-                newNode.checked = zTree.getSelectedNodes()[0].checked;
-                zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
-            } else {
-                zTree.addNodes(null, newNode);
-            }
-        }
-        function removeTreeNode() {
-            hideRMenu();
-            var nodes = zTree.getSelectedNodes();
-            if (nodes && nodes.length>0) {
-                if (nodes[0].children && nodes[0].children.length > 0) {
-                    var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
-                    if (confirm(msg)==true){
-                        zTree.removeNode(nodes[0]);
-                    }
-                } else {
-                    zTree.removeNode(nodes[0]);
-                }
-            }
-        }
-        function checkTreeNode(checked) {
-            var nodes = zTree.getSelectedNodes();
-            if (nodes && nodes.length>0) {
-                zTree.checkNode(nodes[0], checked, true);
-            }
-            hideRMenu();
-        }
-        function resetTree() {
-            hideRMenu();
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-        }
-
-        var zTree, rMenu;
-    </SCRIPT>
+    }
+    </script>
     <style type="text/css">
         div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
         div#rMenu ul li{
@@ -217,34 +101,130 @@
     </style>
 </head>
     <div class="note-tree-menu">
-        <ul id="treeDemo" class="ztree"></ul>
+        <div style="margin: 5px 5px 5px 5px;">
+            <span style="font-size: 1px;color: #b1b5b8;margin: 5px 0 5px 5px;">常用</span>
+            <ul id="quickTree" class="ztree"></ul>
+            <span style="font-size: 1px;color: #b1b5b8;margin: 5px 0 5px 5px;">知识树</span>
+            <ul id="treeDemo" class="ztree" style="height:500px"></ul>
+            <div id="noTreeStruct" style="height:500px" hidden>
+                <button class="btn btn-rounded btn-default waves-effect waves-light"
+                        style="margin:50px 50px 50px 50px " onclick="addTree()">
+                    <i class="mdi mdi-plus"></i>
+                    <span style="font-size:x-small">新建主题</span>
+                </button>
+            </div>
+            <div id="noTreeInfo" style="height:500px" hidden>
+                <span style="font-size: 1px;color:#afb4b7;margin:20px;">您还没有创建任何知识树<br></span>
+                <span style="font-size: 1px;color:#afb4b7;margin:20px;">请先前往【我的知识树】创建分支</span>
+            </div>
+        </div>
     </div>
     <div class="note-atc-menu">
-        <ul class="list-group">
-            <li class="list-group-item" style="margin-right: 3px;">
-                <p class="note-atc-menu-title">我是标题</p>
-                <p class="note-atc-menu-date"> 2018/03/08</p>
-                <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-            </li>
-            <li class="list-group-item" style="margin-right: 3px;">
-                <p class="note-atc-menu-title">我是标题</p>
-                <p class="note-atc-menu-date"> 2018/03/08</p>
-                <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-            </li>
-            <li class="list-group-item" style="margin-right: 3px;">
-                <p class="note-atc-menu-title">我是标题</p>
-                <p class="note-atc-menu-date"> 2018/03/08</p>
-                <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-            </li>
-            <li class="list-group-item" style="margin-right: 3px;">
-                <p class="note-atc-menu-title">我是标题</p>
-                <p class="note-atc-menu-date"> 2018/03/08</p>
-                <p class="note-atc-menu-desc">我是描述我是描</p>
-            </li>
-        </ul>
+        <div style="margin-right: 3px;height: 610px;background-color: white;">
+            <div style="height:30px;background-color: rgb(235, 235, 235);border:0px;">
+                <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:3px 0px 3px 3px ">
+                    <i class="mdi mdi-plus"></i>
+                    <span style="font-size:x-small">新建笔记</span>
+                </button>
+            </div>
+            <div style="height: 580px;overflow:auto;">
+                <ul class="list-group note-atc-menu-ul" >
+                    <li id="li_0" class="list-group-item" onclick="getAtc('li_0')">
+                        <p class="note-atc-menu-title">我是标题我是标题我是标题我是标题我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_1" class="list-group-item" onclick="getAtc('li_1')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_2" class="list-group-item" onclick="getAtc('li_2')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_3" class="list-group-item" onclick="getAtc('li_3')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_4" class="list-group-item" onclick="getAtc('li_4')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_5" class="list-group-item" onclick="getAtc('li_5')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_6" class="list-group-item" onclick="getAtc('li_6')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_7" class="list-group-item" onclick="getAtc('li_7')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_8" class="list-group-item" onclick="getAtc('li_8')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+                    <li id="li_9" class="list-group-item" onclick="getAtc('li_9')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
+                    </li>
+
+                    <li id="li_10" class="list-group-item" onclick="getAtc('li_10')">
+                        <p class="note-atc-menu-title">我是标题</p>
+                        <p class="note-atc-menu-date"> 2018/03/08</p>
+                        <p class="note-atc-menu-desc">我是描述我是描</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div class="note-content">
-        <input id="titleInfo" type="text" class="form-control" placeholder="Title">
+        <div class="form-inline row">
+            <div style="float:left;width:100%;">
+                <div style="margin-right:200px;">
+                    <input id="titleInfo" readOnly="true" style="width:100%;background-color:transparent;border:0;" type="text" class="form-control" placeholder="Title">
+                </div>
+            </div>
+            <div style="position:fixed;right:0;margin-top: 7px;margin-bottom: 7px;width:200px;">
+                <button class="btn-rounded w-xs btn btn-default waves-effect waves-light" onclick="hideToolbar()">
+                    <i class="mdi mdi-lock-outline"></i>
+                    <span style="font-size:x-small">编辑</span>
+                </button>
+                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+                   data-content="<h4>标签</h4>"
+                   style="margin-left: 10px;margin-top:10px;text-decoration:none;">
+                    <i class="mdi mdi-tag-outline"></i>
+                </a>
+                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+                   data-content="<h4>信息概要</h4>" style="text-decoration:none;">
+                    <i class="mdi mdi-information-outline"></i>
+                </a>
+                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+                   data-content="<h4>全屏</h4>" style="text-decoration:none;">
+                    <i class="mdi mdi-arrow-expand-all"></i>
+                </a>
+                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+                   data-content="<h4>评论</h4>" style="text-decoration:none;">
+                    <i class="mdi mdi-comment-processing-outline"></i>
+                </a>
+            </div>
+        </div>
+        <div id="atcDesc" style="height: 88px">
+            <div class="alert alert-info" role="alert">
+                <span>我是描述，描述很多东西</span>
+            </div>
+        </div>
         <div class="summernote"></div>
     </div>
 
@@ -252,13 +232,62 @@
     <ul>
         <li id="m_add" onclick="addTreeNode();">增加节点</li>
         <li id="m_del" onclick="removeTreeNode();">删除节点</li>
-        <li id="m_check" onclick="checkTreeNode(true);">Check节点</li>
-        <li id="m_unCheck" onclick="checkTreeNode(false);">unCheck节点</li>
-        <li id="m_reset" onclick="resetTree();">恢复zTree</li>
+        <li id="m_edit" onclick="editTreeNode();">修改节点</li>
     </ul>
 </div>
 </body>
 <script type="text/javascript">
+    var setting = {
+        view: {
+            selectedMulti: false
+        },
+        check: {
+            enable: false
+            ,chkStyle: 'radio'
+            ,radioType: "level"
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                pIdKey: "parentId",
+                rootPId: 0
+            }
+        },
+        edit: {
+            enable: true
+        },
+        callback: {
+            onRightClick: TreeUtils.OnRightClick,
+            onRemove: afterRemove,
+            onclick : getDetailList,
+            onRename : onRename,
+            onDrop: zTreeOnDrop
+        }
+    };
+
+    var settingTools = {
+        view: {
+            selectedMulti: false
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        }
+    };
+
+    var zNodes = [];
+    var zNodesTools =[
+        { id:1, pId:0, name:"消息中心",click:"quick()"},
+        { id:2, pId:0, name:"选择知识树",click:"quick()"},
+        { id:3, pId:0, name:"快捷方式", open:false},
+        { id:31, pId:3, name:"pNode 11",click:"quick()"}
+    ];
+
+    function quick(){
+
+    }
+
     $(function(){
         /*****编辑器初始化******/
         $('.summernote').summernote({
@@ -267,17 +296,228 @@
             maxHeight: null,             // set maximum height of editor
             focus: false                 // set focus to editable area after initializing summernote
         });
-
         $('.inline-editor').summernote({
             airMode: false
         });
 
-        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        /*****弹框初始化******/
+        $('[data-toggle="popover"]').popover({html : true });
 
-        zTree = $.fn.zTree.getZTreeObj("treeDemo");
-        rMenu = $("#rMenu");
+        /*****预览模式初始化******/
+        $('.note-toolbar').hide();
+        $('.summernote').summernote('disable');
+
+        /*****知识树初始化******/
+        initTree();
     });
 
+    function getAtc(id){
+        $("li").css("border-color","#ddd");
+        $("#"+id).css("border-color","#202edd");
+    }
+
+    var editFlag = 0    ;// 0-预览模式 1-编辑模式
+    function hideToolbar() {
+        if(editFlag == 1){//预览模式
+            $('.note-toolbar').hide();
+            $('.summernote').summernote('disable');
+            $("#atcDesc").show();
+            $("#titleInfo").attr("readOnly",true);
+            editFlag = 0;
+        }else{//编辑模式
+            $('.note-toolbar').show();
+            $('.summernote').summernote('enable');
+            $("#atcDesc").hide();
+            $("#titleInfo").attr("readOnly",false);
+            editFlag = 1;
+        }
+    }
+
+
+    var TreeInfoList = [];
+    var CurTreeStructure = [];//当前树结构体
+    var CurTreeId;
+    function initTree(){
+        //初始化常用栏
+        $.fn.zTree.init($("#quickTree"), settingTools, zNodesTools);
+
+        //初始化知识树栏
+        //获取用户知识树列表
+        var url = Const.Api_URL + "/MyNoteController/getMyTreeInfomation";
+        var param =  "authorId=" + Author.id;
+        View.get(url,param,function(infoResp){
+            TreeInfoList = infoResp;
+            if(!!infoResp[0]){
+                //获取知识树结构
+                url = Const.Api_URL + "/MyNoteController/getTreeStructure";
+                param =  "treeId=" + infoResp[0].id;
+                CurTreeId = infoResp[0].id;
+                View.get(url,param,function(structureResp){
+                    if(structureResp==null||structureResp.length==0){
+                        //没有知识树结构,显示新增按钮
+                        $("#treeDemo").hide();
+                        $("#noTreeStruct").show();
+                    }else{
+                        CurTreeStructure = structureResp;
+                        //zNodes = initZNodes(structureResp);
+                        TreeUtils.init("treeDemo","rMenu",setting,structureResp);
+                    }
+                },function(){
+
+                });
+            }else{
+                $("#treeDemo").hide();
+                $("#noTreeStruct").hide();
+                $("#noTreeInfo").show();
+            }
+        },function(){
+
+        });
+    }
+
+    function frushTree(){
+        if(CurTreeStructure.length>0){
+            $("#treeDemo").show();
+            $("#noTreeStruct").hide();
+            var zNodes = initZNodes(CurTreeStructure);
+            TreeUtils.init("treeDemo","rMenu",setting,zNodes);
+        }else{
+            $("#treeDemo").hide();
+            $("#noTreeStruct").show();
+        }
+    }
+
+    /**新建知识树**/
+    function addTree(){
+        //增加树结构
+        var url = Const.Api_URL + "/MyNoteController/addTreeStructure";
+        var treeStructure = {};
+        treeStructure.treeId = CurTreeId;
+        treeStructure.parentId = 0;
+        treeStructure.name = "新主题";
+        View.post(url,treeStructure,function(structureResp){
+            $("#treeDemo").show();
+            $("#noTreeStruct").hide();
+            TreeUtils.init("treeDemo","rMenu",setting,structureResp);
+            CurTreeStructure.push(structureResp);
+        },function(){
+            swal({title:"新建主题失败",text:"请联系管理员。",showConfirmButton: false,
+                showCancelButton: false, timer:1500,type:"fail"});
+        });
+    }
+
+    /*****修改节点名称*******/
+    function onRename(event, treeId, treeNode, isCancel){
+        if(!isCancel){//修改了
+            var structure = {};
+            structure.name = treeNode.name;
+            structure.parentId = treeNode.parentId;
+            structure.id = treeNode.id;
+            structure.treeId = CurTreeId;
+            var url = Const.Api_URL + "/MyNoteController/updateStruct";
+            View.post(url,structure,function(resp){
+
+            },function(){
+
+            });
+        }
+    }
+
+    /*****点击获取明细列表*******/
+    function getDetailList(event, treeId, treeNode){
+
+    }
+
+    /*****删除节点之后，如果没有节点，显示新增主题*******/
+    function afterRemove(event, treeId, treeNode){
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getNodes();
+        //如果没有节点，显示新增主题
+        if(nodes==null||nodes.length==0){
+            $("#treeDemo").hide();
+            $("#noTreeStruct").show();
+            zNodes=[];
+        }
+        //更新下数据库
+        var url = Const.Api_URL + "/MyNoteController/deleteStruct";
+        View.get(url,"id="+treeNode.id,function(){
+            for(var i=0;i<CurTreeStructure;i++){
+                if(CurTreeStructure[i].id == treeNode.id){
+                    CurTreeStructure.remove(i);
+                    break;
+                }
+            }
+        },function(){
+
+        });
+    }
+
+    function addTreeNode () {
+        TreeUtils.hideRMenu();
+        var zTree = TreeUtils.zTree;
+        var newNode = { name:"新主题" + (TreeUtils.addCount++)};
+        if (zTree.getSelectedNodes()[0]) {
+            newNode.checked = zTree.getSelectedNodes()[0].checked;
+            newNode.parentId = zTree.getSelectedNodes()[0].id;
+        }else{
+            newNode.parentId = 0;
+        }
+        var structure = newNode;
+        structure.treeId = CurTreeId;
+        var url = Const.Api_URL + "/MyNoteController/updateStruct";
+        View.post(url,structure,function(resp){
+            newNode.id = resp.id;
+            if(zTree.getSelectedNodes()[0]){
+                zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
+            }else{
+                zTree.addNodes(null, newNode);
+            }
+        },function(){
+
+        });
+    }
+
+    function removeTreeNode() {
+        TreeUtils.hideRMenu();
+        var zTree = TreeUtils.zTree;
+        var nodes = zTree.getSelectedNodes();
+        if (nodes && nodes.length>0) {
+            if (nodes[0].children && nodes[0].children.length > 0) {
+                var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
+                if (confirm(msg)==true){
+                    zTree.removeNode(nodes[0]);
+                }else{
+                    return;
+                }
+            } else {
+                zTree.removeNode(nodes[0]);
+            }
+        }
+        afterRemove(zTree,TreeUtils.treeId,nodes);
+    }
+
+    function editTreeNode() {
+
+    }
+
+    function zTreeOnDrop(event, treeId, treeNodes, targetNode, moveType,isCopy){
+        if(!isCopy){//移动
+            debugger;
+            var structure = {};
+            structure.id = treeNodes[0].id;
+            structure.parentId = treeNodes[0].parentId;
+            structure.name = treeNodes[0].name;
+            structure.treeId = CurTreeId;
+            var url = Const.Api_URL + "/MyNoteController/updateStruct";
+            View.post(url,structure,function(resp){
+
+            },function(){
+
+            });
+        }else{//复制
+
+        }
+    }
 
 </script>
 </html>
