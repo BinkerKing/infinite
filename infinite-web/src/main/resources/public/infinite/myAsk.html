@@ -101,34 +101,34 @@
     </style>
 </head>
     <div class="note-tree-menu">
-        <div style="margin: 5px 5px 5px 5px;">
+        <div style="margin: 5px 5px 5px 5px;overflow-y:hidden;">
             <span style="font-size: 1px;color: #b1b5b8;margin: 5px 0 5px 5px;">常用</span>
-            <ul id="quickTree" class="ztree"></ul>
+            <ul id="quickTree" class="ztree" style="overflow-y:hidden"></ul>
             <span style="font-size: 1px;color: #b1b5b8;margin: 5px 0 5px 5px;">知识树</span>
-            <ul id="treeDemo" class="ztree" style="height:500px"></ul>
-            <div id="noTreeStruct" style="height:500px" hidden>
+            <ul id="treeDemo" class="ztree" style="height:calc(100vh - 110px);"></ul>
+            <div id="noTreeStruct" style="height:calc(100vh - 200px);" hidden>
                 <button class="btn btn-rounded btn-default waves-effect waves-light"
                         style="margin:50px 50px 50px 50px " onclick="addTree()">
                     <i class="mdi mdi-plus"></i>
                     <span style="font-size:x-small">新建主题</span>
                 </button>
             </div>
-            <div id="noTreeInfo" style="height:500px" hidden>
+            <div id="noTreeInfo" style="height:calc(100vh - 200px);" hidden>
                 <span style="font-size: 1px;color:#afb4b7;margin:20px;">您还没有创建任何知识树<br></span>
                 <span style="font-size: 1px;color:#afb4b7;margin:20px;">请先前往【我的知识树】创建分支</span>
             </div>
         </div>
     </div>
     <div class="note-atc-menu">
-        <div style="margin-right: 3px;height: 610px;background-color: white;">
+        <div style="margin-right: 3px;height: calc(100vh);background-color: white;">
             <div style="height:30px;background-color: rgb(235, 235, 235);border:0px;">
                 <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:3px 0px 3px 3px ">
                     <i class="mdi mdi-plus"></i>
                     <span style="font-size:x-small">新建笔记</span>
                 </button>
             </div>
-            <div style="height: 580px;overflow:auto;">
-                <ul class="list-group note-atc-menu-ul" >
+            <div style="height: calc(100vh - 30px);overflow:auto;overflow-y:hidden;">
+                <ul id="atc-menu-ul" class="list-group note-atc-menu-ul" >
                     <li id="li_0" class="list-group-item" onclick="getAtc('li_0')">
                         <p class="note-atc-menu-title">我是标题我是标题我是标题我是标题我是标题</p>
                         <p class="note-atc-menu-date"> 2018/03/08</p>
@@ -149,37 +149,6 @@
                         <p class="note-atc-menu-date"> 2018/03/08</p>
                         <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
                     </li>
-                    <li id="li_4" class="list-group-item" onclick="getAtc('li_4')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_5" class="list-group-item" onclick="getAtc('li_5')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_6" class="list-group-item" onclick="getAtc('li_6')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_7" class="list-group-item" onclick="getAtc('li_7')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_8" class="list-group-item" onclick="getAtc('li_8')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_9" class="list-group-item" onclick="getAtc('li_9')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-
                     <li id="li_10" class="list-group-item" onclick="getAtc('li_10')">
                         <p class="note-atc-menu-title">我是标题</p>
                         <p class="note-atc-menu-date"> 2018/03/08</p>
@@ -291,7 +260,7 @@
     $(function(){
         /*****编辑器初始化******/
         $('.summernote').summernote({
-            height: 480,                 // set editor height
+            height: $(document.body).height() - 130,                 // set editor height
             minHeight: null,             // set minimum height of editor
             maxHeight: null,             // set maximum height of editor
             focus: false                 // set focus to editable area after initializing summernote
@@ -309,7 +278,27 @@
 
         /*****知识树初始化******/
         initTree();
+
+        $("#atc-menu-ul").slimScroll({
+            width: 'auto', //可滚动区域宽度
+            height: $(document.body).height() - 30 //可滚动区域高度
+        });
+        $("#treeDemo").slimScroll({
+            width: 'auto', //可滚动区域宽度
+            height: $(document.body).height() - 200 //可滚动区域高度
+        });
     });
+
+    /*****滚动条插件******/
+    function setScroll(){
+        $("#atc-menu-ul").slimScroll({
+            alwaysVisible: true
+        });
+        $("#treeDemo").slimScroll({
+            alwaysVisible: true
+        });
+    }
+    $(window).on("resize",setScroll);
 
     function getAtc(id){
         $("li").css("border-color","#ddd");

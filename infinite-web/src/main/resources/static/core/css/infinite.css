@@ -4,20 +4,20 @@
 .note-tree-menu {
 	float : left;
 	background-color: rgb(235, 235, 235);
-	height: 610px;
+	height: calc(100vh);
 	width: 230px;
 	overflow:auto;
 }
 .note-atc-menu {
 	float : left;
 	background-color: rgb(235, 235, 235);
-	height: 610px;
+	height: calc(100vh);
 	width: 230px;
 }
 .note-content {
 	overflow:hidden;
 	background-color: rgba(255, 255, 255, 0.93);
-	height: 610px;
+	height: calc(100vh);
 }
 .note-atc-menu-title {
 	margin: 0px;
