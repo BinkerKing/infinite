@@ -56,8 +56,8 @@ public class TTreDetail {
 	private Long treeId;
 
 	//@Comment("当前节点ID")
-	@Column(name = "lid")
-	private Long lId;
+	@Column(name = "mId")
+	private Long myselfId;
 
 	//@Comment("文章ID")
 	@Column(name = "atcId")

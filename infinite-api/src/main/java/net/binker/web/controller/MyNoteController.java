@@ -2,10 +2,7 @@ package net.binker.web.controller;
 
 import net.binker.config.CodeDef;
 import net.binker.core.entity.Resp;
-import net.binker.entity.model.TAtcComment;
-import net.binker.entity.model.TCltInfo;
-import net.binker.entity.model.TTreInfomation;
-import net.binker.entity.model.TTreStructure;
+import net.binker.entity.model.*;
 import net.binker.service.TCltInfoService;
 import net.binker.service.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +42,15 @@ public class MyNoteController {
 	}
 
 	@RequestMapping(value = "/deleteStruct", method = RequestMethod.GET)
-	public Resp updateStdeleteStructruct(@RequestParam("id") Long id){
+	public Resp deleteStructruct(@RequestParam("id") Long id){
 		treeService.deleteStruct(id);
 		return new Resp().setCode(CodeDef.SUCCESS);
+	}
+
+	@RequestMapping(value = "/getAtcList", method = RequestMethod.GET)
+	public Resp getAtcList(@RequestParam("id") Long id,@RequestParam("treeId") Long treeId){
+		List<TTreDetail> details = treeService.getAtcList(id,treeId);
+		return new Resp(details).setCode(CodeDef.SUCCESS);
 	}
 
 }

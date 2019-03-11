@@ -1,5 +1,6 @@
 package net.binker.service;
 
+import net.binker.entity.model.TTreDetail;
 import net.binker.entity.model.TTreInfomation;
 import net.binker.entity.model.TTreStructure;
 
@@ -15,4 +16,6 @@ public interface TreeService {
     public TTreStructure updateStruct(TTreStructure lc);
 
     public String deleteStruct(Long id);
+
+    public List<TTreDetail> getAtcList(Long id,Long treeId);
 }

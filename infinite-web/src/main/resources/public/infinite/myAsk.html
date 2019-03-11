@@ -104,16 +104,21 @@
         <div style="margin: 5px 5px 5px 5px;overflow-y:hidden;">
             <span style="font-size: 1px;color: #b1b5b8;margin: 5px 0 5px 5px;">常用</span>
             <ul id="quickTree" class="ztree" style="overflow-y:hidden"></ul>
+        </div>
+        <div style="margin: 5px 5px 5px 5px;">
             <span style="font-size: 1px;color: #b1b5b8;margin: 5px 0 5px 5px;">知识树</span>
-            <ul id="treeDemo" class="ztree" style="height:calc(100vh - 110px);"></ul>
-            <div id="noTreeStruct" style="height:calc(100vh - 200px);" hidden>
+            <a href="javascript:controlTreeFun()" style="color: #b1b5b8;margin-left:150px;"><i id="lock-icon" class="mdi mdi-lock-outline"></i></a>
+        </div>
+        <div id="treeDiv">
+            <ul id="treeDemo" class="ztree" style="margin: 5px 5px 5px 5px;height:calc(100vh - 110px);"></ul>
+            <div id="noTreeStruct" style="margin: 5px 5px 5px 5px;height:calc(100vh - 200px);" hidden>
                 <button class="btn btn-rounded btn-default waves-effect waves-light"
                         style="margin:50px 50px 50px 50px " onclick="addTree()">
                     <i class="mdi mdi-plus"></i>
                     <span style="font-size:x-small">新建主题</span>
                 </button>
             </div>
-            <div id="noTreeInfo" style="height:calc(100vh - 200px);" hidden>
+            <div id="noTreeInfo" style="margin: 5px 5px 5px 5px;height:calc(100vh - 200px);" hidden>
                 <span style="font-size: 1px;color:#afb4b7;margin:20px;">您还没有创建任何知识树<br></span>
                 <span style="font-size: 1px;color:#afb4b7;margin:20px;">请先前往【我的知识树】创建分支</span>
             </div>
@@ -129,31 +134,7 @@
             </div>
             <div style="height: calc(100vh - 30px);overflow:auto;overflow-y:hidden;">
                 <ul id="atc-menu-ul" class="list-group note-atc-menu-ul" >
-                    <li id="li_0" class="list-group-item" onclick="getAtc('li_0')">
-                        <p class="note-atc-menu-title">我是标题我是标题我是标题我是标题我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_1" class="list-group-item" onclick="getAtc('li_1')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_2" class="list-group-item" onclick="getAtc('li_2')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_3" class="list-group-item" onclick="getAtc('li_3')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描述我是描述我是描述我是描述我是描是描述是描述我是描述我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述</p>
-                    </li>
-                    <li id="li_10" class="list-group-item" onclick="getAtc('li_10')">
-                        <p class="note-atc-menu-title">我是标题</p>
-                        <p class="note-atc-menu-date"> 2018/03/08</p>
-                        <p class="note-atc-menu-desc">我是描述我是描</p>
-                    </li>
+                    <div id="atcListDiv"></div>
                 </ul>
             </div>
         </div>
@@ -230,7 +211,24 @@
             onRemove: afterRemove,
             onclick : getDetailList,
             onRename : onRename,
-            onDrop: zTreeOnDrop
+            onDrop: zTreeOnDrop,
+            onClick : getAtcList
+        }
+    };
+
+    var setting_lock = {
+        view: {
+            selectedMulti: false
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                pIdKey: "parentId",
+                rootPId: 0
+            }
+        },
+        callback: {
+            onClick : getAtcList
         }
     };
 
@@ -257,6 +255,7 @@
 
     }
 
+    var controlTree = 0;//0-锁 1-开
     $(function(){
         /*****编辑器初始化******/
         $('.summernote').summernote({
@@ -277,13 +276,13 @@
         $('.summernote').summernote('disable');
 
         /*****知识树初始化******/
-        initTree();
+        initTree(0);
 
         $("#atc-menu-ul").slimScroll({
             width: 'auto', //可滚动区域宽度
             height: $(document.body).height() - 30 //可滚动区域高度
         });
-        $("#treeDemo").slimScroll({
+        $("#treeDiv").slimScroll({
             width: 'auto', //可滚动区域宽度
             height: $(document.body).height() - 200 //可滚动区域高度
         });
@@ -294,17 +293,19 @@
         $("#atc-menu-ul").slimScroll({
             alwaysVisible: true
         });
-        $("#treeDemo").slimScroll({
+        $("#treeDiv").slimScroll({
             alwaysVisible: true
         });
     }
     $(window).on("resize",setScroll);
 
-    function getAtc(id){
+    /****点击文章，获取文章详情*****/
+    function getAtc(domId,id){
         $("li").css("border-color","#ddd");
-        $("#"+id).css("border-color","#202edd");
+        $("#"+domId).css("border-color","#202edd");
     }
 
+    /****编辑/预览 按钮*****/
     var editFlag = 0    ;// 0-预览模式 1-编辑模式
     function hideToolbar() {
         if(editFlag == 1){//预览模式
@@ -326,7 +327,9 @@
     var TreeInfoList = [];
     var CurTreeStructure = [];//当前树结构体
     var CurTreeId;
-    function initTree(){
+
+    /****初始化树结构*****/
+    function initTree(cFlag){
         //初始化常用栏
         $.fn.zTree.init($("#quickTree"), settingTools, zNodesTools);
 
@@ -349,7 +352,12 @@
                     }else{
                         CurTreeStructure = structureResp;
                         //zNodes = initZNodes(structureResp);
-                        TreeUtils.init("treeDemo","rMenu",setting,structureResp);
+                        if(cFlag == 0){
+                            //锁住
+                            TreeUtils.init("treeDemo","rMenu",setting_lock,structureResp);
+                        }else{
+                            TreeUtils.init("treeDemo","rMenu",setting,structureResp);
+                        }
                     }
                 },function(){
 
@@ -441,6 +449,7 @@
         });
     }
 
+    /****新增节点*****/
     function addTreeNode () {
         TreeUtils.hideRMenu();
         var zTree = TreeUtils.zTree;
@@ -466,6 +475,7 @@
         });
     }
 
+    /****删除节点*****/
     function removeTreeNode() {
         TreeUtils.hideRMenu();
         var zTree = TreeUtils.zTree;
@@ -485,13 +495,14 @@
         afterRemove(zTree,TreeUtils.treeId,nodes);
     }
 
+    /****右键的修改节点功能*****/
     function editTreeNode() {
 
     }
 
+    /****移动节点*****/
     function zTreeOnDrop(event, treeId, treeNodes, targetNode, moveType,isCopy){
         if(!isCopy){//移动
-            debugger;
             var structure = {};
             structure.id = treeNodes[0].id;
             structure.parentId = treeNodes[0].parentId;
@@ -508,5 +519,52 @@
         }
     }
 
+    var AtcList = [];
+    /****点击节点，获取文章列表*****/
+    function getAtcList(event, treeId, treeNode){
+        var url = Const.Api_URL + "/MyNoteController/getAtcList";
+        View.get(url,"id="+treeNode.id+"&treeId="+CurTreeId,function(resp){
+            AtcList = resp;
+            var data = {};
+            data.list = resp;
+            var	gettype=Object.prototype.toString;
+            for(var i=0;i<data.list.length;i++){
+                if(gettype.call(data.list[i].createTime).indexOf("Number")>-1){
+                    data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+                }
+            }
+            var temp = new Tmpl("atcListTmpl",data);
+            temp.reset("atcListDiv");
+        },function(){
+
+        });
+    }
+
+    /*****控制tree列表是否可以维护*******/
+    function controlTreeFun(){
+        if(controlTree == 0){//解锁
+            controlTree = 1;
+            TreeUtils.init("treeDemo","rMenu",setting,CurTreeStructure);
+            $("#lock-icon").attr("class","mdi mdi mdi-lock-open-outline");
+        }else{
+            //锁住
+            controlTree = 0;
+            TreeUtils.init("treeDemo","rMenu",setting_lock,CurTreeStructure);
+            $("#lock-icon").attr("class","mdi mdi-lock-outline");
+        }
+    }
+
+</script>
+<script id="atcListTmpl" type="text/html">
+    {{if list.length === 0}}
+    <h4>暂无数据</h4>
+    {{/if}}
+    {{each list as item i}}
+    <li id="li_{{i}}" class="list-group-item" onclick="getAtc('li_{{i}}',{{item.id}})">
+        <p class="note-atc-menu-title">{{item.titleInfo}}</p>
+        <p class="note-atc-menu-date"> {{item.createTime}}</p>
+        <p class="note-atc-menu-desc">{{item.description}}</p>
+    </li>
+    {{/each}}
 </script>
 </html>
