@@ -65,6 +65,6 @@ public class TTreDetail {
 
 	//@Comment("文章类型")
 	@Column(name = "type")
-	private Long type;
+	private Integer type;
 
 }

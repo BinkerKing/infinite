@@ -110,15 +110,15 @@
             <a href="javascript:controlTreeFun()" style="color: #b1b5b8;margin-left:150px;"><i id="lock-icon" class="mdi mdi-lock-outline"></i></a>
         </div>
         <div id="treeDiv">
-            <ul id="treeDemo" class="ztree" style="margin: 5px 5px 5px 5px;height:calc(100vh - 110px);"></ul>
-            <div id="noTreeStruct" style="margin: 5px 5px 5px 5px;height:calc(100vh - 200px);" hidden>
+            <ul id="treeDemo" class="ztree" style="overflow: hidden;margin: 5px 5px 5px 5px;"></ul>
+            <div id="noTreeStruct" style="margin: 5px 5px 5px 5px;" hidden>
                 <button class="btn btn-rounded btn-default waves-effect waves-light"
                         style="margin:50px 50px 50px 50px " onclick="addTree()">
                     <i class="mdi mdi-plus"></i>
                     <span style="font-size:x-small">新建主题</span>
                 </button>
             </div>
-            <div id="noTreeInfo" style="margin: 5px 5px 5px 5px;height:calc(100vh - 200px);" hidden>
+            <div id="noTreeInfo" style="margin: 5px 5px 5px 5px;" hidden>
                 <span style="font-size: 1px;color:#afb4b7;margin:20px;">您还没有创建任何知识树<br></span>
                 <span style="font-size: 1px;color:#afb4b7;margin:20px;">请先前往【我的知识树】创建分支</span>
             </div>
@@ -140,42 +140,7 @@
         </div>
     </div>
     <div class="note-content">
-        <div class="form-inline row">
-            <div style="float:left;width:100%;">
-                <div style="margin-right:200px;">
-                    <input id="titleInfo" readOnly="true" style="width:100%;background-color:transparent;border:0;" type="text" class="form-control" placeholder="Title">
-                </div>
-            </div>
-            <div style="position:fixed;right:0;margin-top: 7px;margin-bottom: 7px;width:200px;">
-                <button class="btn-rounded w-xs btn btn-default waves-effect waves-light" onclick="hideToolbar()">
-                    <i class="mdi mdi-lock-outline"></i>
-                    <span style="font-size:x-small">编辑</span>
-                </button>
-                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
-                   data-content="<h4>标签</h4>"
-                   style="margin-left: 10px;margin-top:10px;text-decoration:none;">
-                    <i class="mdi mdi-tag-outline"></i>
-                </a>
-                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
-                   data-content="<h4>信息概要</h4>" style="text-decoration:none;">
-                    <i class="mdi mdi-information-outline"></i>
-                </a>
-                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
-                   data-content="<h4>全屏</h4>" style="text-decoration:none;">
-                    <i class="mdi mdi-arrow-expand-all"></i>
-                </a>
-                <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
-                   data-content="<h4>评论</h4>" style="text-decoration:none;">
-                    <i class="mdi mdi-comment-processing-outline"></i>
-                </a>
-            </div>
-        </div>
-        <div id="atcDesc" style="height: 88px">
-            <div class="alert alert-info" role="alert">
-                <span>我是描述，描述很多东西</span>
-            </div>
-        </div>
-        <div class="summernote"></div>
+        <div id="atcDiv"></div>
     </div>
 
 <div id="rMenu">
@@ -257,23 +222,12 @@
 
     var controlTree = 0;//0-锁 1-开
     $(function(){
-        /*****编辑器初始化******/
-        $('.summernote').summernote({
-            height: $(document.body).height() - 130,                 // set editor height
-            minHeight: null,             // set minimum height of editor
-            maxHeight: null,             // set maximum height of editor
-            focus: false                 // set focus to editable area after initializing summernote
-        });
-        $('.inline-editor').summernote({
-            airMode: false
-        });
+
 
         /*****弹框初始化******/
         $('[data-toggle="popover"]').popover({html : true });
 
-        /*****预览模式初始化******/
-        $('.note-toolbar').hide();
-        $('.summernote').summernote('disable');
+
 
         /*****知识树初始化******/
         initTree(0);
@@ -284,7 +238,7 @@
         });
         $("#treeDiv").slimScroll({
             width: 'auto', //可滚动区域宽度
-            height: $(document.body).height() - 200 //可滚动区域高度
+            height: $(document.body).height() - 170 //可滚动区域高度
         });
     });
 
@@ -300,9 +254,54 @@
     $(window).on("resize",setScroll);
 
     /****点击文章，获取文章详情*****/
-    function getAtc(domId,id){
+    var CurAtc = {};
+    var CurCode = {};
+    var CurAsk = {};
+    var CurType = 1;
+    function getAtc(domId,atcId,type){
         $("li").css("border-color","#ddd");
-        $("#"+domId).css("border-color","#202edd");
+        $("#"+domId).css("border-color","#6addbb");
+
+        var url = Const.Api_URL + "/MyNoteController/getAtc";
+        View.get(url,"atcId="+atcId+"&type="+type,function(resp){
+            CurType = type;
+            var content = "";
+            if(type == 1){
+                CurAtc = resp;
+                content = resp.tatcContent.htmlContent;
+            }else if(type == 2){
+                CurAsk = resp;
+            }else if(type == 3){
+                CurCode = resp;
+            }
+            var data = {};
+            data.data = resp;
+            var	gettype=Object.prototype.toString;
+            if(gettype.call(data.data.createTime).indexOf("Number")>-1) {
+                data.data.createTime = getMyDate(parseInt(data.data.createTime));
+            }
+            var temp = new Tmpl("atcTmpl",data);
+            temp.reset("atcDiv");
+
+            /*****编辑器初始化******/
+            $('.summernote').summernote({
+                height: $(document.body).height() - 130,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: false                 // set focus to editable area after initializing summernote
+            });
+            $('.inline-editor').summernote({
+                airMode: false
+            });
+
+            $('.summernote').summernote('code',content);
+
+            /*****预览模式初始化******/
+            $('.note-toolbar').hide();
+            $('.summernote').summernote('disable');
+        },function(){
+
+        });
     }
 
     /****编辑/预览 按钮*****/
@@ -557,14 +556,52 @@
 </script>
 <script id="atcListTmpl" type="text/html">
     {{if list.length === 0}}
-    <h4>暂无数据</h4>
+    <p class="note-atc-menu-desc" style="margin-left:80px">暂无记录</p>
     {{/if}}
     {{each list as item i}}
-    <li id="li_{{i}}" class="list-group-item" onclick="getAtc('li_{{i}}',{{item.id}})">
+    <li id="li_{{i}}" class="list-group-item" onclick="getAtc('li_{{i}}',{{item.atcId}},{{item.type}})">
         <p class="note-atc-menu-title">{{item.titleInfo}}</p>
         <p class="note-atc-menu-date"> {{item.createTime}}</p>
         <p class="note-atc-menu-desc">{{item.description}}</p>
     </li>
     {{/each}}
+</script>
+<script id="atcTmpl" type="text/html">
+    <div class="form-inline row">
+        <div style="float:left;width:100%;">
+            <div style="margin-right:200px;">
+                <input id="titleInfo" readOnly="true" style="width:100%;background-color:transparent;border:0;" type="text" class="form-control" placeholder="{{data.titleInfo}}">
+            </div>
+        </div>
+        <div style="position:fixed;right:0;margin-top: 7px;margin-bottom: 7px;width:200px;">
+            <button class="btn-rounded w-xs btn btn-default waves-effect waves-light" onclick="hideToolbar()">
+                <i class="mdi mdi-lock-outline"></i>
+                <span style="font-size:x-small">编辑</span>
+            </button>
+            <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+               data-content="<h4>标签</h4>"
+               style="margin-left: 10px;margin-top:10px;text-decoration:none;">
+                <i class="mdi mdi-tag-outline"></i>
+            </a>
+            <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+               data-content="<h4>信息概要</h4>" style="text-decoration:none;">
+                <i class="mdi mdi-information-outline"></i>
+            </a>
+            <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+               data-content="<h4>全屏</h4>" style="text-decoration:none;">
+                <i class="mdi mdi-arrow-expand-all"></i>
+            </a>
+            <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
+               data-content="<h4>评论</h4>" style="text-decoration:none;">
+                <i class="mdi mdi-comment-processing-outline"></i>
+            </a>
+        </div>
+    </div>
+    <div id="atcDesc" style="height: 88px">
+        <div class="alert alert-info" role="alert">
+            <span>{{data.description}}</span>
+        </div>
+    </div>
+    <div class="summernote"></div>
 </script>
 </html>
