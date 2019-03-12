@@ -33,5 +33,7 @@ public interface AtcService {
 	public String updateNotes(List<TAtcNote> notes);
 
 	public List<TAtcInfomation> getSearchResult(String filter);
+
+	public Long addEmptyAtc(TAtcInfomation info);
 	
 }

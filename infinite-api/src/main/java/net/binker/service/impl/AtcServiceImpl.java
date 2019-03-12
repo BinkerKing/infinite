@@ -156,4 +156,13 @@ public class AtcServiceImpl implements AtcService {
 		return info;
 	}
 
+	@Override
+	public Long addEmptyAtc(TAtcInfomation info){
+		TAtcContent content = new TAtcContent();
+		content = tAtcContentRepo.save(content);
+		info.setContentId(content.getId());
+		info = tAtcInfomationRepo.save(info);
+		return info.getId();
+	}
+
 }

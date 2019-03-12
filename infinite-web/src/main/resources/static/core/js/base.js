@@ -520,6 +520,7 @@ function addZero(num){
 	return num;
 }
 
+/***检查对象是否为空，或者空格，或者无值，或者换行等****/
 function isEmpty(obj){
     if(typeof obj == "undefined" || obj == null){
         return true;
@@ -528,4 +529,9 @@ function isEmpty(obj){
     }else{
     	return false;
 	}
+}
+
+/***给数据头部添加元素****/
+function prepend(arr, item){
+    return [item].concat(arr);
 }

@@ -79,4 +79,10 @@ public class MyNoteController {
 		return new Resp().setCode(CodeDef.ERROR);
 	}
 
+    @RequestMapping(value = "/addDetail", method = RequestMethod.POST)
+    public Resp addDetail(@RequestBody TTreDetail lc){
+        TTreDetail detail = treeService.addDetail(lc);
+        return new Resp(detail).setCode(CodeDef.SUCCESS);
+    }
+
 }

@@ -1,8 +1,10 @@
 package net.binker.service.impl;
 
+import net.binker.entity.model.TAtcInfomation;
 import net.binker.entity.model.TTreDetail;
 import net.binker.entity.model.TTreInfomation;
 import net.binker.entity.model.TTreStructure;
+import net.binker.service.AtcService;
 import net.binker.service.CustService;
 import net.binker.service.TreeService;
 import net.binker.service.repo.TTpcInfomationRepo;
@@ -24,6 +26,9 @@ public class TreeServiceImpl implements TreeService {
 
     @Autowired
     private TTreDetailRepo tTreDetailRepo;
+
+    @Autowired
+    private AtcService atcService;
 
     @Override
     public List<TTreInfomation> getMyTreeInfomation(Long authorId){
@@ -56,5 +61,15 @@ public class TreeServiceImpl implements TreeService {
     public List<TTreDetail> getAtcList(Long id,Long treeId){
         List<TTreDetail> details =  tTreDetailRepo.findByMIdAndTreeId(id,treeId);
         return details;
+    }
+
+    @Override
+    public TTreDetail addDetail(TTreDetail lc){
+        TTreDetail detail = tTreDetailRepo.save(lc);
+        TAtcInfomation info = new TAtcInfomation();
+        info.setAuthorId(lc.getAuthorId());
+        info.setAuthorName(lc.getAuthorName());
+        detail.setAtcId(atcService.addEmptyAtc(info));
+        return detail;
     }
 }

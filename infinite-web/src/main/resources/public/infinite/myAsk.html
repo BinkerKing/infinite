@@ -127,7 +127,7 @@
     <div class="note-atc-menu">
         <div style="margin-right: 3px;height: calc(100vh);background-color: white;">
             <div style="height:30px;background-color: rgb(235, 235, 235);border:0px;">
-                <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:3px 0px 3px 3px ">
+                <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:3px 0px 3px 3px " onclick="addAtc()">
                     <i class="mdi mdi-plus"></i>
                     <span style="font-size:x-small">新建笔记</span>
                 </button>
@@ -174,10 +174,9 @@
         callback: {
             onRightClick: TreeUtils.OnRightClick,
             onRemove: afterRemove,
-            onclick : getDetailList,
+            onClick : getDetailList,
             onRename : onRename,
-            onDrop: zTreeOnDrop,
-            onClick : getAtcList
+            onDrop: zTreeOnDrop
         }
     };
 
@@ -193,7 +192,7 @@
             }
         },
         callback: {
-            onClick : getAtcList
+            onClick : getDetailList
         }
     };
 
@@ -222,12 +221,8 @@
 
     var controlTree = 0;//0-锁 1-开
     $(function(){
-
-
         /*****弹框初始化******/
         $('[data-toggle="popover"]').popover({html : true });
-
-
 
         /*****知识树初始化******/
         initTree(0);
@@ -254,10 +249,10 @@
     $(window).on("resize",setScroll);
 
     /****点击文章，获取文章详情*****/
-    var CurAtc = {};
-    var CurCode = {};
-    var CurAsk = {};
-    var CurType = 1;
+    var CurAtc = {};//当前文章
+    var CurCode = {};//当前代码
+    var CurAsk = {};//当前猿问
+    var CurType = 1;//当前文章类型
     function getAtc(domId,atcId,type){
         $("li").css("border-color","#ddd");
         $("#"+domId).css("border-color","#6addbb");
@@ -274,14 +269,7 @@
             }else if(type == 3){
                 CurCode = resp;
             }
-            var data = {};
-            data.data = resp;
-            var	gettype=Object.prototype.toString;
-            if(gettype.call(data.data.createTime).indexOf("Number")>-1) {
-                data.data.createTime = getMyDate(parseInt(data.data.createTime));
-            }
-            var temp = new Tmpl("atcTmpl",data);
-            temp.reset("atcDiv");
+            frushAtcTmpl();
 
             /*****编辑器初始化******/
             $('.summernote').summernote({
@@ -299,6 +287,7 @@
             /*****预览模式初始化******/
             $('.note-toolbar').hide();
             $('.summernote').summernote('disable');
+
         },function(){
 
         });
@@ -307,13 +296,30 @@
     /****编辑/预览 按钮*****/
     var editFlag = 0    ;// 0-预览模式 1-编辑模式
     function hideToolbar() {
-        if(editFlag == 1){//预览模式
+        if(editFlag == 1){//开启预览模式+保存
             $('.note-toolbar').hide();
             $('.summernote').summernote('disable');
             $("#atcDesc").show();
             $("#titleInfo").attr("readOnly",true);
             editFlag = 0;
-        }else{//编辑模式
+            //将内容存入数据库
+            $('.summernote').summernote('code');
+            if(CurType == 1){
+                CurAtc.titleInfo = $("#titleInfo").val();
+                CurAtc.tatcContent.htmlContent = $('.summernote').summernote('code');
+                var url = Const.Api_URL + "/AtcController/saveAtc";
+                View.post(url,CurAtc,function(resp){
+                    swal({title:"保存成功",text:"",showConfirmButton: false,
+                        showCancelButton: false, timer:1500,type:"success"});
+                },function(){
+
+                });
+            }else if(CurType == 2){
+
+            }else if(CurType == 3) {
+
+            }
+        }else{//开启编辑模式
             $('.note-toolbar').show();
             $('.summernote').summernote('enable');
             $("#atcDesc").hide();
@@ -322,10 +328,85 @@
         }
     }
 
+    /****新建笔记*****/
+    function addAtc(){
+        var newDetail = {};
+        newDetail.authorId = Author.id;
+        newDetail.authorName = Author.name;
+        newDetail.treeId = CurTreeId;
+        newDetail.mId = CurNode.id;
+        newDetail.titleInfo = "新笔记";
+        newDetail.description = "还未添加描述。。。";
+        newDetail.createTime = new Date();
+        CurDetailList = prepend(CurDetailList,newDetail);
+        //刷新列表
+        frushDetailTmpl();
+        //第一个选中
+        $("li").css("border-color","#ddd");
+        $("#li_0").css("border-color","#6addbb");
+        //刷新右边文章显示（暂时默认新增的是手记录）
+        CurType = 1;
+        CurAtc.titleInfo = "";
+        CurAtc.description = "还未添加描述。。。";
+        CurAtc.tatcContent = {};
+        CurAtc.tatcContent.htmlContent = "";
+        frushAtcTmpl();
 
-    var TreeInfoList = [];
+
+        /*****编辑器初始化******/
+        $('.summernote').summernote({
+            height: $(document.body).height() - 130,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            focus: false                 // set focus to editable area after initializing summernote
+        });
+        $('.inline-editor').summernote({
+            airMode: false
+        });
+        /*****预览模式初始化******/
+        $('.note-toolbar').hide();
+        $('.summernote').summernote('disable');
+        hideToolbar();
+
+        var url = Const.Api_URL + "/MyNoteController/addDetail";
+        View.post(url,newDetail,function(resp){
+            CurAtc = resp;
+
+        },function(){
+
+        });
+    }
+
+    /*****刷新文章列表*******/
+    function frushDetailTmpl (){
+        var data = {};
+        data.list = CurDetailList;
+        var	gettype=Object.prototype.toString;
+        for(var i=0;i<data.list.length;i++){
+            if(gettype.call(data.list[i].createTime).indexOf("Number")>-1){
+                data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
+            }
+        }
+        var temp = new Tmpl("atcListTmpl",data);
+        temp.reset("atcListDiv");
+    }
+
+    function frushAtcTmpl(){
+        var data = {};
+        data.data = CurAtc;
+        var	gettype=Object.prototype.toString;
+        if(gettype.call(data.data.createTime).indexOf("Number")>-1) {
+            data.data.createTime = getMyDate(parseInt(data.data.createTime));
+        }
+        var temp = new Tmpl("atcTmpl",data);
+        temp.reset("atcDiv");
+    }
+
+    var TreeInfoList = [];//当前用户知识树列表
     var CurTreeStructure = [];//当前树结构体
-    var CurTreeId;
+    var CurTreeId;//当前知识树ID
+    var CurDetailList = [];//当前文章列表
+    var CurNode = {};//当前点击节点信息
 
     /****初始化树结构*****/
     function initTree(cFlag){
@@ -371,18 +452,6 @@
         });
     }
 
-    function frushTree(){
-        if(CurTreeStructure.length>0){
-            $("#treeDemo").show();
-            $("#noTreeStruct").hide();
-            var zNodes = initZNodes(CurTreeStructure);
-            TreeUtils.init("treeDemo","rMenu",setting,zNodes);
-        }else{
-            $("#treeDemo").hide();
-            $("#noTreeStruct").show();
-        }
-    }
-
     /**新建知识树**/
     function addTree(){
         //增加树结构
@@ -417,11 +486,6 @@
 
             });
         }
-    }
-
-    /*****点击获取明细列表*******/
-    function getDetailList(event, treeId, treeNode){
-
     }
 
     /*****删除节点之后，如果没有节点，显示新增主题*******/
@@ -518,22 +582,13 @@
         }
     }
 
-    var AtcList = [];
     /****点击节点，获取文章列表*****/
-    function getAtcList(event, treeId, treeNode){
+    function getDetailList(event, treeId, treeNode){
+        CurNode = treeNode;
         var url = Const.Api_URL + "/MyNoteController/getAtcList";
         View.get(url,"id="+treeNode.id+"&treeId="+CurTreeId,function(resp){
-            AtcList = resp;
-            var data = {};
-            data.list = resp;
-            var	gettype=Object.prototype.toString;
-            for(var i=0;i<data.list.length;i++){
-                if(gettype.call(data.list[i].createTime).indexOf("Number")>-1){
-                    data.list[i].createTime = getMyDate(parseInt(data.list[i].createTime));
-                }
-            }
-            var temp = new Tmpl("atcListTmpl",data);
-            temp.reset("atcListDiv");
+            CurDetailList = resp;
+            frushDetailTmpl();
         },function(){
 
         });
@@ -570,7 +625,7 @@
     <div class="form-inline row">
         <div style="float:left;width:100%;">
             <div style="margin-right:200px;">
-                <input id="titleInfo" readOnly="true" style="width:100%;background-color:transparent;border:0;" type="text" class="form-control" placeholder="{{data.titleInfo}}">
+                <input id="titleInfo" readOnly="true" style="width:100%;background-color:transparent;border:0;" type="text" placeholder="Title..." class="form-control" value="{{data.titleInfo}}">
             </div>
         </div>
         <div style="position:fixed;right:0;margin-top: 7px;margin-bottom: 7px;width:200px;">

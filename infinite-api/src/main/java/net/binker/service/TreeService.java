@@ -18,4 +18,6 @@ public interface TreeService {
     public String deleteStruct(Long id);
 
     public List<TTreDetail> getAtcList(Long id,Long treeId);
+
+    public TTreDetail addDetail(TTreDetail lc);
 }
