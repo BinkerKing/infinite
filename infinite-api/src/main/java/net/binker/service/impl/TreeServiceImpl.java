@@ -65,11 +65,11 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public TTreDetail addDetail(TTreDetail lc){
-        TTreDetail detail = tTreDetailRepo.save(lc);
         TAtcInfomation info = new TAtcInfomation();
         info.setAuthorId(lc.getAuthorId());
         info.setAuthorName(lc.getAuthorName());
-        detail.setAtcId(atcService.addEmptyAtc(info));
-        return detail;
+        lc.setAtcId(atcService.addEmptyAtc(info));
+        tTreDetailRepo.save(lc);
+        return lc;
     }
 }

@@ -285,16 +285,24 @@
             $('.summernote').summernote('code',content);
 
             /*****预览模式初始化******/
-            $('.note-toolbar').hide();
-            $('.summernote').summernote('disable');
-
+            if(newFlag){
+                $('.note-toolbar').show();
+                $("#atcDesc").hide();
+                editFlag = 1;
+                newFlag = false;
+            }else{
+                $('.note-toolbar').hide();
+                $('.summernote').summernote('disable');
+                editFlag = 0;
+            }
         },function(){
 
         });
     }
 
     /****编辑/预览 按钮*****/
-    var editFlag = 0    ;// 0-预览模式 1-编辑模式
+    var editFlag = 0;// 0-预览模式 1-编辑模式
+    var newFlag = false;
     function hideToolbar() {
         if(editFlag == 1){//开启预览模式+保存
             $('.note-toolbar').hide();
@@ -334,44 +342,26 @@
         newDetail.authorId = Author.id;
         newDetail.authorName = Author.name;
         newDetail.treeId = CurTreeId;
-        newDetail.mId = CurNode.id;
+        newDetail.type = 1;
+        newDetail.myselfId = CurNode.id;
         newDetail.titleInfo = "新笔记";
         newDetail.description = "还未添加描述。。。";
         newDetail.createTime = new Date();
-        CurDetailList = prepend(CurDetailList,newDetail);
-        //刷新列表
-        frushDetailTmpl();
-        //第一个选中
-        $("li").css("border-color","#ddd");
-        $("#li_0").css("border-color","#6addbb");
-        //刷新右边文章显示（暂时默认新增的是手记录）
-        CurType = 1;
-        CurAtc.titleInfo = "";
-        CurAtc.description = "还未添加描述。。。";
-        CurAtc.tatcContent = {};
-        CurAtc.tatcContent.htmlContent = "";
-        frushAtcTmpl();
-
-
-        /*****编辑器初始化******/
-        $('.summernote').summernote({
-            height: $(document.body).height() - 130,                 // set editor height
-            minHeight: null,             // set minimum height of editor
-            maxHeight: null,             // set maximum height of editor
-            focus: false                 // set focus to editable area after initializing summernote
-        });
-        $('.inline-editor').summernote({
-            airMode: false
-        });
-        /*****预览模式初始化******/
-        $('.note-toolbar').hide();
-        $('.summernote').summernote('disable');
-        hideToolbar();
-
         var url = Const.Api_URL + "/MyNoteController/addDetail";
         View.post(url,newDetail,function(resp){
-            CurAtc = resp;
+            newDetail = resp;
+            //刷新列表
+            CurDetailList = prepend(CurDetailList,newDetail);
+            //刷新列表
+            frushDetailTmpl();
 
+            //第一个选中
+            $("li").css("border-color","#ddd");
+            $("#li_0").css("border-color","#6addbb");
+            //刷新右边文章显示（暂时默认新增的是手记录）
+            CurType = 1;
+            newFlag = true;
+            getAtc("li_0",resp.atcId,CurType);
         },function(){
 
         });
