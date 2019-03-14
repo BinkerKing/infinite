@@ -11,7 +11,7 @@ public interface TreeService {
 
     public List<TTreStructure> getTreeStructure(Long treeId);
 
-    public TTreStructure addTreeStructure(TTreStructure lc);
+    public List<TTreStructure> addTreeStructure(TTreStructure lc);
 
     public TTreStructure updateStruct(TTreStructure lc);
 
@@ -24,4 +24,6 @@ public interface TreeService {
     public String deleteDetail(Long atcId,Integer type);
 
     public TTreDetail updateDetail(TTreDetail lc);
+
+    public String deleteDetail(TTreDetail lc);
 }

@@ -98,6 +98,8 @@
             list-style: none outside none;
             background-color: #DFDFDF;
         }
+        .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
+        .ztree li ul.level0 {padding:0; background:none;}
     </style>
 </head>
     <div class="note-tree-menu">
@@ -175,6 +177,11 @@
             }
         },
         edit: {
+            drag: {
+                autoExpandTrigger: true,
+                borderMax:-1,
+                borderMin:-1
+            },
             enable: true
         },
         callback: {
@@ -182,7 +189,8 @@
             onRemove: afterRemove,
             onClick : getDetailList,
             onRename : onRename,
-            onDrop: zTreeOnDrop
+            onDrop: zTreeOnDrop,
+            dblClickExpand: dblClickExpand
         }
     };
 
@@ -224,6 +232,21 @@
     function quick(){
 
     }
+
+    function dropPrev(treeId, nodes, targetNode) {
+        var pNode = targetNode.getParentNode();
+        if (pNode && pNode.dropInner === false) {
+            return false;
+        } else {
+            for (var i=0,l=curDragNodes.length; i<l; i++) {
+                var curPNode = curDragNodes[i].getParentNode();
+                if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     /*********全局变量**********/
     var controlTree = 0;//0-锁 1-开
     var CurAtc = {};//当前文章
@@ -234,8 +257,8 @@
     var CurDetail = {};//当前detial
 
     var TreeInfoList = [];//当前用户知识树列表
+    var CurTreeInfo = {};//当前知识树
     var CurTreeStructure = [];//当前树结构体
-    var CurTreeId;//当前知识树ID
     var CurDetailList = [];//当前文章列表
     var CurNode = {};//当前点击节点信息
 
@@ -377,9 +400,10 @@
 
     /*****文章列表：删除当前Detail******/
     function deleteCurDetail(){
-        for(var i=0;i<CurDetailList;i++){
+        for(var i=0;i<CurDetailList.length;i++){
             if(CurDetailList[i].type == CurDetail.type && CurDetailList[i].atcId == CurDetail.atcId){
-                CurDetailList.remove(i);
+                CurDetailList.splice(i,1)
+                CurDetail = {};
                 return;
             }
         }
@@ -388,7 +412,7 @@
     /*****文章列表：将CurDetail更新到DetailList中******/
     function updateCurDetailList(detail){
         var d = detail || CurDetail;
-        for(var i=0;i<CurDetailList;i++){
+        for(var i=0;i<CurDetailList.length;i++){
             if(CurDetailList[i].type == d.type && CurDetailList[i].atcId == d.atcId){
                 CurDetailList[i] = d;
                 return;
@@ -404,10 +428,10 @@
         var newDetail = {};
         newDetail.authorId = Author.id;
         newDetail.authorName = Author.name;
-        newDetail.treeId = CurTreeId;
+        newDetail.treeId = CurTreeInfo.id;
         newDetail.type = 1;
         newDetail.myselfId = CurNode.id;
-        newDetail.titleInfo = "新笔记";
+        newDetail.titleInfo = "";
         newDetail.description = "还未添加描述。。。";
         newDetail.createTime = new Date();
         var url = Const.Api_URL + "/MyNoteController/addDetail";
@@ -463,7 +487,7 @@
 
     /****文章内容：编辑/预览 按钮***
      * editFlag 切换
-     * CurAtc,CurDetail , CurDetailList内容更新
+     * CurAtc,CurDetail,CurDetailList内容更新
      * **/
     function hideToolbar() {
         if(editFlag == 1){//开启预览模式+保存
@@ -519,11 +543,14 @@
         if(CurType == 1){
             var url = Const.Api_URL + "/AtcController/deleteAtc";
             View.post(url,CurAtc,function(resp){
-                swal({title:"删除成功",text:"",showConfirmButton: false,
-                    showCancelButton: false, timer:1500,type:"success"});
+                CurAtc = {};
                 //刷新列表
+                CurDomId = null;
                 deleteCurDetail();
                 frushDetailTmpl();
+                noAtc();
+                swal({title:"删除成功",text:"",showConfirmButton: false,
+                    showCancelButton: false, timer:1500,type:"success"});
             },function(){
 
             });
@@ -561,6 +588,12 @@
         temp.reset("atcDiv");
     }
 
+    function noAtc(){
+        var data = {};
+        var temp = new Tmpl("empty_atcTmpl",data);
+        temp.reset("atcDiv");
+    }
+
     /****文件夹：初始化树结构*****/
     function initTree(cFlag){
         //初始化常用栏
@@ -576,7 +609,7 @@
                 //获取知识树结构
                 url = Const.Api_URL + "/MyNoteController/getTreeStructure";
                 param =  "treeId=" + infoResp[0].id;
-                CurTreeId = infoResp[0].id;
+                CurTreeInfo = infoResp[0];
                 View.get(url,param,function(structureResp){
                     if(structureResp==null||structureResp.length==0){
                         //没有知识树结构,显示新增按钮
@@ -610,14 +643,19 @@
         //增加树结构
         var url = Const.Api_URL + "/MyNoteController/addTreeStructure";
         var treeStructure = {};
-        treeStructure.treeId = CurTreeId;
+        treeStructure.treeId = CurTreeInfo.id;
         treeStructure.parentId = 0;
-        treeStructure.name = "新主题";
+        treeStructure.name = CurTreeInfo.titleInfo;
+        treeStructure.open = 1;
+        treeStructure.drag = 0;
         View.post(url,treeStructure,function(structureResp){
             $("#treeDemo").show();
             $("#noTreeStruct").hide();
-            TreeUtils.init("treeDemo","rMenu",setting,structureResp);
-            CurTreeStructure.push(structureResp);
+            CurTreeStructure = structureResp;
+            controlTree = 0;
+            TreeUtils.init("treeDemo","rMenu",setting_lock,CurTreeStructure);
+            $("#lock-icon").attr("class","mdi mdi-lock-outline");
+
         },function(){
             swal({title:"新建主题失败",text:"请联系管理员。",showConfirmButton: false,
                 showCancelButton: false, timer:1500,type:"fail"});
@@ -631,7 +669,7 @@
             structure.name = treeNode.name;
             structure.parentId = treeNode.parentId;
             structure.id = treeNode.id;
-            structure.treeId = CurTreeId;
+            structure.treeId = CurTreeInfo.id;
             var url = Const.Api_URL + "/MyNoteController/updateStruct";
             View.post(url,structure,function(resp){
 
@@ -654,7 +692,7 @@
         //更新下数据库
         var url = Const.Api_URL + "/MyNoteController/deleteStruct";
         View.get(url,"id="+treeNode.id,function(){
-            for(var i=0;i<CurTreeStructure;i++){
+            for(var i=0;i<CurTreeStructure.length;i++){
                 if(CurTreeStructure[i].id == treeNode.id){
                     CurTreeStructure.remove(i);
                     break;
@@ -677,7 +715,7 @@
             newNode.parentId = 0;
         }
         var structure = newNode;
-        structure.treeId = CurTreeId;
+        structure.treeId = CurTreeInfo.id;
         var url = Const.Api_URL + "/MyNoteController/updateStruct";
         View.post(url,structure,function(resp){
             newNode.id = resp.id;
@@ -723,16 +761,26 @@
             structure.id = treeNodes[0].id;
             structure.parentId = treeNodes[0].parentId;
             structure.name = treeNodes[0].name;
-            structure.treeId = CurTreeId;
+            structure.treeId = CurTreeInfo.id;
+            structure.drag = 1;
             var url = Const.Api_URL + "/MyNoteController/updateStruct";
             View.post(url,structure,function(resp){
-
+                updateCurStructure(structure);
             },function(){
 
             });
         }else{//复制
 
         }
+    }
+
+    function updateCurStructure(structure){
+        $.each(CurTreeStructure,function(i,item){
+            if(item.id == structure.id){
+                CurTreeStructure[i] = structure;
+                return;
+            }
+        })
     }
 
     /****文件夹：点击节点，获取文章列表*****/
@@ -743,7 +791,7 @@
         }
         CurNode = treeNode;
         var url = Const.Api_URL + "/MyNoteController/getAtcList";
-        View.get(url,"id="+treeNode.id+"&treeId="+CurTreeId,function(resp){
+        View.get(url,"id="+treeNode.id+"&treeId="+CurTreeInfo.id,function(resp){
             CurDetailList = resp;
             CurDomId = null;
             frushDetailTmpl();
@@ -766,6 +814,11 @@
         }
     }
 
+    /*****文件夹：冻结根节点*******/
+    function dblClickExpand(treeId, treeNode) {
+        return treeNode.level > 0;
+    }
+
 </script>
 <script id="atcListTmpl" type="text/html">
     {{if list.length === 0}}
@@ -773,7 +826,11 @@
     {{/if}}
     {{each list as item i}}
     <li id="li_{{i}}" class="list-group-item" onclick="getAtc('li_{{i}}',{{item.atcId}},{{item.type}})">
+        {{if item.titleInfo === "" || item.titleInfo ===null}}
+        <p class="note-atc-menu-title">无标题</p>
+        {{else}}
         <p class="note-atc-menu-title">{{item.titleInfo}}</p>
+        {{/if}}
         <p class="note-atc-menu-date"> {{item.createTime}}</p>
         <p class="note-atc-menu-desc">{{item.description}}</p>
     </li>
@@ -820,5 +877,8 @@
         </div>
     </div>
     <div class="summernote"></div>
+</script>
+<script id="empty_atcTmpl" type="text/html">
+    <h4></h4>
 </script>
 </html>

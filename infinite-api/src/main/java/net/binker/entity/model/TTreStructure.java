@@ -30,4 +30,27 @@ public class TTreStructure {
 	@Column(name = "title_info")
 	private String name;
 
+	//@Comment("是否打开")
+	@Column(name = "open")
+	private Byte open;
+
+	//@Comment("是否可以拖拽")
+	@Column(name = "drag")
+	private Byte drag;
+
+	//@Comment("下面是否可以放子节点")
+	@Column(name = "dropInner")
+	private Byte dropInner;
+
+	//@Comment("是否可以作为根节点")
+	@Column(name = "dropRoot")
+	private Byte dropRoot;
+
+	//@Comment("禁止子节点移走")
+	@Column(name = "childOuter")
+	private Byte childOuter;
+
+	//@Comment("禁止子节点排序")
+	@Column(name = "childOrder")
+	private Byte childOrder;
 }

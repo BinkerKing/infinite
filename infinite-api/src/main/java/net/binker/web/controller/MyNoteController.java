@@ -39,8 +39,8 @@ public class MyNoteController {
 
 	@RequestMapping(value = "/addTreeStructure", method = RequestMethod.POST)
 	public Resp addTreeStructure(@RequestBody TTreStructure lc){
-		TTreStructure structure = treeService.addTreeStructure(lc);
-		return new Resp(structure,CodeDef.SUCCESS);
+		List<TTreStructure> structureList = treeService.addTreeStructure(lc);
+		return new Resp(structureList,CodeDef.SUCCESS);
 	}
 
 	@RequestMapping(value = "/updateStruct", method = RequestMethod.POST)
@@ -90,5 +90,11 @@ public class MyNoteController {
         TTreDetail detail = treeService.updateDetail(lc);
         return new Resp(detail).setCode(CodeDef.SUCCESS);
     }
+
+	@RequestMapping(value = "/deleteDetail", method = RequestMethod.POST)
+	public Resp deleteDetail(@RequestBody TTreDetail lc){
+		treeService.deleteDetail(lc);
+		return new Resp().setCode(CodeDef.SUCCESS);
+	}
 
 }

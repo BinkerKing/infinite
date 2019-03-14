@@ -14,6 +14,7 @@ import net.binker.service.repo.TTreStructureRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,9 +42,21 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public TTreStructure addTreeStructure(TTreStructure lc){
-        TTreStructure structure = tTreStructureRepo.save(lc);
-        return structure;
+    public List<TTreStructure> addTreeStructure(TTreStructure lc){
+        lc = tTreStructureRepo.save(lc);
+
+        List<TTreStructure> structureList = new ArrayList<TTreStructure>();
+        structureList.add(lc);
+        TTreStructure structure1 = new TTreStructure();
+        structure1.setName("闲文");
+        structure1.setOpen((byte)0);
+        structure1.setParentId(lc.getId());
+        structure1.setTreeId(lc.getTreeId());
+        structure1.setDrag((byte)0);
+        structure1 = tTreStructureRepo.save(structure1);
+        structureList.add(structure1);
+
+        return structureList;
     }
 
     @Override
@@ -83,5 +96,10 @@ public class TreeServiceImpl implements TreeService {
     @Override
     public TTreDetail updateDetail(TTreDetail lc){
         return tTreDetailRepo.save(lc);
+    }
+
+    public String deleteDetail(TTreDetail lc){
+        tTreDetailRepo.delete(lc.getId());
+        return null;
     }
 }
