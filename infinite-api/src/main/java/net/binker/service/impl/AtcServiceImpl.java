@@ -7,6 +7,7 @@ import net.binker.entity.model.TAtcContent;
 import net.binker.entity.model.TAtcInfomation;
 import net.binker.entity.model.TAtcNote;
 import net.binker.service.AtcService;
+import net.binker.service.TreeService;
 import net.binker.service.repo.TAtcCommentRepo;
 import net.binker.service.repo.TAtcContentRepo;
 import net.binker.service.repo.TAtcInfomationRepo;
@@ -34,6 +35,9 @@ public class AtcServiceImpl implements AtcService {
 	@Autowired
 	private TAtcNoteRepo tAtcNoteRepo;
 
+    @Autowired
+    private TreeService treeService;
+
 	/**
 	 * 功能：获取所有我的文章列表
 	 */
@@ -46,13 +50,13 @@ public class AtcServiceImpl implements AtcService {
 	 * 功能：保存手记信息和内容
 	 */
 	@Override
-	public String saveAtc(TAtcInfomation lc) {
+	public TAtcInfomation saveAtc(TAtcInfomation lc) {
 		TAtcContent content = tAtcContentRepo.save(lc.getTatcContent());
 		lc.setContentId(content.getId());
 		lc.setCreateTime(new Date());
 		lc.setValidFlag(Const.ATC_INFO_VALIDFLAG_YES);
 		tAtcInfomationRepo.save(lc);
-		return null;
+		return lc;
 	}
 
 	/**
@@ -62,6 +66,7 @@ public class AtcServiceImpl implements AtcService {
 	public String deleteAtc(TAtcInfomation lc) {
 		tAtcInfomationRepo.delete(lc.getId());
 		tAtcContentRepo.delete(lc.getContentId());
+        treeService.deleteDetail(lc.getId(),1);
 		return null;
 	}
 

@@ -114,8 +114,8 @@ public class AtcController {
 	 * */
 	@RequestMapping(value = "/saveAtc", method = RequestMethod.POST)
 	public Resp saveAtc(@RequestBody TAtcInfomation lc){
-		atcService.saveAtc(lc);
-		return new Resp(CodeDef.SUCCESS);
+		TAtcInfomation info = atcService.saveAtc(lc);
+		return new Resp(info,CodeDef.SUCCESS);
 	}
 
 	/**

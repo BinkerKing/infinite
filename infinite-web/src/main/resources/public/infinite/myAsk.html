@@ -150,8 +150,14 @@
         <li id="m_edit" onclick="editTreeNode();">修改节点</li>
     </ul>
 </div>
+<div id="rDetailMenu" hidden>
+    <ul>
+        <li id="rd_delete" onclick="deleteDetail();">删除文章</li>
+    </ul>
+</div>
 </body>
 <script type="text/javascript">
+    /*********配置**********/
     var setting = {
         view: {
             selectedMulti: false
@@ -218,8 +224,25 @@
     function quick(){
 
     }
-
+    /*********全局变量**********/
     var controlTree = 0;//0-锁 1-开
+    var CurAtc = {};//当前文章
+    var CurCode = {};//当前代码
+    var CurAsk = {};//当前猿问
+    var CurType = 1;//当前文章类型
+    var CurDomId = "";//当前detail的domID
+    var CurDetail = {};//当前detial
+
+    var TreeInfoList = [];//当前用户知识树列表
+    var CurTreeStructure = [];//当前树结构体
+    var CurTreeId;//当前知识树ID
+    var CurDetailList = [];//当前文章列表
+    var CurNode = {};//当前点击节点信息
+
+    var editFlag = 0;// 0-预览模式 1-编辑模式
+    var newFlag = false;
+
+    /*******************************************初始化************************************/
     $(function(){
         /*****弹框初始化******/
         $('[data-toggle="popover"]').popover({html : true });
@@ -237,6 +260,28 @@
         });
     });
 
+    /*****监听******/
+    //阻止浏览器默认右键点击事件
+    // $("body").bind("contextmenu", function(){
+    //     return false;
+    // });
+    //
+    // $("#atcListDiv li").mousedown(function(e) {
+    //     alert("1");
+    //     var x = e.offset().top;
+    //     var y = e.offset().left;
+    //     //右键为3
+    //     if (3 == e.which) {
+    //         $("#rDetailMenu ul").show();
+    //         y += document.body.scrollTop;
+    //         x += document.body.scrollLeft;
+    //         $("#rDetailMenu ul").css({"top":y+"px", "left":x+"px", "visibility":"visible"});
+    //     }
+    // });
+    // $("body").unbind("mousedown", function(){
+    //     $("#rDetailMenu ul").hidden();
+    // });
+
     /*****滚动条插件******/
     function setScroll(){
         $("#atc-menu-ul").slimScroll({
@@ -248,14 +293,28 @@
     }
     $(window).on("resize",setScroll);
 
-    /****点击文章，获取文章详情*****/
-    var CurAtc = {};//当前文章
-    var CurCode = {};//当前代码
-    var CurAsk = {};//当前猿问
-    var CurType = 1;//当前文章类型
+    /*******************************************操作************************************/
+
+    /****文章列表：点击文章，获取文章详情**
+     * CurAtc,CurCode,CurAsk,CurType,CurDomId,CurDetail 与文章有关全局赋值
+     * editFlag = 0 预览状态
+     * newFlag 是否新增文章
+     * */
     function getAtc(domId,atcId,type){
+        //加边框
+        CurDomId = domId;
         $("li").css("border-color","#ddd");
         $("#"+domId).css("border-color","#6addbb");
+        //如果点击的是已经打开的文章，则不做任何操作
+        if(type == CurType &&
+            ((type == 1 && atcId == CurAtc.id) ||
+                (type == 2 && atcId == CurAsk.id)||
+                (type == 3 && atcId == CurCode.id))){
+            return;
+        }
+        saveCurAtc();//如果是编辑模式，跳转时需要保存
+
+
 
         var url = Const.Api_URL + "/MyNoteController/getAtc";
         View.get(url,"atcId="+atcId+"&type="+type,function(resp){
@@ -269,9 +328,9 @@
             }else if(type == 3){
                 CurCode = resp;
             }
-            frushAtcTmpl();
+            frushAtcTmpl();//初始化文章主体模板
 
-            /*****编辑器初始化******/
+            // 编辑器初始化
             $('.summernote').summernote({
                 height: $(document.body).height() - 130,                 // set editor height
                 minHeight: null,             // set minimum height of editor
@@ -284,31 +343,137 @@
 
             $('.summernote').summernote('code',content);
 
-            /*****预览模式初始化******/
+            // 预览模式初始化
             if(newFlag){
                 $('.note-toolbar').show();
                 $("#atcDesc").hide();
+                $("#titleInfo").attr("readOnly",false);
+                $("#saveCoin").attr("class","mdi mdi-eye");
+                $("#saveDesc").text("预览并保存");
                 editFlag = 1;
                 newFlag = false;
             }else{
                 $('.note-toolbar').hide();
                 $('.summernote').summernote('disable');
+                $("#saveCoin").attr("class","mdi mdi-pencil-box-outline");
+                $("#saveDesc").text("编辑");
                 editFlag = 0;
             }
+            getCurDetail(type,atcId);//从DetailList中，更新CurDetail
         },function(){
 
         });
     }
 
-    /****编辑/预览 按钮*****/
-    var editFlag = 0;// 0-预览模式 1-编辑模式
-    var newFlag = false;
+    /*****文章列表：获取当前Detail******/
+    function getCurDetail(type,atcId){
+        $.each(CurDetailList,function(i,item){
+            if(item.type==type && item.atcId == atcId){
+                CurDetail = item;
+                return;
+            }
+        });
+    }
+
+    /*****文章列表：删除当前Detail******/
+    function deleteCurDetail(){
+        for(var i=0;i<CurDetailList;i++){
+            if(CurDetailList[i].type == CurDetail.type && CurDetailList[i].atcId == CurDetail.atcId){
+                CurDetailList.remove(i);
+                return;
+            }
+        }
+    }
+
+    /*****文章列表：将CurDetail更新到DetailList中******/
+    function updateCurDetailList(detail){
+        var d = detail || CurDetail;
+        for(var i=0;i<CurDetailList;i++){
+            if(CurDetailList[i].type == d.type && CurDetailList[i].atcId == d.atcId){
+                CurDetailList[i] = d;
+                return;
+            }
+        }
+    }
+
+    /****文章列表：新建笔记***
+     * CurDetailList,CurDetail 更新
+     * newFlag = true
+     * **/
+    function addAtc(){
+        var newDetail = {};
+        newDetail.authorId = Author.id;
+        newDetail.authorName = Author.name;
+        newDetail.treeId = CurTreeId;
+        newDetail.type = 1;
+        newDetail.myselfId = CurNode.id;
+        newDetail.titleInfo = "新笔记";
+        newDetail.description = "还未添加描述。。。";
+        newDetail.createTime = new Date();
+        var url = Const.Api_URL + "/MyNoteController/addDetail";
+        View.post(url,newDetail,function(resp){
+            //刷新列表
+            CurDetailList = prepend(CurDetailList,resp);
+            //刷新列表
+            frushDetailTmpl();
+
+            //第一个选中
+            $("li").css("border-color","#ddd");
+            $("#li_0").css("border-color","#6addbb");
+            //刷新右边文章显示（暂时默认新增的是手记录）
+            newFlag = true;
+            getAtc("li_0",resp.atcId,1);
+        },function(){
+
+        });
+    }
+
+    /****文章内容：跳转页面的时候 调用保存*****/
+    function saveCurAtc(){
+        //当前是编辑模式
+        if(editFlag == 1){
+            if(CurType == 1){
+                var atc = CurAtc;
+                var detail = CurDetail;
+                atc.titleInfo = $("#titleInfo").val();
+                atc.tatcContent.htmlContent = $('.summernote').summernote('code');
+                var url = Const.Api_URL + "/AtcController/saveAtc";
+                View.post(url,atc,function(resp){
+                    //保存detail,刷新列表
+                    var url = Const.Api_URL + "/MyNoteController/updateDetail";
+                    detail.titleInfo = resp.titleInfo;
+                    detail.description = resp.description;
+                    detail.createTime = resp.createTime;
+                    View.post(url,detail,function(resp){
+                        updateCurDetailList(detail);//更新CurDetailList
+                        frushDetailTmpl();
+                    },function(){
+
+                    });
+                },function(){
+
+                });
+            }else if(CurType == 2){
+
+            }else if(CurType == 3) {
+
+            }
+        }
+    }
+
+    /****文章内容：编辑/预览 按钮***
+     * editFlag 切换
+     * CurAtc,CurDetail , CurDetailList内容更新
+     * **/
     function hideToolbar() {
         if(editFlag == 1){//开启预览模式+保存
             $('.note-toolbar').hide();
             $('.summernote').summernote('disable');
             $("#atcDesc").show();
             $("#titleInfo").attr("readOnly",true);
+            $("#saveCoin").attr("class","mdi mdi-pencil-box-outline");
+            $("#saveDesc").text("编辑");
+
             editFlag = 0;
             //将内容存入数据库
             $('.summernote').summernote('code');
@@ -317,8 +482,19 @@
                 CurAtc.tatcContent.htmlContent = $('.summernote').summernote('code');
                 var url = Const.Api_URL + "/AtcController/saveAtc";
                 View.post(url,CurAtc,function(resp){
-                    swal({title:"保存成功",text:"",showConfirmButton: false,
-                        showCancelButton: false, timer:1500,type:"success"});
+                    //保存detail,刷新列表
+                    var url = Const.Api_URL + "/MyNoteController/updateDetail";
+                    CurDetail.titleInfo = resp.titleInfo;
+                    CurDetail.description = resp.description;
+                    CurDetail.createTime = resp.createTime;
+                    View.post(url,CurDetail,function(resp){
+                        updateCurDetailList();//更新CurDetailList
+                        frushDetailTmpl();
+                        swal({title:"保存成功",text:"",showConfirmButton: false,
+                            showCancelButton: false, timer:1500,type:"success"});
+                    },function(){
+
+                    });
                 },function(){
 
                 });
@@ -332,42 +508,29 @@
             $('.summernote').summernote('enable');
             $("#atcDesc").hide();
             $("#titleInfo").attr("readOnly",false);
+            $("#saveCoin").attr("class","mdi mdi-eye");
+            $("#saveDesc").text("预览并保存");
             editFlag = 1;
         }
     }
 
-    /****新建笔记*****/
-    function addAtc(){
-        var newDetail = {};
-        newDetail.authorId = Author.id;
-        newDetail.authorName = Author.name;
-        newDetail.treeId = CurTreeId;
-        newDetail.type = 1;
-        newDetail.myselfId = CurNode.id;
-        newDetail.titleInfo = "新笔记";
-        newDetail.description = "还未添加描述。。。";
-        newDetail.createTime = new Date();
-        var url = Const.Api_URL + "/MyNoteController/addDetail";
-        View.post(url,newDetail,function(resp){
-            newDetail = resp;
-            //刷新列表
-            CurDetailList = prepend(CurDetailList,newDetail);
-            //刷新列表
-            frushDetailTmpl();
+    /****文章内容：删除 按钮*****/
+    function deleteAtc(){
+        if(CurType == 1){
+            var url = Const.Api_URL + "/AtcController/deleteAtc";
+            View.post(url,CurAtc,function(resp){
+                swal({title:"删除成功",text:"",showConfirmButton: false,
+                    showCancelButton: false, timer:1500,type:"success"});
+                //刷新列表
+                deleteCurDetail();
+                frushDetailTmpl();
+            },function(){
 
-            //第一个选中
-            $("li").css("border-color","#ddd");
-            $("#li_0").css("border-color","#6addbb");
-            //刷新右边文章显示（暂时默认新增的是手记录）
-            CurType = 1;
-            newFlag = true;
-            getAtc("li_0",resp.atcId,CurType);
-        },function(){
-
-        });
+            });
+        }
     }
 
-    /*****刷新文章列表*******/
+    /*****模板：刷新文章列表*******/
     function frushDetailTmpl (){
         var data = {};
         data.list = CurDetailList;
@@ -379,8 +542,14 @@
         }
         var temp = new Tmpl("atcListTmpl",data);
         temp.reset("atcListDiv");
+        //加边框D
+        $("li").css("border-color","#ddd");
+        if(CurDomId){
+            $("#"+CurDomId).css("border-color","#6addbb");
+        }
     }
 
+    /*****模板：刷新文章*******/
     function frushAtcTmpl(){
         var data = {};
         data.data = CurAtc;
@@ -392,13 +561,7 @@
         temp.reset("atcDiv");
     }
 
-    var TreeInfoList = [];//当前用户知识树列表
-    var CurTreeStructure = [];//当前树结构体
-    var CurTreeId;//当前知识树ID
-    var CurDetailList = [];//当前文章列表
-    var CurNode = {};//当前点击节点信息
-
-    /****初始化树结构*****/
+    /****文件夹：初始化树结构*****/
     function initTree(cFlag){
         //初始化常用栏
         $.fn.zTree.init($("#quickTree"), settingTools, zNodesTools);
@@ -442,7 +605,7 @@
         });
     }
 
-    /**新建知识树**/
+    /*****文件夹:新建知识树*****/
     function addTree(){
         //增加树结构
         var url = Const.Api_URL + "/MyNoteController/addTreeStructure";
@@ -461,7 +624,7 @@
         });
     }
 
-    /*****修改节点名称*******/
+    /*****文件夹：修改节点名称*******/
     function onRename(event, treeId, treeNode, isCancel){
         if(!isCancel){//修改了
             var structure = {};
@@ -478,7 +641,7 @@
         }
     }
 
-    /*****删除节点之后，如果没有节点，显示新增主题*******/
+    /*****文件夹：删除节点之后，如果没有节点，显示新增主题*******/
     function afterRemove(event, treeId, treeNode){
         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
         var nodes = treeObj.getNodes();
@@ -502,7 +665,7 @@
         });
     }
 
-    /****新增节点*****/
+    /****文件夹：新增节点*****/
     function addTreeNode () {
         TreeUtils.hideRMenu();
         var zTree = TreeUtils.zTree;
@@ -528,7 +691,7 @@
         });
     }
 
-    /****删除节点*****/
+    /****文件夹:删除节点*****/
     function removeTreeNode() {
         TreeUtils.hideRMenu();
         var zTree = TreeUtils.zTree;
@@ -548,12 +711,12 @@
         afterRemove(zTree,TreeUtils.treeId,nodes);
     }
 
-    /****右键的修改节点功能*****/
+    /****文件夹：右键的修改节点功能*****/
     function editTreeNode() {
 
     }
 
-    /****移动节点*****/
+    /****文件夹：移动节点*****/
     function zTreeOnDrop(event, treeId, treeNodes, targetNode, moveType,isCopy){
         if(!isCopy){//移动
             var structure = {};
@@ -572,19 +735,24 @@
         }
     }
 
-    /****点击节点，获取文章列表*****/
+    /****文件夹：点击节点，获取文章列表*****/
     function getDetailList(event, treeId, treeNode){
+        //如果点击节点为当前节点，不做操作
+        if(treeNode.id == CurNode.id){
+            return;
+        }
         CurNode = treeNode;
         var url = Const.Api_URL + "/MyNoteController/getAtcList";
         View.get(url,"id="+treeNode.id+"&treeId="+CurTreeId,function(resp){
             CurDetailList = resp;
+            CurDomId = null;
             frushDetailTmpl();
         },function(){
 
         });
     }
 
-    /*****控制tree列表是否可以维护*******/
+    /*****文件夹：控制tree列表是否可以维护*******/
     function controlTreeFun(){
         if(controlTree == 0){//解锁
             controlTree = 1;
@@ -618,10 +786,10 @@
                 <input id="titleInfo" readOnly="true" style="width:100%;background-color:transparent;border:0;" type="text" placeholder="Title..." class="form-control" value="{{data.titleInfo}}">
             </div>
         </div>
-        <div style="position:fixed;right:0;margin-top: 7px;margin-bottom: 7px;width:200px;">
+        <div style="position:fixed;right:0;margin-top: 7px;margin-bottom: 7px;width:220px;">
             <button class="btn-rounded w-xs btn btn-default waves-effect waves-light" onclick="hideToolbar()">
-                <i class="mdi mdi-lock-outline"></i>
-                <span style="font-size:x-small">编辑</span>
+                <i id="saveCoin" class="mdi mdi-pencil-box-outlinemdi mdi-pencil-box-outline"></i>
+                <span id="saveDesc" style="font-size:x-small">编辑</span>
             </button>
             <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
                data-content="<h4>标签</h4>"
@@ -631,6 +799,9 @@
             <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
                data-content="<h4>信息概要</h4>" style="text-decoration:none;">
                 <i class="mdi mdi-information-outline"></i>
+            </a>
+            <a style="text-decoration:none;" href="javascript:deleteAtc()">
+                <i class="mdi mdi-delete-forever"></i>
             </a>
             <a data-container="body" data-placement="bottom" data-toggle="popover" title=""
                data-content="<h4>全屏</h4>" style="text-decoration:none;">
@@ -643,8 +814,9 @@
         </div>
     </div>
     <div id="atcDesc" style="height: 88px">
-        <div class="alert alert-info" role="alert">
-            <span>{{data.description}}</span>
+        <div class="alert alert-info" style="height: 88px" role="alert">
+            <p class="note-atc-menu-date">记录信息</p>
+            <p class="note-atc-menu-desc">描述：{{data.description}}</p>
         </div>
     </div>
     <div class="summernote"></div>

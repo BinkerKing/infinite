@@ -10,7 +10,7 @@ public interface AtcService {
 
 	public List<TAtcInfomation> getMyAtcList(Long authorId);
 
-	public String saveAtc(TAtcInfomation lc);
+	public TAtcInfomation saveAtc(TAtcInfomation lc);
 
 	public String deleteAtc(TAtcInfomation lc);
 	

@@ -85,4 +85,10 @@ public class MyNoteController {
         return new Resp(detail).setCode(CodeDef.SUCCESS);
     }
 
+    @RequestMapping(value = "/updateDetail", method = RequestMethod.POST)
+    public Resp updateDetail(@RequestBody TTreDetail lc){
+        TTreDetail detail = treeService.updateDetail(lc);
+        return new Resp(detail).setCode(CodeDef.SUCCESS);
+    }
+
 }

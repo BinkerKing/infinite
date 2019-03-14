@@ -20,4 +20,8 @@ public interface TreeService {
     public List<TTreDetail> getAtcList(Long id,Long treeId);
 
     public TTreDetail addDetail(TTreDetail lc);
+
+    public String deleteDetail(Long atcId,Integer type);
+
+    public TTreDetail updateDetail(TTreDetail lc);
 }

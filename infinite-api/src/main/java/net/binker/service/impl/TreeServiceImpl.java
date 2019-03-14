@@ -68,8 +68,20 @@ public class TreeServiceImpl implements TreeService {
         TAtcInfomation info = new TAtcInfomation();
         info.setAuthorId(lc.getAuthorId());
         info.setAuthorName(lc.getAuthorName());
+        info.setDescription(lc.getDescription());
         lc.setAtcId(atcService.addEmptyAtc(info));
         tTreDetailRepo.save(lc);
         return lc;
+    }
+
+    @Override
+    public String deleteDetail(Long atcId,Integer type){
+        tTreDetailRepo.deleteByAtcIdAndType(atcId,type);
+        return null;
+    }
+
+    @Override
+    public TTreDetail updateDetail(TTreDetail lc){
+        return tTreDetailRepo.save(lc);
     }
 }
