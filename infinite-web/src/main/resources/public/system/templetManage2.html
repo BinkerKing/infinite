@@ -31,11 +31,11 @@
     /*初始化*/
     $(function(){
         //1.初始化Table
-        var url = Const.Api_URL + "/TmplController/test";
+        var url = Const.Api_URL + "/TmplController/getMore";
         var $table = TableUtil.init(url);
         //传入table的DOM，访问地址url,
-        $table.height =500;
-        $('#ArbetTable').bootstrapTable("refresh");
+        //$table.height =500;
+        //$('#ArbetTable').bootstrapTable("refresh");
 
         $('#tmplView').attr('height',min_height+"px");
     });

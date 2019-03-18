@@ -1,18 +1,15 @@
 package net.binker.web.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.binker.config.CodeDef;
+import net.binker.core.entity.PageQuery;
 import net.binker.core.entity.Resp;
-import net.binker.entity.model.SearchParam;
 import net.binker.entity.model.TSysTmplinfo;
-import net.binker.entity.model.temp.TableResult;
-import net.binker.entity.model.temp.TableTest;
 import net.binker.service.TSysTmplinfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -48,19 +45,12 @@ public class TmplController {
 		return new Resp(tAtcInfomation,CodeDef.SUCCESS);
 	}
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public JSONObject test(@RequestParam("limit") int limit, @RequestParam("offset") int offset)
-	{
+	@RequestMapping(value = "/getMore", method = RequestMethod.GET)
+	public JSONObject test(@ModelAttribute PageQuery query, @ModelAttribute TSysTmplinfo lc) {
+		Page<TSysTmplinfo> page = tAtcInfomationService.findAllPage(query,lc);
 		JSONObject jsonObject = new JSONObject();
-		List<TableTest> data = new ArrayList<TableTest>();
-		TableTest test = new TableTest();
-		test.setId(1L);
-		test.setName("test1");
-		test.setSex("man");
-		data.add(test);
-		Integer total = data.size();
-		jsonObject.put("total",total);
-		jsonObject.put("rows",data);
+		jsonObject.put("total",page.getTotalElements());
+		jsonObject.put("rows",page.getContent());
 		return jsonObject;
 	}
 

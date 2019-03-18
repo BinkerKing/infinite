@@ -8,7 +8,6 @@ import lombok.Setter;
 public class TableTest {
 
 	private Long id;
-	
 	private String name;
 	private String sex;
 	

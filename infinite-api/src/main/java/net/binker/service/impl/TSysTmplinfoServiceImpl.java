@@ -1,10 +1,15 @@
 package net.binker.service.impl;
 
+import net.binker.core.entity.PageQuery;
 import net.binker.entity.model.TSysTmplcontent;
 import net.binker.entity.model.TSysTmplinfo;
 import net.binker.service.TSysTmplinfoService;
 import net.binker.service.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -48,6 +53,12 @@ public class TSysTmplinfoServiceImpl implements TSysTmplinfoService {
 		info.setTsysTmplcontent(content);
 		return info;
 	}
-	
+
+	public Page<TSysTmplinfo> findAllPage(PageQuery query, TSysTmplinfo tmplInfo){
+		PageRequest pageable = new PageRequest(query.getPindex(), query.getPcount(), query.getSortObj());
+		Example<TSysTmplinfo> example = Example.of(tmplInfo, ExampleMatcher.matchingAll());
+		Page<TSysTmplinfo> page = tSysTmplinfoRepo.findAll(example, pageable);
+		return page;
+	}
 
 }

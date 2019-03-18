@@ -129,12 +129,15 @@
     <div class="note-atc-menu">
         <div style="margin-right: 3px;height: calc(100vh);background-color: white;">
             <div style="height:30px;background-color: rgb(235, 235, 235);border:0px;">
-                <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:3px 0px 3px 3px " onclick="addAtc()">
+                <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:4px 0px 4px 4px " onclick="addAtc()">
                     <i class="mdi mdi-plus"></i>
                     <span style="font-size:x-small">新建笔记</span>
                 </button>
             </div>
-            <div style="height: calc(100vh - 30px);overflow:auto;overflow-y:hidden;">
+            <div id="searchDiv" style="height:30px;" hidden>
+                <input id="searchMyAtc" style="width:100%;border:1px solid #ffbff3;" type="text" placeholder="..." class="form-control">
+            </div>
+            <div id="menuDiv" style="height: calc(100vh - 30px);overflow:auto;overflow-y:hidden;">
                 <ul id="atc-menu-ul" class="list-group note-atc-menu-ul" >
                     <div id="atcListDiv"></div>
                 </ul>
@@ -450,6 +453,11 @@
         },function(){
 
         });
+    }
+
+    function showSearch(){
+        $("#searchDiv").show();
+        $("#menuDiv").css("height","calc(100vh - 60px)")
     }
 
     /****文章内容：跳转页面的时候 调用保存*****/
