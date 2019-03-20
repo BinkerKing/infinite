@@ -129,16 +129,10 @@
     <div class="note-atc-menu">
         <div style="margin-right: 3px;height: calc(100vh);background-color: white;">
             <div style="height:30px;background-color: rgb(235, 235, 235);border:0px;">
-                <div class="input-group-btn">
-                    <button class="btn btn-sm waves-effect waves-light" style="overflow: hidden; position: relative;" onclick="addAtc()">
-                        <i class="mdi mdi-plus"></i><span style="font-size:x-small">新建笔记</span>
-                    </button>
-                    <button class="btn btn-sm waves-effect waves-light" data-toggle="dropdown" style="overflow: hidden; position: relative;"><span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="javascript:addAtc()" style="text-decoration:none;">普通笔记</a></li>
-                        <li><a href data-toggle="modal" data-target="#atcTmplChoose" style="text-decoration:none;">模板笔记</a></li>
-                    </ul>
-                </div>
+                <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:4px 0px 4px 4px " onclick="addAtc()">
+                    <i class="mdi mdi-plus"></i>
+                    <span style="font-size:x-small">新建笔记</span>
+                </button>
             </div>
             <div id="searchDiv" style="height:30px;" hidden>
                 <input id="searchMyAtc" style="width:100%;border:1px solid #ffbff3;" type="text" placeholder="..." class="form-control">
@@ -176,18 +170,7 @@
                 <h4 class="modal-title" id="myModalLabel">选择模板</h4>
             </div>
             <div class="modal-body">
-                <div class="alert alert-info" role="alert">
-                    <p>记录信息</p>
-                </div>
-                <div class="alert alert-info" role="alert">
-                    <p>记录信息</p>
-                </div>
-                <div class="alert alert-info" role="alert">
-                    <p>记录信息</p>
-                </div>
-                <div class="alert alert-info" role="alert">
-                    <p>记录信息</p>
-                </div>
+                <div id="tmplChooseDiv"></div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -282,6 +265,32 @@
         }
         return true;
     }
+    var toolbar = [<!--字体工具-->
+        ['fontname', ['fontname']], //字体系列
+        ['style', ['bold', 'italic', 'underline', 'clear']], // 字体粗体、字体斜体、字体下划线、字体格式清除
+        ['font', ['strikethrough']], //字体划线、字体上标、字体下标
+        ['fontsize', ['fontsize']], //字体大小
+        ['color', ['color']], //字体颜色
+
+        <!--段落工具-->
+        ['para', ['ul', 'ol', 'paragraph']], //无序列表、有序列表、段落对齐方式
+        ['height', ['height']], //行高
+
+        <!--插入工具-->
+        ['table',['table']], //插入表格
+        ['hr',['hr']],//插入水平线
+        ['link',['link']], //插入链接
+        ['picture',['picture']], //插入图片
+        ['video',['video']], //插入视频
+
+        <!--其它-->
+        ['fullscreen',['fullscreen']], //全屏
+        ['codeview',['codeview']], //查看html代码
+        ['undo',['undo']], //撤销
+        ['redo',['redo']], //取消撤销
+        ['help',['help']], //帮助
+        ['tmpl',['tmpl']]
+     ];
     /*********全局变量**********/
     var controlTree = 0;//0-锁 1-开
     var CurAtc = {};//当前文章
@@ -290,6 +299,7 @@
     var CurType = 1;//当前文章类型
     var CurDomId = "";//当前detail的domID
     var CurDetail = {};//当前detial
+    var TmplList = [];//模版列表
 
     var TreeInfoList = [];//当前用户知识树列表
     var CurTreeInfo = {};//当前知识树
@@ -351,6 +361,22 @@
     }
     $(window).on("resize",setScroll);
 
+    var tmplButton = function (context) {
+        var ui = $.summernote.ui;
+        // create button
+        var button = ui.button({
+            contents: '<i class="fa fa-child"/>',
+            tooltip: '模版',
+            click: function () {
+                $('#atcTmplChoose').modal({
+                    show: true,
+                    backdrop:'static'
+                });
+                addTmplAtc();
+            }
+        });
+        return button.render();  // return button as jquery object
+    }
     /*******************************************操作************************************/
 
     /****文章列表：点击文章，获取文章详情**
@@ -386,12 +412,23 @@
             }
             frushAtcTmpl();//初始化文章主体模板
 
+            var summernoteHeight = 0;
+            if(newFlag){
+                summernoteHeight = $(document.body).height() - 130;
+            }else{
+                summernoteHeight = $(document.body).height() - 47;
+            }
+
             // 编辑器初始化
             $('.summernote').summernote({
-                height: $(document.body).height() - 130,                 // set editor height
+                height: summernoteHeight,    // set editor height
                 minHeight: null,             // set minimum height of editor
                 maxHeight: null,             // set maximum height of editor
-                focus: false                 // set focus to editable area after initializing summernote
+                focus: false,             // set focus to editable area after initializing summernote
+                toolbar:toolbar,
+                buttons: {
+                    tmpl: tmplButton
+                }
             });
 
             $('.inline-editor').summernote({
@@ -486,8 +523,31 @@
         });
     }
 
+    /****文章列表：新建模版笔记，选择模版***
+     * **/
     function addTmplAtc(){
+        if(TmplList.length==0){
+            var url = Const.Api_URL + "/TmplController/getPublishAtcTmpl";
+            View.get(url,null,function(resp){
+                TmplList = resp;
+                frushTmplChooseTmpl();
+            },function(){
 
+            });
+        }else{
+            frushTmplChooseTmpl();
+        }
+    }
+
+    function getAtcTmpl(tmplId){
+        var url = Const.Api_URL + "/TmplController/getTmplContent";
+        var param = "id="+tmplId;
+        View.get(url,param,function(resp){
+            $('.summernote').summernote('code',resp.htmlContent);
+            $('#atcTmplChoose').modal('hide');
+        },function(){
+
+        });
     }
 
     function showSearch(){
@@ -533,6 +593,7 @@
      * CurAtc,CurDetail,CurDetailList内容更新
      * **/
     function hideToolbar() {
+        var noteHeight = 0;
         if(editFlag == 1){//开启预览模式+保存
             $('.note-toolbar').hide();
             $('.summernote').summernote('disable');
@@ -540,10 +601,11 @@
             $("#titleInfo").attr("readOnly",true);
             $("#saveCoin").attr("class","mdi mdi-pencil-box-outline");
             $("#saveDesc").text("编辑");
+            noteHeight = $(document.body).height() - 47;
+            $('.note-editable').attr('style','height:'+noteHeight+'px');
 
             editFlag = 0;
             //将内容存入数据库
-            $('.summernote').summernote('code');
             if(CurType == 1){
                 CurAtc.titleInfo = $("#titleInfo").val();
                 CurAtc.tatcContent.htmlContent = $('.summernote').summernote('code');
@@ -577,6 +639,8 @@
             $("#titleInfo").attr("readOnly",false);
             $("#saveCoin").attr("class","mdi mdi-eye");
             $("#saveDesc").text("预览并保存");
+            noteHeight = $(document.body).height() - 130;
+            $('.note-editable').attr('style','height:'+noteHeight+'px');
             editFlag = 1;
         }
     }
@@ -629,6 +693,14 @@
         }
         var temp = new Tmpl("atcTmpl",data);
         temp.reset("atcDiv");
+    }
+
+    /*****模板：刷新模版选择列表*******/
+    function frushTmplChooseTmpl(){
+        var data = {};
+        data.list = TmplList;
+        var temp = new Tmpl("tmplChooseTmpl",data);
+        temp.reset("tmplChooseDiv");
     }
 
     function noAtc(){
@@ -913,15 +985,16 @@
             </a>
         </div>
     </div>
-    <div id="atcDesc" style="height: 88px">
-        <div class="alert alert-info" style="height: 88px" role="alert">
-            <p class="note-atc-menu-date">记录信息</p>
-            <p class="note-atc-menu-desc">描述：{{data.description}}</p>
-        </div>
-    </div>
     <div class="summernote"></div>
 </script>
 <script id="empty_atcTmpl" type="text/html">
     <h4></h4>
+</script>
+<script id="tmplChooseTmpl" type="text/html">
+    {{each list as item i}}
+    <div class="alert alert-info" role="alert" style="cursor:pointer;" onclick="getAtcTmpl({{item.contentId}})">
+        <p>{{item.titleInfo}}</p>
+    </div>
+    {{/each}}
 </script>
 </html>

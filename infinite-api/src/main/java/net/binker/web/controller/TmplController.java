@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import net.binker.config.CodeDef;
 import net.binker.core.entity.PageQuery;
 import net.binker.core.entity.Resp;
+import net.binker.entity.model.TSysTmplcontent;
 import net.binker.entity.model.TSysTmplinfo;
 import net.binker.service.TSysTmplinfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,13 @@ public class TmplController {
 	public TSysTmplinfoService tAtcInfomationService;
 	
 	@RequestMapping(value = "/getTmplList", method = RequestMethod.POST)
-	public Resp getMyAtcList(){
+	public Resp getTmplList(){
 		List<TSysTmplinfo> tAtcInfomationList = tAtcInfomationService.getTmplList();
 		return new Resp(tAtcInfomationList, CodeDef.SUCCESS);
 	}
 	
 	@RequestMapping(value = "/saveTmpl", method = RequestMethod.POST)
-	public Resp savTmpl(@RequestBody TSysTmplinfo lc){
+	public Resp saveTmpl(@RequestBody TSysTmplinfo lc){
 		tAtcInfomationService.saveTmpl(lc);
 		return new Resp(CodeDef.SUCCESS);
 	}
@@ -52,6 +53,20 @@ public class TmplController {
 		jsonObject.put("total",page.getTotalElements());
 		jsonObject.put("rows",page.getContent());
 		return jsonObject;
+	}
+
+	@RequestMapping(value = "/getPublishAtcTmpl", method = RequestMethod.GET)
+	public Resp getPublishAtcTmpl(){
+		List<TSysTmplinfo> tAtcInfomationList = tAtcInfomationService.getPublishAtcTmpl();
+		return new Resp(tAtcInfomationList, CodeDef.SUCCESS);
+	}
+
+	@RequestMapping(value = "/getTmplContent", method = RequestMethod.GET)
+	public Resp getTmplContent(@RequestParam("id") Long id){
+		TSysTmplcontent tSysTmplcontent = tAtcInfomationService.getTmplContent(id);
+		if(tSysTmplcontent == null)
+			return new Resp().setCode(CodeDef.ERROR);
+		return new Resp(tSysTmplcontent,CodeDef.SUCCESS);
 	}
 
 }

@@ -2,16 +2,10 @@ package net.binker.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import net.binker.config.Const;
-import net.binker.entity.model.TAtcComment;
-import net.binker.entity.model.TAtcContent;
-import net.binker.entity.model.TAtcInfomation;
-import net.binker.entity.model.TAtcNote;
+import net.binker.entity.model.*;
 import net.binker.service.AtcService;
 import net.binker.service.TreeService;
-import net.binker.service.repo.TAtcCommentRepo;
-import net.binker.service.repo.TAtcContentRepo;
-import net.binker.service.repo.TAtcInfomationRepo;
-import net.binker.service.repo.TAtcNoteRepo;
+import net.binker.service.repo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +28,9 @@ public class AtcServiceImpl implements AtcService {
 	
 	@Autowired
 	private TAtcNoteRepo tAtcNoteRepo;
+
+	@Autowired
+	private TSysTmplcontentRepo tSysTmplcontentRepo;
 
     @Autowired
     private TreeService treeService;

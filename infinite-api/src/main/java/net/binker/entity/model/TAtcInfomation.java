@@ -101,7 +101,7 @@ public class TAtcInfomation {
 	//@Comment("描述")
 	@Column(name = "description")
 	private String description;
-	
+
 	//正文内容
 	@Transient
 	private TAtcContent tatcContent;

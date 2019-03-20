@@ -2,6 +2,7 @@ package net.binker.service;
 
 import net.binker.core.entity.PageQuery;
 import net.binker.entity.model.TAtcComment;
+import net.binker.entity.model.TSysTmplcontent;
 import net.binker.entity.model.TSysTmplinfo;
 import net.binker.entity.model.TAtcNote;
 import org.springframework.data.domain.Page;
@@ -19,5 +20,9 @@ public interface TSysTmplinfoService {
 	public TSysTmplinfo getOneTmpl(Long id);
 
 	public Page<TSysTmplinfo> findAllPage(PageQuery query,TSysTmplinfo tmplInfo);
+
+	public List<TSysTmplinfo> getPublishAtcTmpl();
+
+	public TSysTmplcontent getTmplContent(Long id);
 
 }

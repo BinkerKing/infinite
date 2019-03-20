@@ -61,4 +61,11 @@ public class TSysTmplinfoServiceImpl implements TSysTmplinfoService {
 		return page;
 	}
 
+	public List<TSysTmplinfo> getPublishAtcTmpl(){
+		return tSysTmplinfoRepo.findByPublish();
+	}
+
+	public TSysTmplcontent getTmplContent(Long id){
+		return tSysTmplcontentRepo.findOne(id);
+	}
 }
