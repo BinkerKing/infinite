@@ -129,10 +129,16 @@
     <div class="note-atc-menu">
         <div style="margin-right: 3px;height: calc(100vh);background-color: white;">
             <div style="height:30px;background-color: rgb(235, 235, 235);border:0px;">
-                <button class="btn btn-rounded btn-default waves-effect waves-light" style="margin:4px 0px 4px 4px " onclick="addAtc()">
-                    <i class="mdi mdi-plus"></i>
-                    <span style="font-size:x-small">新建笔记</span>
-                </button>
+                <div class="input-group-btn">
+                    <button class="btn btn-sm waves-effect waves-light" style="overflow: hidden; position: relative;" onclick="addAtc()">
+                        <i class="mdi mdi-plus"></i><span style="font-size:x-small">新建笔记</span>
+                    </button>
+                    <button class="btn btn-sm waves-effect waves-light" data-toggle="dropdown" style="overflow: hidden; position: relative;"><span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:addAtc()" style="text-decoration:none;">普通笔记</a></li>
+                        <li><a href data-toggle="modal" data-target="#atcTmplChoose" style="text-decoration:none;">模板笔记</a></li>
+                    </ul>
+                </div>
             </div>
             <div id="searchDiv" style="height:30px;" hidden>
                 <input id="searchMyAtc" style="width:100%;border:1px solid #ffbff3;" type="text" placeholder="..." class="form-control">
@@ -146,6 +152,8 @@
     </div>
     <div class="note-content">
         <div id="atcDiv"></div>
+        <div>
+        </div>
     </div>
 
 <div id="rMenu">
@@ -160,6 +168,30 @@
         <li id="rd_delete" onclick="deleteDetail();">删除文章</li>
     </ul>
 </div>
+<div id="atcTmplChoose" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">选择模板</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info" role="alert">
+                    <p>记录信息</p>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    <p>记录信息</p>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    <p>记录信息</p>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    <p>记录信息</p>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </body>
 <script type="text/javascript">
     /*********配置**********/
@@ -361,6 +393,7 @@
                 maxHeight: null,             // set maximum height of editor
                 focus: false                 // set focus to editable area after initializing summernote
             });
+
             $('.inline-editor').summernote({
                 airMode: false
             });
@@ -451,6 +484,10 @@
         },function(){
 
         });
+    }
+
+    function addTmplAtc(){
+
     }
 
     function showSearch(){

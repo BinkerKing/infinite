@@ -31,10 +31,10 @@
                 <div class="nav-active-white">
                     <ul class="nav nav-pills nav-stacked nav-sm">
                         <li class="nav-item">
-                            <a class="nav-link" onclick="searchByStatus(0)">
+                            <a class="nav-link" onclick="searchByStatus(1)">
                                 <i class="fa m-r-sm fa-circle text-info"></i> 启用
                             </a>
-                            <a class="nav-link" onclick="searchByStatus(1)">
+                            <a class="nav-link" onclick="searchByStatus(0)">
                                 <i class="fa m-r-sm fa-circle text-warn"></i> 禁用
                             </a>
                         </li>
@@ -80,7 +80,7 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-2">
-                            <a href="javascript:pulish();"><i id="collect-icon" class="glyphicon glyphicon-star-empty"></i></a>
+
                         </div>
                         <div class="col-sm-2">
                             <a href="javascript:edit();"><i class="glyphicon glyphicon-pencil"></i></a>
@@ -213,7 +213,7 @@
 </script>
 <script id="tmplListTmpl" type="text/html">
     {{each list as item}}
-    <div class="list-item b-l b-l-2x b-info">
+    <div class="list-item b-l b-l-2x b-info" style="cursor:pointer;margin-top: 10px;" data-toggle="modal" data-target="#myModal" onclick="getTmpl({{item.id}},'{{item.titleInfo}}')">
         <div class="list-left">
             {{if item.publishStatus===1}}
             <span class="avatar-sm-box bg-orange">P</span>
@@ -227,7 +227,7 @@
                     class="fa fa-paperclip m-l-sm"></i>
             </div>
             <div>
-                <a href class="_500" data-toggle="modal" data-target="#myModal" onclick="getTmpl({{item.id}},'{{item.titleInfo}}')">{{item.titleInfo}}</a>
+                <a class="_500" >{{item.titleInfo}}</a>
                 <span class="label label-xs m-l-sm text-u-c"></span>
             </div>
             {{if item.description===""}}
