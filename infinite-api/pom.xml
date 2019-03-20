@@ -18,6 +18,7 @@
         <!-- 字符集编码 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <kettle.version>7.1.0.1-34</kettle.version>
     </properties>
 
     <profiles>
@@ -78,6 +79,7 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- junit 测试 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -85,6 +87,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- json 工具-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -106,13 +109,17 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>sqljdbc4</artifactId>
-			<version>4.0</version>
-		</dependency>
+            <groupId>oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>12.1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>4.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -123,5 +130,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

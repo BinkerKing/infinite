@@ -9,7 +9,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication()
-//@EnableJpaRepositories(basePackages = {"net.binker.service.repo"})
+//@EnableJpaRepositories(basePackages = {"net.binker.ods.repo"})
 public class Application extends SpringBootServletInitializer {
 
 	//如果需要通过打包的方式在web容器中进行部署，

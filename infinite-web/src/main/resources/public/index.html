@@ -38,10 +38,11 @@
                     <!-- Navbar-left -->
                     <ul class="nav navbar-nav navbar-left">
                         <li>
-                            <button class="button-menu-mobile open-left waves-effect">
+                            <button class="button-menu-mobile open-left">
                                 <i class="mdi mdi-menu"></i>
                             </button>
                         </li>
+                        <!-- 搜索框
                         <li class="hidden-xs">
                             <form role="search" class="app-search">
                                 <input id="searchFilter" type="text" placeholder="Search..."
@@ -49,6 +50,7 @@
                                 <a href="javascript:searchGlobal();"><i class="fa fa-search"></i></a>
                             </form>
                         </li>
+                        -->
                     </ul>
 
                     <!-- Right(Notification) -->
@@ -95,25 +97,19 @@
                         <li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-heart-outline"></i><span> 个人空间 </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="#" onclick="getUrl('/infinite/myZone.html')">我的空间</a></li>
-                                <li><a href="#" onclick="getUrl('/infinite/myAtc.html')">我的手记</a></li>
-                                <li><a href="#" onclick="getUrl('/infinite/myAsk.html')">我的猿问</a></li>
-                                <li><a href="#" onclick="getUrl('/infinite/myCode.html')">我的代码块</a></li>
-                                <li><a href="#" onclick="getUrl('')">我的知识树</a></li>
-                                <li><a href="#" onclick="getUrl('')">我的参与</a></li>
+                                <li><a href="index.html">我的空间</a></li>
+                                <li><a href="javascript:void(0);" onclick="getUrl('/infinite/myTree.html')">我的知识树</a></li>
+                                <li><a href="javascript:void(0);" onclick="getUrl('/infinite/myNote.html')">我的笔记</a></li>
                             </ul>
                         </li>
 
-                        <li class="menu-title">平台</li>
+                        <li class="menu-title">共享</li>
 
                         <li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-chart-arc"></i><span> 共享空间 </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="#" onclick="getUrl('/infinite/shareAtc.html')">手记</a></li>
-                                <li><a href="#" onclick="getUrl('')">猿问</a></li>
-                                <li><a href="#" onclick="getUrl('/infinite/topic.html')">话题</a></li>
-                                <li><a href="#" onclick="getUrl('')">代码块</a></li>
-                                <li><a href="#" onclick="getUrl('')">知识树</a></li>
+                                <li><a href="javascript:void(0);" onclick="getUrl('/infinite/shareAtc.html')">共享笔记</a></li>
+                                <li><a href="javascript:void(0);" onclick="getUrl('/infinite/shareTree.html')">共享知识树</a></li>
                             </ul>
                         </li>
 
@@ -122,8 +118,7 @@
                         <li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-chart-arc"></i><span> 系统配置 </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="#" onclick="getUrl('/system/templetManage2.html')">标签管理</a></li>
-                                <li><a href="#" onclick="getUrl('/system/templetManage.html')">模板管理</a></li>
+                                <li><a href="javascript:void(0);" onclick="getUrl('/system/templetManage.html')">模板管理</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -190,15 +185,15 @@
 <script src="/temp1/plugins/counterup/jquery.counterup.min.js"></script><!-- 数字动画插件 -->
 <!-- App js -->
 <script src="/temp1/assets/js/jquery.core.js"></script><!-- JQUERY核心 -->
-<script src="/temp1/assets/js/jquery.app.js"></script>
+<script src="/temp1/assets/js/jquery.app.js"></script><!-- APP核心 -->
 <script>
 /*全局变量区*/
 var min_height = document.documentElement.clientHeight - 86;//获取屏幕高度-头部高度
 var resizefunc = [];
 /*初始化*/
 $(function(){
-    getUrl('/infinite/myAtc.html');//首页
-    Const.CUR_URL = '/infinite/myAtc.html';
+    getUrl('/infinite/myZone.html');//首页
+    Const.CUR_URL = '/infinite/myZone.html';
 });
 
 /*方法区*/
@@ -209,14 +204,14 @@ function getUrl(url){
     $("#searchFilter").val("");
 }
 
-function searchGlobal(){
-    var searchFilter = $("#searchFilter").val();
-    getUrl(encodeURI('/infinite/searchGlobal.html?searchFilter='+searchFilter));//搜索
-}
+// function searchGlobal(){
+//     var searchFilter = $("#searchFilter").val();
+//     getUrl(encodeURI('/infinite/searchGlobal.html?searchFilter='+searchFilter));//搜索
+// }
 
-$('#searchFilter').bind('keypress',function(e){ //监听搜索框的回车
-    if(e.keyCode == 13)
-        searchGlobal();
-});
+// $('#searchFilter').bind('keypress',function(e){ //监听搜索框的回车
+//     if(e.keyCode == 13)
+//         searchGlobal();
+// });
 </script>
 </html>
