@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+    <meta name="author" content="Coderthemes">
+
+    <link rel="import" href="/common/depjs.html" />
+    <link rel="import" href="/common/depcss.html" />
+    <link rel="import" href="/common/form-js.html" />
+
+    <link rel="stylesheet" href="/tools/zTree_v3/css/demo.css" type="text/css">
+    <link rel="stylesheet" href="/tools/zTree_v3/css/awesomeStyle/awesome.css" type="text/css">
+
+    <script type="text/javascript" src="/tools/zTree_v3/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="/tools/zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript" src="/tools/zTree_v3/js/jquery.ztree.exedit.js"></script>
+
+    <script src="/temp1/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="/temp1/assets/pages/jquery.tooltipster.js"></script>
+
+    <style>
+        .tree-list{
+            float : left;
+            height: calc(100vh);
+            width: 300px;
+            overflow:auto;
+            background-color: rgb(99, 235, 170);
+        }
+        .tree-operate{
+            overflow: hidden;
+            height: calc(100vh);
+            background-color: rgb(229, 232, 235);
+        }
+        .tree-tools {
+            width: 100px;
+            background-color: rgba(128, 203, 255, 0.93);
+            height: calc(100vh);
+            float : right;
+        }
+        .tree-view {
+            float : left;
+            height: calc(100vh);
+            padding: 20px 20px 20px 20px;
+        }
+        div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
+        div#rMenu ul li{
+            margin: 1px 0;
+            padding: 0 5px;
+            cursor: pointer;
+            list-style: none outside none;
+            background-color: #DFDFDF;
+        }
+        .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
+        .ztree li ul.level0 {padding:0; background:none;}
+        .ztree li span{color:black;}
+    </style>
+</head>
+<body>
+
+<div class="tree-list">
+    <div class="card-box">
+        <h4 class="header-title m-t-0 m-b-30">知识树</h4>
+        <div class="table-responsive">
+            <table class="table table table-hover m-0">
+                <tbody>
+                <tr>
+                    <th>
+                        <p>dafd </p>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="tree-operate">
+    <div class="tree-view">
+        <ul id="treeDemo" class="ztree" style="overflow-y:hidden"></ul>
+    </div>
+    <div class="tree-tools">
+        <a id="expandAllBtn"><i class="mdi mdi-plus"></i></a>
+        <a id="collapseAllBtn"><i class="mdi mdi-plus"></i></a>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            fontCss: getFontCss,
+            selectedMulti: false
+        },
+        check: {
+            enable: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        edit: {
+            enable: true
+        }
+    };
+
+    var zNodes =[
+        { id:1, pId:0, name:"父节点1", open:true},
+        { id:11, pId:1, name:"父节点11"},
+        { id:111, pId:11, name:"叶子节点111"},
+        { id:112, pId:11, name:"叶子节点112"},
+        { id:113, pId:11, name:"叶子节点113"},
+        { id:114, pId:11, name:"叶子节点114"},
+        { id:12, pId:1, name:"父节点12"},
+        { id:121, pId:12, name:"叶子节点121"},
+        { id:122, pId:12, name:"叶子节点122"},
+        { id:123, pId:12, name:"叶子节点123"},
+        { id:124, pId:12, name:"叶子节点124"},
+        { id:13, pId:1, name:"父节点13", isParent:true},
+        { id:2, pId:0, name:"父节点2"},
+        { id:21, pId:2, name:"父节点21", open:true},
+        { id:211, pId:21, name:"叶子节点211"},
+        { id:212, pId:21, name:"叶子节点212"},
+        { id:213, pId:21, name:"叶子节点213"},
+        { id:214, pId:21, name:"叶子节点214"},
+        { id:22, pId:2, name:"父节点22"},
+        { id:221, pId:22, name:"叶子节点221"},
+        { id:222, pId:22, name:"叶子节点222"},
+        { id:223, pId:22, name:"叶子节点223"},
+        { id:224, pId:22, name:"叶子节点224"},
+        { id:23, pId:2, name:"父节点23"},
+        { id:231, pId:23, name:"叶子节点231"},
+        { id:232, pId:23, name:"叶子节点232"},
+        { id:233, pId:23, name:"叶子节点233"},
+        { id:234, pId:23, name:"叶子节点234"},
+        { id:3, pId:0, name:"父节点3", isParent:true}
+    ];
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+            return false;
+        });
+    };
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
+
+    function dblClickExpand(treeId, treeNode) {
+        return treeNode.level > 0;
+    }
+</script>
+<script>
+    var resizefunc = [];
+
+    var TreeInfoList = [];//知识树清单
+    var CurTreeInfo = {};//当前知识树
+    var CurTreeStructure = [];//当前树结构体
+
+    $(document).ready(function(){
+        var zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.expandAll(true);
+    });
+
+    $("#expandAllBtn").bind("click", {type:"expandAll"}, expandNode);
+    $("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
+
+
+    function expandNode(e) {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+            type = e.data.type,
+            nodes = zTree.getSelectedNodes();
+        if (type.indexOf("All")<0 && nodes.length == 0) {
+            alert("请先选择一个父节点");
+        }
+
+        if (type == "expandAll") {
+            zTree.expandAll(true);
+        } else if (type == "collapseAll") {
+            zTree.expandAll(false);
+        } else {
+            var callbackFlag = $("#callbackTrigger").attr("checked");
+            for (var i=0, l=nodes.length; i<l; i++) {
+                zTree.setting.view.fontCss = {};
+                if (type == "expand") {
+                    zTree.expandNode(nodes[i], true, null, null, callbackFlag);
+                } else if (type == "collapse") {
+                    zTree.expandNode(nodes[i], false, null, null, callbackFlag);
+                } else if (type == "toggle") {
+                    zTree.expandNode(nodes[i], null, null, null, callbackFlag);
+                } else if (type == "expandSon") {
+                    zTree.expandNode(nodes[i], true, true, null, callbackFlag);
+                } else if (type == "collapseSon") {
+                    zTree.expandNode(nodes[i], false, true, null, callbackFlag);
+                }
+            }
+        }
+    }
+
+    /**搜索****searchNodes.html**/
+
+
+</script>
+</html>

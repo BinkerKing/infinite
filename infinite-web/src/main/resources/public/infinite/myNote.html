@@ -778,27 +778,27 @@
         });
     }
 
-    /*****文件夹：修改节点名称*******/
-    function onRename(event, treeId, treeNode, isCancel){
-        if(!isCancel){//修改了
-            var structure = {};
-            structure.name = treeNode.name;
-            structure.parentId = treeNode.parentId;
-            structure.id = treeNode.id;
-            structure.treeId = CurTreeInfo.id;
-            var url = Const.Api_URL + "/MyNoteController/updateStruct";
-            View.post(url,structure,function(resp){
 
-            },function(){
-
-            });
-        }
-    }
 
     /*****文件夹：删除节点之后，如果没有节点，显示新增主题*******/
     function afterRemove(event, treeId, treeNode){
         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-        var nodes = treeObj.getNodes();
+        var nodes = treeObj.getNodes();/*****文件夹：修改节点名称*******/
+        function onRename(event, treeId, treeNode, isCancel){
+            if(!isCancel){//修改了
+                var structure = {};
+                structure.name = treeNode.name;
+                structure.parentId = treeNode.parentId;
+                structure.id = treeNode.id;
+                structure.treeId = CurTreeInfo.id;
+                var url = Const.Api_URL + "/MyNoteController/updateStruct";
+                View.post(url,structure,function(resp){
+
+                },function(){
+
+                });
+            }
+        }
         //如果没有节点，显示新增主题
         if(nodes==null||nodes.length==0){
             $("#treeDemo").hide();
